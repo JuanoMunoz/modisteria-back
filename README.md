@@ -1,145 +1,200 @@
-Catalogo:
-GET:
-http://localhost:4000/api/getAllCatalogo
-http://localhost:4000/api/getCatalogoById/:id
+## Catalogo:
 
-POST: 
-http://localhost:4000/api/createCatalogo
+`GET`:
 
-PUT:
-http://localhost:4000/api/updateCatalogo/:id
+- http://localhost:4000/api/getAllCatalogo
+- http://localhost:4000/api/getCatalogoById/_:id_
 
-UPDATE:
-http://localhost:4000/api/updateCatalogo/:id
+`POST`:
 
-DELETE:
-http://localhost:4000/api/deleteCatalogo/:id
+- http://localhost:4000/api/createCatalogo
 
+`PUT`:
 
-Categoria:
-GET:
-http://localhost:4000/api/getAllCategorias
-http://localhost:4000/api/getCategoriaById/:id
+- http://localhost:4000/api/updateCatalogo/_:id_
 
-POST:
-http://localhost:4000/api/createCategoria
+`UPDATE`:
 
-PUT:
-http://localhost:4000/api/updateCategoria/:id
+- http://localhost:4000/api/updateCatalogo/_:id_
 
-UPDATE:
-http://localhost:4000/api/statusCategoria/:id
+`DELETE`:
 
-DELETE: 
-http://localhost:4000/api/deleteCategoria/:id
+- http://localhost:4000/api/deleteCatalogo/_:id_
 
+### Categoria:
 
-Cita:
-GET:
-http://localhost:4000/api/getAllCitas
-http://localhost:4000/api/getCitaById/:id
- 
-POST:
-http://localhost:4000/api/createCita
+---
 
-PUT:
-http://localhost:4000/api/updateCita/:id
+`GET`:
 
-UPDATE:
-http://localhost:4000/api/statusCita/:id
+- - http://localhost:4000/api/getAllCategorias
+- http://localhost:4000/api/getCategoriaById/_:id_
 
-DELETE:
-http://localhost:4000/api/deleteCita/:id
+`POST`:
 
+- http://localhost:4000/api/createCategoria
 
-Insumo:
-GET: 
-http://localhost:4000/api/getAllInsumos
-http://localhost:4000/api/getInsumoById
+`PUT`:
 
-POST:
-http://localhost:4000/api/createInsumo
+- http://localhost:4000/api/updateCategoria/_:id_
 
-PUT:
-http://localhost:4000/api/updateInsumo/:id
+`UPDATE`:
 
-UPDATE:
-http://localhost:4000/api/statusInsumo/:id
+- http://localhost:4000/api/statusCategoria/_:id_
 
-DELETE:
-http://localhost:4000/api/deleteInsumo/:id
+`DELETE`:
 
+- http://localhost:4000/api/deleteCategoria/_:id_
 
-Permisos:
-GET:
-http://localhost:4000/api/getAllPermisos
-http://localhost:4000/api/getPermisoById/:id
+### Cita
 
-POST:
-http://localhost:4000/api/createPermiso
+---
 
-PUT:
-http://localhost:4000/api/updatePermiso/:id
+`GET`:
 
-UPDATE:
-http://localhost:4000/api/statusPermiso/:id
+- http://localhost:4000/api/getAllCitas
+- http://localhost:4000/api/getCitaById/_:id_
 
-DELETE:
-http://localhost:4000/api/deletePermiso/:id
+`POST`:
 
+- http://localhost:4000/api/createCita
 
-Prenda:
-GET:
-http://localhost:4000/api/getAllPrendas
-http://localhost:4000/api/getPrendaById/:id
+`PUT`:
 
-POST:
-http://localhost:4000/api/createPrenda
+- http://localhost:4000/api/updateCita/_:id_
 
-PUT:
-http://localhost:4000/api/updatePrenda/:id
+`UPDATE`:
 
-UPDATE:
-http://localhost:4000/api/statusPrenda/:id
+- http://localhost:4000/api/statusCita/_:id_
 
-DELETE:
-http://localhost:4000/api/deletePrenda/:id
+`DELETE`:
 
+- http://localhost:4000/api/deleteCita/_:id_
 
-Rol:
-GET:
-http://localhost:4000/api/getAllRoles
-http://localhost:4000/api/getRolById/:id
+### Insumo
 
-POST:
-http://localhost:4000/api/createRol
+---
 
-PUT:
-http://localhost:4000/api/updateRol/:id
+`GET`:
 
-UPDATE:
-http://localhost:4000/api/statusRol/:id
+- http://localhost:4000/api/getAllInsumos
+- http://localhost:4000/api/getInsumoById
 
-DELETE:
-http://localhost:4000/api/deleteRol/:id
+`POST`:
 
+- http://localhost:4000/api/createInsumo
 
-Usuarios:
-GET:
-http://localhost:4000/api/getAllUsers
-http://localhost:4000/api/getUserById/:id
+`PUT`:
 
-POST:
-http://localhost:4000/api/createUser
-http://localhost:4000/api/login
-http://localhost:4000/api/forgotPassword
-http://localhost:4000/api/resetPassword
+- http://localhost:4000/api/updateInsumo/_:id_
 
-PUT:
-http://localhost:4000/api/updateUser/:id
+`UPDATE`:
 
-UPDATE:
-http://localhost:4000/api/statusUser/:id
+- http://localhost:4000/api/statusInsumo/_:id_
 
-DELETE:
-http://localhost:4000/api/deleteUser/:id
+`DELETE`:
+
+- http://localhost:4000/api/deleteInsumo/_:id_
+
+### Permisos
+
+---
+
+`GET`:
+
+- http://localhost:4000/api/getAllPermisos
+- http://localhost:4000/api/getPermisoById/_:id_
+
+`POST`:
+
+- http://localhost:4000/api/createPermiso
+
+`PUT`:
+
+- http://localhost:4000/api/updatePermiso/_:id_
+
+`UPDATE`:
+
+- http://localhost:4000/api/statusPermiso/_:id_
+
+`DELETE`:
+
+- http://localhost:4000/api/deletePermiso/_:id_
+
+### Prenda
+
+---
+
+`GET`:
+
+- http://localhost:4000/api/getAllPrendas
+- http://localhost:4000/api/getPrendaById/_:id_
+
+`POST`:
+
+- http://localhost:4000/api/createPrenda
+
+`PUT`:
+
+- http://localhost:4000/api/updatePrenda/_:id_
+
+`UPDATE`:
+
+- http://localhost:4000/api/statusPrenda/_:id_
+
+`DELETE`:
+
+- http://localhost:4000/api/deletePrenda/_:id_
+
+### Rol
+
+---
+
+`GET`:
+
+- http://localhost:4000/api/getAllRoles
+- http://localhost:4000/api/getRolById/_:id_
+
+`POST`:
+
+- http://localhost:4000/api/createRol
+
+`PUT`:
+
+- http://localhost:4000/api/updateRol/_:id_
+
+`UPDATE`:
+
+- http://localhost:4000/api/statusRol/_:id_
+
+`DELETE`:
+
+- http://localhost:4000/api/deleteRol/_:id_
+
+### Usuarios
+
+---
+
+`GET`:
+
+- http://localhost:4000/api/getAllUsers
+- http://localhost:4000/api/getUserById/_:id_
+
+`POST`:
+
+- http://localhost:4000/api/createUser
+- http://localhost:4000/api/login
+- http://localhost:4000/api/forgotPassword
+- http://localhost:4000/api/resetPassword
+
+`PUT`:
+
+- http://localhost:4000/api/updateUser/_:id_
+
+`UPDATE`:
+
+- http://localhost:4000/api/statusUser/_:id_
+
+`DELETE`:
+
+- http://localhost:4000/api/deleteUser/_:id_
