@@ -1,0 +1,11 @@
+const PERMISO_CREAR = 1;
+const PERMISO_ACTUALIZAR = 2;
+const PERMISO_ELIMINAR = 3;
+const PERMISO_LISTAR = 4;
+
+module.exports = { 
+    PERMISO_CREAR, 
+    PERMISO_ACTUALIZAR, 
+    PERMISO_ELIMINAR, 
+    PERMISO_LISTAR 
+};
