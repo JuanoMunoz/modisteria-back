@@ -13,8 +13,8 @@ router.post('/createPrenda', createPrenda);
 
 router.put('/updatePrenda/:id', [], updatePrenda);
 
-router.update('/statusPrenda/:id', [], statusPrenda);
+router.put('/statusPrenda/:id', [], statusPrenda);
 
-router.destroy('/deletePrenda/:id', [], deletePrenda);
+router.delete('/deletePrenda/:id', [], deletePrenda);
 
 module.exports = router;

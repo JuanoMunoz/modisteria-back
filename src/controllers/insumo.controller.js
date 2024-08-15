@@ -57,11 +57,11 @@ exports.statusInsumo = async (req, res) => {
         res.status(500).json(error);
     }
 }
-exports.statusInsumo = async (req, res) => {
+exports.deleteInsumo = async (req, res) => {
     const { id } = req.params;
 
     try {
-        await statusInsumo(id);
+        await deleteInsumo(id);
         res.status(201).json({msg: 'insumo eliminado'});
     } catch (error) {
         res.status(500).json(error);

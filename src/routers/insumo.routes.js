@@ -13,8 +13,8 @@ router.post('/createInsumo', createInsumo);
 
 router.put('/updateInsumo/:id', [], updateInsumo);
 
-router.update('/statusInsumo/:id', [], statusInsumo);
+router.put('/statusInsumo/:id', [], statusInsumo);
 
-router.destroy('/deleteInsumo/:id', [], deleteInsumo);
+router.delete('/deleteInsumo/:id', [], deleteInsumo);
 
 module.exports = router;

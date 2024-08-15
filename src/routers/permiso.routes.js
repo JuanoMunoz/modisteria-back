@@ -13,8 +13,8 @@ router.post('/createPermiso', createPermiso);
 
 router.put('/updatePermiso/:id', [], updatePermiso);
 
-router.update('/statusPermiso/:id', [], statusPermiso);
+router.put('/statusPermiso/:id', [], statusPermiso);
 
-router.destroy('/deletePermiso/:id', [], deletePermiso);
+router.delete('/deletePermiso/:id', [], deletePermiso);
 
 module.exports = router;

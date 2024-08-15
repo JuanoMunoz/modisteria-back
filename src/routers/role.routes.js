@@ -13,8 +13,8 @@ router.post('/createRol', createRole);
 
 router.put('/updateRol/:id', [], updateRole);
 
-router.update('/statusRol/:id', [], statusRole);
+router.put('/statusRol/:id', [], statusRole);
 
-router.destroy('/deleteRol/:id', [], deleteRole);
+router.delete('/deleteRol/:id', [], deleteRole);
 
 module.exports = router;

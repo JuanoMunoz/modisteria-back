@@ -13,8 +13,8 @@ router.post('/createCategoria', createCategoria);
 
 router.put('/updateCategoria/:id', [], updateCategoria);
 
-router.update('/statusCategoria/:id', [], statusCategoria);
+router.put('/statusCategoria/:id', [], statusCategoria);
 
-router.destroy('/deleteCategoria/:id', [], deleteCategoria);
+router.delete('/deleteCategoria/:id', [], deleteCategoria);
 
 module.exports = router;

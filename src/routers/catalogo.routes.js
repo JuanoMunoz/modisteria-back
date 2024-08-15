@@ -13,8 +13,8 @@ router.post('/createCatalogo', createCatalogo);
 
 router.put('/updateCatalogo/:id', [], updateCatalogo);
 
-router.update('/statusCatalogo/:id', [], statusCatalogo);
+router.put('/statusCatalogo/:id', [], statusCatalogo);
 
-router.destroy('/deleteCatalogo/:id', [], deleteCatalogo);
+router.delete('/deleteCatalogo/:id', [], deleteCatalogo);
 
 module.exports = router;

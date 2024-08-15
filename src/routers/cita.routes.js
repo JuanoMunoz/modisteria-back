@@ -13,8 +13,8 @@ router.post('/createCita', createCita);
 
 router.put('/updateCita/:id', [], updateCita);
 
-router.update('/statusCita/:id', [], statusCita);
+router.put('/statusCita/:id', [], statusCita);
 
-router.destroy('/deleteCita/:id', [], deleteCita)
+router.delete('/deleteCita/:id', [], deleteCita)
 
 module.exports = router;

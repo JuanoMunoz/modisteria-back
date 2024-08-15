@@ -13,17 +13,14 @@ router.post('/createUser', [emailExist], createUser);
 
 router.put('/updateUser/:id', [], updateUser);
 
-router.update('/statusUser/:id', [], statusUser);
+router.put('/statusUser/:id', [], statusUser);
 
-router.destroy('/deleteUser/:id', [], deleteUser); 
+router.delete('/deleteUser/:id', [], deleteUser); 
 
 router.post('/login', [], login);
 
 router.post('/forgotPassword', [], forgotPassword)
 
 router.post('/resetPassword', [], resetPassword)
-
-
-
 
 module.exports = router;
