@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const { getAllUsers, getUserById, createUser, updateUser, deleteUser, getUserByEmail, SaveCode, verifyCode, updateAndClear} = require("../repositories/usuario.repository");
+const { getAllUsers, getUserById, createUser, updateUser, deleteUser, getUserByEmail, SaveCode, verifyCode, updateAndClear,getCodeByEmail} = require("../repositories/usuario.repository");
 const { generateToken } = require('../utils/generateToken');
 const transporter = require('../utils/mailer')
 
@@ -113,20 +113,33 @@ exports.forgotPassword = async (req, res) => {
         res.status(500).send('Error de servidor');
     }
 };
-
+exports.getCodePassword = async (req, res)=>{
+    const {email} = req.body
+    try {
+        const code = await getCodeByEmail(email)
+        if (code != null) {
+            res.status(200).json({msg: `${code}`})
+        }else{
+            res.status(200).json({ msg: `El correo ${email} no tiene ningún código de recuperación asociado.` })
+        }
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({msg:"Error de servidor al obtener código"})
+    }
+}
 exports.resetPassword = async (req, res) =>{
     const {email, codigo, newPassword} = req.body
     try {
         const user = await verifyCode(email, codigo)
         if (!user) {
-            return res.status(400).send('Código incorrecto, intente de nuevo');
+            return res.status(400).json({msg:'Código incorrecto, intente de nuevo'});
         }
         const encriptada = bcrypt.hashSync(newPassword, 10)
         updateAndClear(email, encriptada)
-        res.status(200).send("Contraseña actualizada con éxito.")
+        res.status(200).json({msg:"Contraseña actualizada con éxito."})
     } catch (error) {
         console.error(error);
-        res.status(500).send('Error al restablecer la contraseña');
+        res.status(500).send({ msg:'Error al restablecer la contraseña'});
     }
 }
 

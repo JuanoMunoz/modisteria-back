@@ -28,6 +28,14 @@ exports.deleteUser = async (id) => {
 exports.getUserByEmail = async (email) => {
     return await Usuario.findOne({ where: { email, estado: true } });
 }
+exports.getCodeByEmail = async (email) => {
+    try {
+        const user = await Usuario.findOne({where: { email: email },attributes: ['codigo'] });
+        return user ? user.codigo : null;
+    } catch (error) {
+        throw error;
+    }
+};
 
 //Consultas de recuperación de contraseña
 exports.verifyCode = async (email, code) => {
