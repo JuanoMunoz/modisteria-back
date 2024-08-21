@@ -1,4 +1,4 @@
-const { getAllCatalogo, getCatalogoById, createCatalogo, updateCatalogo, deleteCatalogo } = require("../repositories/catalogo.repository");
+const { getAllCatalogo, getCatalogoById, createCatalogo, updateCatalogo, deleteCatalogo, getCatalogoByCategoria } = require("../repositories/catalogo.repository");
 
 exports.getAllCatalogo = async (req, res) => {
   try {
@@ -18,6 +18,19 @@ exports.getCatalogoById = async (req, res) => {
         res.status(200).json(catalogo);
     } catch (error) {
         res.status(500).json(error);
+    }
+};
+exports.getCatalogoByCategoria = async (req, res) => {
+    const { categoriaId } = req.params;
+    try {
+        const catalogo = await getCatalogoByCategoria(categoriaId);
+        if (catalogo.length === 0) {
+            return res.status(404).json({ error: 'No se encontraron prendas en el catalogo para esta categoría' });
+        }
+        res.status(200).json(insumos);
+    } catch (error) {
+        console.error('Error al obtener catalogo:', error); 
+        res.status(500).json({ error: 'Error al obtener los catalogo', details: error.message });
     }
 };
 
