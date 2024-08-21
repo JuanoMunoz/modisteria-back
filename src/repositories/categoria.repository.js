@@ -8,6 +8,10 @@ exports.getCategoriaById = async (id) => {
     return await Categoria.findByPk(id);
 }
 
+exports.getCategoriaByTipo = async(tipo)=>{
+    return await Categoria.findAll({where:{tipo}})
+}
+
 exports.createCategoria = async (categoria) => {
     return await Categoria.create(categoria);
 }
@@ -21,7 +25,4 @@ exports.statusCategoria = async (id) => {
 }
 exports.deleteCategoria = async (id) => {
     return await Categoria.destroy( { where: { id } });
-}
-exports.getCategoriaByTipo = async(tipo)=>{
-    return await Categoria.findAll({where:{tipo}})
 }
