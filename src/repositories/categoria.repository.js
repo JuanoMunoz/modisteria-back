@@ -22,3 +22,6 @@ exports.statusCategoria = async (id) => {
 exports.deleteCategoria = async (id) => {
     return await Categoria.destroy( { where: { id } });
 }
+exports.getCategoriaByTipo = async(tipo)=>{
+    return await Categoria.findAll({where:{tipo}})
+}

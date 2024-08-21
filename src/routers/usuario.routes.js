@@ -6,7 +6,8 @@ const { validateRoleAdmin, emailExist } = require("../validators/role.validator"
 const router = Router();
 
 
-router.get('/getAllUsers', [verifyToken, validateRoleAdmin], getAllUsers);
+//router.get('/getAllUsers', [verifyToken, validateRoleAdmin], getAllUsers);
+router.get('/getAllUsers', [], getAllUsers);
 
 router.get('/getUserById/:id', [], getUserById);
 
