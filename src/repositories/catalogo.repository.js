@@ -1,4 +1,4 @@
-const { Catalogo } = require("../models");
+const { Catalogo, Categoria } = require("../models");
 
 exports.getAllCatalogo = async () => {
     return await Catalogo.findAll();
@@ -21,4 +21,11 @@ exports.statusCatalogo = async (id) => {
 }
 exports.deleteCatalogo = async (id) => {
     return await Catalogo.destroy({ where: { id } });
+}
+
+exports.getCatalogoByCategoria = async(categoriaId)=>{
+    return await Catalogo.findAll({
+        where:{categoriaId},
+        include:[{model: Categoria, as: "categorias", attributes:['nombre']}]
+    })
 }
