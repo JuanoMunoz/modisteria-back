@@ -1,4 +1,4 @@
-const { getAllCategorias, getCategoriaById, createCategoria, updateCategoria, deleteCategoria } = require("../repositories/categoria.repository");
+const { getAllCategorias, getCategoriaById, createCategoria, updateCategoria, deleteCategoria, getCategoriaByTipo } = require("../repositories/categoria.repository");
 
 exports.getAllCategorias = async (req, res) => {
   try {
@@ -63,5 +63,15 @@ exports.deleteCategoria = async (req, res) => {
         res.status(201).json({msg: 'categoria eliminada'});
     } catch (error) {
         res.status(500).json(error);
+    }
+}
+
+exports.getCategoriaByTipo = async(req, res)=>{
+    const {tipo} = req.params
+    try {
+        const categorias = await getCategoriaByTipo(tipo)
+        res.status(200).json(categorias)
+    } catch (error) {
+        res.status(500).json(error)
     }
 }

@@ -15,10 +15,10 @@ exports.getAllUsers = async (req, res) => {
 };
 
 exports.getUserById = async (req, res) => {
-    const { id_user } = req.params;
+    const { id} = req.params;
     try {
-        console.log(id_user);
-        const user = await getUserById(id_user);
+        console.log(id);
+        const user = await getUserById(id);
         res.status(200).json(user);
     } catch (error) {
         res.status(500).json(error);
