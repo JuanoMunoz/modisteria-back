@@ -1,6 +1,8 @@
 const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize(process.env.CONNECT_DB)
+const sequelize = new Sequelize(process.env.CONNECT_DB, {
+  dialect: 'postgres'
+})
 
 const connection = async () => {
   const { Usuario, Role } = require("../models");
