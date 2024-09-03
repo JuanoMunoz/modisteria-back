@@ -5,6 +5,7 @@ exports.generateToken = (user) => {
         email: user.email,
         nombre: user.nombre,
         apellido: user.apellido,
+        telefono: user.telefono
         role: user.roleId
     }
     const token = jwt.sign({ payload }, process.env.KEY_JWT , { expiresIn: '1h' });
