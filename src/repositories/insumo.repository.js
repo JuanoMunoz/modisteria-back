@@ -1,4 +1,4 @@
-const { Insumo } = require("../models");
+const { Insumo, Categoria } = require("../models");
 
 exports.getAllInsumos = async () => {
     return await Insumo.findAll();
@@ -22,3 +22,10 @@ exports.statusInsumo = async (id) => {
 exports.deleteInsumo = async (id) => {
     return await Insumo.destroy({ where: { id } });
 }
+exports.getInsumosByCategoria = async(categoriaId)=>{
+    return await Insumo.findAll({
+        where:{categoriaId},
+        include:[{model: Categoria, as: "categorias", attributes:['nombre']}]
+    })
+}
+
