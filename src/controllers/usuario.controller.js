@@ -103,7 +103,113 @@ exports.forgotPassword = async (req, res) => {
             from: 'camiloyarce11@gmail.com',
             to: email,
             subject: 'Código de recuperación',
-            text: `Usted ha solicitado un código para recuperar su contraseña, use el siguiente código para seguir con el proceso de recuperación: ${code}`
+            html:`<!DOCTYPE html>
+                <html lang="es">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Correo Electrónico</title>
+                    <style>
+                        .all {
+                            background-color: #252525;
+                            text-align: center;
+                            justify-content: center;
+                            margin: 0 auto;
+                            min-width: 400px;
+                            max-width: 500px;
+                            min-height: 500px;
+                            padding: 10px;
+                            border-radius: 8px;
+                        }
+                        .container {
+                            background-image: url('https://i.pinimg.com/564x/55/ac/eb/55aceb377ec84ed5487aa685a527d187.jpg');
+                            margin: 0 auto;
+                            min-width: 400px;
+                            max-width: 500px;
+                            min-height: 500px;
+                            border-radius: 8px;
+                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                            text-align: center;
+
+                        }
+                        .header {
+                            background-color: rgb(39, 38, 38);
+                            color: black;
+                            padding: 20px;
+                            border-radius: 8px 8px 0 0;
+                        }
+                        .header h1 {
+                            margin: 0;
+                            font-size: 30px;
+                        }
+                        .content {
+                            padding: 20px;
+                        }
+                        .content p {
+                            font-size: 18px;
+                            color: black;
+                            line-height: 1.5;
+                            margin: 20px 0;
+                        }
+                        .verification-code {
+                            font-size: 32px;
+                            font-weight: bold;
+                            letter-spacing: 2px;
+                            color: black;
+                            background-color: white;
+                            padding: 10px 20px;
+                            border-bottom: solid 5px black;
+                            display: inline-block;
+                            margin: 20px 0;
+                        }
+                        .verification-code-ag {
+                            font-size: 32px;
+                            font-weight: bold;
+                            letter-spacing: 2px;
+                            color: #ffffff;
+                            padding: 10px 6px;
+                            border-radius: 5px;
+                            display: inline-block;
+                            margin: 20px 0;
+                            justify-self: end;
+                        }
+                        .btn {
+                            display: inline-block;
+                            padding: 12px 25px;
+                            font-size: 16px;
+                            color: white;
+                            background-color: #4CAF50;
+                            text-decoration: none;
+                            border-radius: 5px;
+                            margin-top: 20px;
+                        }
+                        .footer {
+                            margin-top: 20px;
+                            font-size: 12px;
+                            color: #777;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="all">
+                        <div class="container">
+                        
+                        <div class="content">
+                            <h1>Modisteria D.L</h1>
+                            <hr>
+                            <p>Fue solicitado un código de verificación para recuperar tu contraseña</p>
+                            <p>Tu código de verificación es:</p>
+                            <div class="verification-code">${code}</div>
+                            <p>Ingresa este código para recuperar tu contraseña</p>
+                        </div>
+                        <div class="footer">
+                            <p>Si no solicitaste este correo, por favor ignóralo.</p>
+                            <p>&copy; 2024 Modisteria D.L. Todos los derechos reservados.</p>
+                        </div>
+                    </div>
+                    </div>
+                </body>
+                </html>`
         };
 
         await transporter.sendMail(emailOpts);
