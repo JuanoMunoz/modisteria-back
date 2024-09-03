@@ -72,7 +72,7 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
     try {
         const user = await getUserByEmail(email);
-        if(!user && !bcrypt.compareSync(password, user.password)) return res.status(401).json({msg: 'Datos invalidos'})
+        if(!user || !bcrypt.compareSync(password, user.password)) return res.status(401).json({msg: 'Datos invalidos'})
         const token = generateToken(user)
         res.status(200).json({token});
 
