@@ -1,6 +1,6 @@
 const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize(process.env.CONNECT_DB, {
+const sequelize = new Sequelize(process.env.CONNECT_DB, process.env.USER_DB, null, {
   dialect: 'postgres'
 })
 
