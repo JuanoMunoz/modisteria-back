@@ -1,5 +1,5 @@
 const { getAllCatalogo, getCatalogoById, createCatalogo, updateCatalogo, deleteCatalogo, getCatalogoByCategoria } = require("../repositories/catalogo.repository");
-const { helperImg, uploadToCloudinary } = require('../utils/image.js');
+const { helperImg, uploadToCloudinary, deleteFromCloudinary, getPublicIdFromUrl } = require('../utils/image.js');
 const fs = require('fs');
 const path = require('path');
 
@@ -44,24 +44,22 @@ exports.createCatalogo = async (req, res) => {
         }
 
         const { producto, precio, descripcion, talla, insumoId, categoriaId } = req.body;
-        console.log(`Nombre del archivo: ${req.file.filename}`);
 
-        // Procesar la imagen
-        const processedFileName = `resize-${req.file.filename}`;
-        await helperImg(req.file.path, processedFileName, 300);
-        const processedFilePath = `./optimize/${processedFileName}`;
+        // Procesar las tallas
+        const tallasProcesadas = req.body.talla.split(',').map(t => t.trim().toLowerCase());
 
-        console.log(`Archivo procesado en: ${processedFilePath}`);
+        // Procesar la imagen desde el buffer de Multer
+        const processedBuffer = await helperImg(req.file.buffer, 300);
 
-        // Subir a Cloudinary
-        const result = await uploadToCloudinary(processedFilePath);
+        // Subir la imagen procesada a Cloudinary
+        const result = await uploadToCloudinary(processedBuffer);
 
         // Crear el catálogo con la URL de la imagen
         const newCatalogo = {
             producto,
             precio,
             descripcion,
-            talla,
+            talla: tallasProcesadas,
             insumoId,
             categoriaId,
             imagen: result.url  // URL de la imagen subida a Cloudinary
@@ -79,11 +77,47 @@ exports.createCatalogo = async (req, res) => {
 exports.updateCatalogo = async (req, res) => {
     try {
         const { id } = req.params;
-        const catalogo = req.body;
-        await updateCatalogo(id, catalogo);
-        res.status(201).json({msg: 'catalogo actualizado exitosamente'});
+        const { producto, precio, descripcion, talla, insumoId, categoriaId } = req.body;
+
+        const tallasProcesadas = req.body.talla.split(',').map(t => t.trim().toLowerCase());
+
+        // Obtener el catálogo existente para acceder a la imagen previa
+        const existingCatalogo = await getCatalogoById(id);
+
+        let newImageUrl = existingCatalogo.imagen;  // Mantener la URL de la imagen actual si no hay nueva imagen
+
+        if (req.file) {
+            // Procesar la nueva imagen si se sube
+            const processedBuffer = await helperImg(req.file.buffer, 300);
+
+            // Subir la nueva imagen a Cloudinary
+            const result = await uploadToCloudinary(processedBuffer);
+            newImageUrl = result.url;  // Actualizar la URL de la imagen
+
+            // Eliminar la imagen previa de Cloudinary si existe
+            if (existingCatalogo.imagen) {
+                const publicId = getPublicIdFromUrl(existingCatalogo.imagen); // Extraer el public_id de la imagen anterior
+                await deleteFromCloudinary(publicId);  // Eliminar la imagen previa
+            }
+        }
+
+        // Actualizar el catálogo con los nuevos datos y la nueva URL de la imagen
+        const updatedCatalogo = {
+            producto,
+            precio,
+            descripcion,
+            talla: tallasProcesadas,
+            insumoId,
+            categoriaId,
+            imagen: newImageUrl  // Nueva URL de la imagen (o la misma si no se cambió)
+        };
+
+        await updateCatalogo(id, updatedCatalogo);
+        res.status(200).json({ msg: 'Catálogo actualizado exitosamente' });
+
     } catch (error) {
-        res.status(500).json(error);
+        console.error(`Error en updateCatalogo: ${error.message}`);
+        res.status(500).json({ success: false, message: 'Error al actualizar el catálogo' });
     }
 };
 
