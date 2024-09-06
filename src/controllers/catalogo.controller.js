@@ -1,4 +1,7 @@
 const { getAllCatalogo, getCatalogoById, createCatalogo, updateCatalogo, deleteCatalogo, getCatalogoByCategoria } = require("../repositories/catalogo.repository");
+const { helperImg, uploadToCloudinary } = require('../utils/image.js');
+const fs = require('fs');
+const path = require('path');
 
 exports.getAllCatalogo = async (req, res) => {
   try {
@@ -36,13 +39,40 @@ exports.getCatalogoByCategoria = async (req, res) => {
 
 exports.createCatalogo = async (req, res) => {
     try {
-        console.log(req.body);
-        const catalogo = req.body;
-        await createCatalogo(catalogo);
-        res.status(201).json({msg: 'catalogo creado exitosamente'});
+        if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+
+        const { producto, precio, descripcion, talla, insumoId, categoriaId } = req.body;
+        console.log(`Nombre del archivo: ${req.file.filename}`);
+
+        // Procesar la imagen
+        const processedFileName = `resize-${req.file.filename}`;
+        await helperImg(req.file.path, processedFileName, 300);
+        const processedFilePath = `./optimize/${processedFileName}`;
+
+        console.log(`Archivo procesado en: ${processedFilePath}`);
+
+        // Subir a Cloudinary
+        const result = await uploadToCloudinary(processedFilePath);
+
+        // Crear el catálogo con la URL de la imagen
+        const newCatalogo = {
+            producto,
+            precio,
+            descripcion,
+            talla,
+            insumoId,
+            categoriaId,
+            imagen: result.url  // URL de la imagen subida a Cloudinary
+        };
+
+        await createCatalogo(newCatalogo);
+        res.status(201).json({ msg: 'Catálogo creado exitosamente' });
+
     } catch (error) {
-        console.log(error);
-        res.status(500).json(error);
+        console.error(`Error en createCatalogo: ${error.message}`);
+        res.status(500).json({ success: false, message: 'Error al crear el catálogo' });
     }
 };
 
