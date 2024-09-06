@@ -6,5 +6,6 @@ const { Categoria } = require("./categoria.model");
 const { Catalogo } = require('./catalogo.model.js');
 const { Prenda } = require('./prenda.model.js');
 const { Cita } = require('./cita.model.js');
+const {CatalogoInsumos} = require('./catalogo_insumos.model.js')
 
-module.exports = { Usuario, Role, Permiso, Insumo, Categoria, Catalogo, Prenda, Cita };
+module.exports = { Usuario, Role, Permiso, Insumo, Categoria, Catalogo, Prenda, Cita, CatalogoInsumos };
