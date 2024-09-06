@@ -1,4 +1,4 @@
-const { getAllInsumos, getInsumoById, createInsumo, updateInsumo, deleteInsumo } = require("../repositories/insumo.repository");
+const { getAllInsumos, getInsumoById, createInsumo, updateInsumo, deleteInsumo, getInsumosByCategoria } = require("../repositories/insumo.repository");
 
 exports.getAllInsumos = async (req, res) => {
   try {
@@ -9,6 +9,21 @@ exports.getAllInsumos = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
+exports.getInsumosByCategoria = async (req, res) => {
+    const { categoriaId } = req.params;
+    try {
+        const insumos = await getInsumosByCategoria(categoriaId);
+        if (insumos.length === 0) {
+            return res.status(404).json({ error: 'No se encontraron insumos para esta categoría' });
+        }
+        res.status(200).json(insumos);
+    } catch (error) {
+        console.error('Error al obtener insumos:', error); 
+        res.status(500).json({ error: 'Error al obtener los insumos', details: error.message });
+    }
+};
+
 
 exports.getInsumoById = async (req, res) => {
     const { id } = req.params;
