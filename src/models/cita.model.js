@@ -19,6 +19,10 @@ const Cita = sequelize.define('Cita',
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
+    objetivo: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },
   {
     timestamps: false,
