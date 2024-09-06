@@ -6,7 +6,7 @@ const sequelize = new Sequelize(process.env.CONNECT_DB, {
 });
 
 const connection = async () => {
-  const { Usuario, Role } = require("../models");
+  // const { Usuario, Role } = require("../models");
   try {
     await sequelize.authenticate();
     // await User.sync({ force: false, alter: true });
