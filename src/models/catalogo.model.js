@@ -1,44 +1,37 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/connection.js');
 
-const Catalogo = sequelize.define('Catalogo',
-  {
+const Catalogo = sequelize.define('Catalogo', {
     producto: {
-      type: DataTypes.STRING,
-      allowNull: false,
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     precio: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+        type: DataTypes.INTEGER,
+        allowNull: false,
     },
     descripcion: {
-      type: DataTypes.STRING,
-      allowNull: false,
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     imagen: {
-      type: DataTypes.STRING,
-      allowNull: false,
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     talla: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    insumoId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+        type: DataTypes.STRING,
+        allowNull: false,
     },
     categoriaId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+        type: DataTypes.INTEGER,
+        allowNull: false,
     },
     estado: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
     },
-  },
-  {
+}, {
     timestamps: false,
-  },
-);
+});
 
 module.exports = { Catalogo };
