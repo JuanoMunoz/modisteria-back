@@ -8,7 +8,7 @@ const storage = multer.memoryStorage();
 const upload = multer({
     storage: storage,
     fileFilter: function (req, file, cb) {
-        console.log('Archivo recibido:', file);
+        // console.log('Archivo recibido:', file);
         cb(null, true);
     }
 });
@@ -16,7 +16,7 @@ const upload = multer({
 // Procesar la imagen desde el buffer en memoria y subirla a Cloudinary
 async function helperImg(buffer, width) {
     try {
-        console.log('Procesando imagen desde buffer en memoria');
+        // console.log('Procesando imagen desde buffer en memoria');
         const processedBuffer = await sharp(buffer)
             .resize(width)
             .toBuffer();  // Convertir la imagen procesada en buffer nuevamente
@@ -29,7 +29,7 @@ async function helperImg(buffer, width) {
 
 async function uploadToCloudinary(buffer) {
     try {
-        console.log('Subiendo archivo directamente a Cloudinary');
+        // console.log('Subiendo archivo directamente a Cloudinary');
         
         // Usamos una promesa para capturar el resultado de Cloudinary
         return new Promise((resolve, reject) => {
@@ -38,7 +38,7 @@ async function uploadToCloudinary(buffer) {
                     console.error('Error subiendo archivo a Cloudinary:', error);
                     return reject(error);
                 }
-                console.log('Resultado de Cloudinary:', result);
+                // console.log('Resultado de Cloudinary:', result);
                 resolve(result);  // Devolver el resultado
             });
             
@@ -54,9 +54,9 @@ async function uploadToCloudinary(buffer) {
 //Eliminar imagen de cloudinary
 async function deleteFromCloudinary(publicId) {
     try {
-        console.log(`Eliminando imagen con public_id: ${publicId} de Cloudinary`);
+        // console.log(`Eliminando imagen con public_id: ${publicId} de Cloudinary`);
         await cloudinary.uploader.destroy(publicId);
-        console.log('Imagen eliminada de Cloudinary');
+        // console.log('Imagen eliminada de Cloudinary');
     } catch (error) {
         console.error(`Error eliminando la imagen de Cloudinary: ${error.message}`);
         throw error;

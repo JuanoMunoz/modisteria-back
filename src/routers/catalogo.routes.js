@@ -15,7 +15,7 @@ router.get('/getCatalogoByCategoria/:categoriaId', [], getCatalogoByCategoria)
 
 router.post('/createCatalogo', upload.single('file'), createCatalogo);
 
-router.put('/updateCatalogo/:id', [], updateCatalogo);
+router.put('/updateCatalogo/:id', upload.single('file'), updateCatalogo);
 
 router.put('/statusCatalogo/:id', [], statusCatalogo);
 
