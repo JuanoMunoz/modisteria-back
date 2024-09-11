@@ -7,7 +7,7 @@ const {upload} = require('../utils/image.js')
 
 const router = Router();
 
-router.get('/getAllCatalogo', [verifyToken, validateRoleAdmin], getAllCatalogo);
+router.get('/getAllCatalogo', getAllCatalogo);
 
 router.get('/getCatalogoById/:id', [], getCatalogoById);
 

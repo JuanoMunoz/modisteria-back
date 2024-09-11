@@ -28,7 +28,6 @@ app.use('*', (req, res) => {
 
 (async () => { await connection(); })();
 
-
 app.listen(port, () => {
     console.log(`El server está funcionando en el puerto ${port}`);
 });

@@ -43,7 +43,7 @@ exports.createCatalogo = async (req, res) => {
             return res.status(400).json({ error: 'No file uploaded' });
         }
 
-        const { producto, precio, descripcion, talla, insumoId, categoriaId } = req.body;
+        const { producto, precio, descripcion, talla, categoriaId } = req.body;
         console.log(`Nombre del archivo: ${req.file.filename}`);
 
         // Procesar la imagen
