@@ -60,7 +60,6 @@ exports.createCatalogo = async (req, res) => {
             precio,
             descripcion,
             talla: tallasProcesadas,
-            insumoId,
             categoriaId,
             imagen: result.url  // URL de la imagen subida a Cloudinary
         };
@@ -77,7 +76,7 @@ exports.createCatalogo = async (req, res) => {
 exports.updateCatalogo = async (req, res) => {
     try {
         const { id } = req.params;
-        const { producto, precio, descripcion, talla, insumoId, categoriaId } = req.body;
+        const { producto, precio, descripcion, talla, categoriaId } = req.body;
 
         // Obtener el catálogo existente para acceder a la imagen previa
         const existingCatalogo = await getCatalogoById(id);
@@ -98,7 +97,6 @@ exports.updateCatalogo = async (req, res) => {
             precio: precio || existingCatalogo.precio,
             descripcion: descripcion || existingCatalogo.descripcion,
             talla: tallasProcesadas || existingCatalogo.talla,
-            insumoId: insumoId || existingCatalogo.insumoId,
             categoriaId: categoriaId || existingCatalogo.categoriaId,
             imagen: existingCatalogo.imagen
         };
