@@ -1,4 +1,4 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes, Sequelize } = require('sequelize');
 const { sequelize } = require('../database/connection.js');
 
 const Catalogo = sequelize.define('Catalogo', {
@@ -19,8 +19,12 @@ const Catalogo = sequelize.define('Catalogo', {
         allowNull: false,
     },
     talla: {
-        type: DataTypes.STRING,
-        allowNull: false,
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      allowNull: false,
+    },
+    insumoId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     categoriaId: {
         type: DataTypes.INTEGER,
