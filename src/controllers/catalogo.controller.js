@@ -5,7 +5,7 @@ const path = require('path');
 
 exports.getAllCatalogo = async (req, res) => {
     try {
-        const limit = 5
+        const limit = req.query.limit || 9
         const page = req.query.page || 1
         const offset = (page - 1) * limit
         const catalogo = await getAllCatalogo(offset,limit);
