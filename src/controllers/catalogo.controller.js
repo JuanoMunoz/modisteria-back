@@ -4,9 +4,12 @@ const fs = require('fs');
 const path = require('path');
 
 exports.getAllCatalogo = async (req, res) => {
-  try {
-    const catalogo = await getAllCatalogo();
-    res.status(200).json(catalogo);
+    try {
+        const limit = 5
+        const page = req.query.page || 1
+        const offset = (page - 1) * limit
+        const catalogo = await getAllCatalogo(offset,limit);
+        res.status(200).json(catalogo);
   } catch (error) {
     console.log(error);
     res.status(500).json(error);

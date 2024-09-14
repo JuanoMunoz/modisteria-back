@@ -1,7 +1,13 @@
 const { Catalogo, Categoria } = require("../models");
 
-exports.getAllCatalogo = async () => {
-    return await Catalogo.findAll();
+exports.getAllCatalogo = async (offset, limit) => {
+    console.log(offset,limit);
+    
+    return await Catalogo.findAndCountAll({
+        offset,
+        limit,
+        order: [["id","DESC"]]
+    });
 };
 
 exports.getCatalogoById = async (id) => {
