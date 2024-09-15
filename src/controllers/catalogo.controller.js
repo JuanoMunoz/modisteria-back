@@ -5,10 +5,11 @@ const path = require('path');
 
 exports.getAllCatalogo = async (req, res) => {
     try {
-        const limit = req.query.limit || 9
-        const page = req.query.page || 1
+        const priceLimit = parseInt(req.query.price) || 250000
+        const limit =  parseInt(req.query.limit ) || 9
+        const page =  parseInt(req.query.page ) || 1
         const offset = (page - 1) * limit
-        const catalogo = await getAllCatalogo(offset,limit);
+        const catalogo = await getAllCatalogo(offset,limit,priceLimit);
         res.status(200).json(catalogo);
   } catch (error) {
     console.log(error);
