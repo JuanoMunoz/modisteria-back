@@ -29,7 +29,6 @@ const Cita = sequelize.define('Cita',
   },
 );
 
-//Relacion cita y prenda
 
 
 module.exports = { Cita };
