@@ -1,7 +1,17 @@
 const { Catalogo, Categoria } = require("../models");
+const { Op } = require("sequelize");
 
-exports.getAllCatalogo = async () => {
-    return await Catalogo.findAll();
+exports.getAllCatalogo = async (offset, limit, priceLimit) => {
+    console.log(offset,limit);
+    
+    return await Catalogo.findAndCountAll({
+        offset,
+        limit,
+        order: [["id", "DESC"]],
+        where: {
+            precio:  { [Op.lte]: priceLimit }
+        }
+    });
 };
 
 exports.getCatalogoById = async (id) => {
