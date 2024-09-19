@@ -5,7 +5,7 @@ const { verifyToken } = require("../utils/verifyToken");
 const { validateRoleAdmin } = require("../validators/role.validator");
 const router = Router();
 
-router.get('/getAllCitas', [verifyToken, validateRoleAdmin], getAllCitas);
+router.get('/getAllCitas', [], getAllCitas);
 
 router.get('/getCitaById/:id', [], getCitaById);
 
