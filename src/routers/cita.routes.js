@@ -9,6 +9,7 @@ router.get('/getAllCitas', [], getAllCitas);
 
 router.get('/getCitaById/:id', [], getCitaById);
 
+//router.post('/createCita',[verifyToken, validateRoleAdmin], createCita);
 router.post('/createCita', createCita);
 
 router.put('/updateCita/:id', [], updateCita);

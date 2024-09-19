@@ -4,6 +4,11 @@ const { Catalogo } = require('./catalogo.model.js');
 const { Insumo } = require('./insumo.model.js');
 
 const CatalogoInsumos = sequelize.define('CatalogoInsumos', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
     cantidad_utilizada: {
         type: DataTypes.INTEGER,
         allowNull: false
