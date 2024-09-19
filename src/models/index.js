@@ -8,5 +8,6 @@ const { Prenda } = require('./prenda.model.js');
 const { Cita } = require('./cita.model.js');
 const { CatalogoInsumos } = require('./catalogo_insumos.model.js')
 const { Domicilio } = require('./domicilio.model.js')
+const { PQRS } = require('./pqrs.model.js')
 
-module.exports = { Usuario, Role, Permiso, Insumo, Categoria, Catalogo, Prenda, Cita, CatalogoInsumos, Domicilio };
+module.exports = { Usuario, Role, Permiso, Insumo, Categoria, Catalogo, Prenda, Cita, CatalogoInsumos, Domicilio, PQRS };

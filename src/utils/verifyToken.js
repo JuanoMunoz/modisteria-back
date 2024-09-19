@@ -7,9 +7,11 @@ exports.verifyToken = (req, res, next) => {
 
     jwt.verify(token, process.env.KEY_JWT, (err, decoded) => {
         if (err) return res.status(401).json({ msg: 'No está autorizado' });
-        req.userId = decoded.payload.id;
-        req.email = decoded.payload.email;
-        req.role = decoded.payload.role;
+        req.user = {
+            id: decoded.id,
+            email: decoded.email,
+            role: decoded.role
+        };
         next();
     });
 }
