@@ -1,4 +1,4 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes, Sequelize } = require('sequelize');
 const { sequelize } = require('../database/connection.js');
 
 const Prenda = sequelize.define('Prenda',
@@ -8,7 +8,7 @@ const Prenda = sequelize.define('Prenda',
       allowNull: false,
     },
     talla: {
-      type: DataTypes.STRING,
+      type: Sequelize.ARRAY(Sequelize.STRING),
       allowNull: false,
     },
     imagen: {

@@ -21,7 +21,8 @@ app.use('/api/catalogos', require('./routers/catalogo.routes'));
 app.use('/api/prendas', require('./routers/prenda.routes'));
 app.use('/api/citas', require('./routers/cita.routes'));
 app.use('/api/catalogoinsumos', require('./routers/catalogoinsumos.routes'));
-
+app.use('/api/domicilios', require('./routers/domicilio.routes'));
+app.use('/api/pqrs', require('./routers/pqrs.routes'));
 
 app.use('*', (req, res) => {
     res.status(404).json({ message: 'Ruta no encontrada, por favor contacta el administrador' });
