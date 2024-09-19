@@ -1,4 +1,5 @@
 const { getAllCatalogo, getCatalogoById, createCatalogo, updateCatalogo, deleteCatalogo, getCatalogoByCategoria } = require("../repositories/catalogo.repository");
+const {createCatIns} = require('../repositories/catalogo_insumos.repository.js')
 const { helperImg, uploadToCloudinary, deleteFromCloudinary, getPublicIdFromUrl } = require('../utils/image.js');
 const fs = require('fs');
 const path = require('path');
@@ -46,31 +47,31 @@ exports.createCatalogo = async (req, res) => {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });
         }
-
-        const { producto, precio, descripcion, talla, categoriaId } = req.body;
-
-        // Procesar las tallas
+        const { producto, precio, descripcion, talla, categoriaId, cantidad_utilizada, insumoId} = req.body;
         const tallasProcesadas = req.body.talla.split(',').map(t => t.trim().toLowerCase());
-        
-        // Procesar la imagen desde el buffer de Multer
         const processedBuffer = await helperImg(req.file.buffer, 300);
-
-        // Subir la imagen procesada a Cloudinary
         const result = await uploadToCloudinary(processedBuffer);
-
-        // Crear el catálogo con la URL de la imagen
         const newCatalogo = {
             producto,
             precio,
             descripcion,
             talla: tallasProcesadas,
             categoriaId,
-            imagen: result.url  // URL de la imagen subida a Cloudinary
+            imagen: result.url 
         };
+        const catalogoCreado = await createCatalogo(newCatalogo);
+        const catalogoId = catalogoCreado['id']
+        const catalogo_insumo = {
+            cantidad_utilizada: cantidad_utilizada,
+            insumo_id:insumoId,
+            catalogo_id:catalogoId
+        }
+        const catInsCreado = await createCatIns(catalogo_insumo)
+        if (catInsCreado) {
+            console.log("agregado a catalogo insumos")
+        }
 
-        await createCatalogo(newCatalogo);
         res.status(201).json({ msg: 'Catálogo creado exitosamente' });
-
     } catch (error) {
         console.error(`Error en createCatalogo: ${error.message}`);
         res.status(500).json({ success: false, message: 'Error al crear el catálogo' });
