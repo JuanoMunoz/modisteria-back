@@ -8,8 +8,10 @@ exports.getDomicilioById = async (id) => {
     return await Domicilio.findByPk(id);
 };
 
-exports.getDomiciliosByCliente = async (usuarioId) => {
-    return await Domicilio.findAll({ where: { usuarioId } });
+exports.getDomiciliosByDomiciliario = async (usuarioId) => {
+    return await Domicilio.findAll({where: {
+      usuarioId: usuarioId 
+    }});
 };
 
 exports.createDomicilio = async (domicilio) => {

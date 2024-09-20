@@ -1,4 +1,4 @@
-const { getAllDomicilios, getDomicilioById, getDomiciliosByCliente, createDomicilio, updateDomicilio, deleteDomicilio } = require("../repositories/domicilio.repository");
+const { getAllDomicilios, getDomicilioById, getDomiciliosByDomiciliario, createDomicilio, updateDomicilio, deleteDomicilio } = require("../repositories/domicilio.repository");
 
 exports.getAllDomicilios = async (req, res) => {
     try {
@@ -22,12 +22,12 @@ exports.getDomicilioById = async (req, res) => {
     }
 };
 
-exports.getDomiciliosByCliente = async (req, res) => {
+exports.getDomiciliosByDomiciliario = async (req, res) => {
     const { usuarioId } = req.params;
     try {
-        const domicilios = await getDomiciliosByCliente(usuarioId);
+        const domicilios = await getDomiciliosByDomiciliario(usuarioId);
         if (domicilios.length === 0) {
-            return res.status(404).json({ msg: 'No se encontraron domicilios para este cliente.' });
+            return res.status(404).json({ msg: 'No se encontraron domicilios de este domiciliario.' });
         }
         res.status(200).json(domicilios);
     } catch (error) {
