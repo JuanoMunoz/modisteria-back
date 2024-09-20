@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/connection.js');
 const { Domicilio } = require('./domicilio.model.js');
+const { Pedido } = require('./pedido.model.js');
 
 
 const Usuario = sequelize.define('Usuario',
@@ -55,5 +56,10 @@ const Usuario = sequelize.define('Usuario',
 //Relacion usuario y domicilio
 Usuario.hasMany(Domicilio, {foreignKey: 'usuarioId', sourceKey: 'id', as: 'domicilio'});
 Domicilio.belongsTo(Usuario, {foreignKey: 'usuarioId', targetKey: 'id', as: 'usuario'});
+
+//Relación usuario y carrito (pedido)
+Usuario.hasMany(Pedido, {foreignKey:'usuarioId', sourceKey:'id', as:"pedido"})
+Pedido.belongsTo(Usuario, {foreignKey:'usuarioId', sourceKey:'id', as:'usuario'})
+
 
 module.exports = { Usuario };

@@ -9,5 +9,6 @@ const { Verificacion } = require('./verificacion.model.js');
 const { CatalogoInsumos } = require('./catalogo_insumos.model.js')
 const { Domicilio } = require('./domicilio.model.js')
 const { PQRS } = require('./pqrs.model.js')
+const { Pedido } = require('./pedido.model.js')
 
-module.exports = { Usuario, Role, Permiso, Insumo, Categoria, Catalogo, Cita, CatalogoInsumos, Domicilio, PQRS, Verificacion };
+module.exports = { Usuario, Role, Permiso, Insumo, Categoria, Catalogo, Cita, CatalogoInsumos, Domicilio, PQRS, Verificacion, Pedido};
