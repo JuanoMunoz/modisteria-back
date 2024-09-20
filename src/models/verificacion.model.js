@@ -11,7 +11,7 @@ const Verificacion = sequelize.define('Verificacion', {
     },
     estado:{
         type:DataTypes.BOOLEAN,
-        defaultValue:false
+        defaultValue:true
     },
     expiracion:{
         type:DataTypes.DATE,
