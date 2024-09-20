@@ -18,7 +18,7 @@ app.use('/api/permisos', require('./routers/permiso.routes'));
 app.use('/api/insumos', require('./routers/insumo.routes'));
 app.use('/api/categorias', require('./routers/categoria.routes'));
 app.use('/api/catalogos', require('./routers/catalogo.routes'));
-app.use('/api/prendas', require('./routers/prenda.routes'));
+app.use('/api/pedidos', require('./routers/pedido.routes'));
 app.use('/api/citas', require('./routers/cita.routes'));
 app.use('/api/catalogoinsumos', require('./routers/catalogoinsumos.routes'));
 app.use('/api/domicilios', require('./routers/domicilio.routes'));

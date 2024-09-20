@@ -2,7 +2,6 @@ const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/connection.js');
 const { Insumo } = require('./insumo.model.js');
 const { Catalogo } = require('./catalogo.model.js');
-const { Prenda } = require('./prenda.model.js');
 
 const Categoria = sequelize.define('Categorias',
   {
@@ -36,9 +35,6 @@ Insumo.belongsTo(Categoria, {foreignKey: 'categoriaId', targetKey: 'id', as: 'ca
 Categoria.hasMany(Catalogo, {foreignKey: 'categoriaId', sourceKey: 'id', as: 'catalogo'});
 Catalogo.belongsTo(Categoria, {foreignKey: 'categoriaId', targetKey: 'id', as: 'categorias'});
 
-//Relacion categoria y prenda
-Categoria.hasMany(Prenda, {foreignKey: 'categoriaId', sourceKey: 'id', as: 'prendas'});
-Prenda.belongsTo(Categoria, {foreignKey: 'categoriaId', targetKey: 'id', as: 'categorias'});
 
 
 module.exports = { Categoria };

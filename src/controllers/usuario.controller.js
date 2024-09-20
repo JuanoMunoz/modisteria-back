@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const { getAllUsers, getUserById, createUser, updateUser, deleteUser, getUserByEmail, SaveCode, verifyCode, updateAndClear,getCodeByEmail} = require("../repositories/usuario.repository");
+const {createVerify} = require('../repositories/verificacion.repository')
 const { generateToken } = require('../utils/generateToken');
 const transporter = require('../utils/mailer')
 
@@ -25,18 +26,135 @@ exports.getUserById = async (req, res) => {
     }
 };
 
-exports.createUser = async (req, res) => {
-    try {
-        console.log(req.body);
-        const {password, ...user} = req.body;
-        user.password = bcrypt.hashSync(password, 10);
-        await createUser(user);
-        res.status(201).json({msg: 'usuario creado exitosamente.'});
-    } catch (error) {
-        console.log(error);
-        res.status(500).json(error);
+exports.createUser = async (req, res) =>{
+    const {email, nombre, telefono, password, roleId} = req.body
+    function codigoRandom() {
+        return Math.floor(100000 + Math.random() * 900000).toString();
     }
-};
+    try {
+        const codigo = codigoRandom()
+        const expiracion = new Date();
+        expiracion.setMinutes(expiracion.getMinutes() + 10)
+        createVerify(email, codigo, expiracion)
+        const emailOpts = {
+            from: 'modistadonaluz@gmail.com',
+            to: email,
+            subject: 'Código de verificación',
+            html:`<!DOCTYPE html>
+                <html lang="es">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Correo Electrónico</title>
+                    <style>
+                        .all {
+                            background-color: #252525;
+                            text-align: center;
+                            justify-content: center;
+                            margin: 0 auto;
+                            min-width: 400px;
+                            max-width: 500px;
+                            min-height: 500px;
+                            padding: 10px;
+                            border-radius: 8px;
+                        }
+                        .container {
+                            background-image: url('https://i.pinimg.com/564x/55/ac/eb/55aceb377ec84ed5487aa685a527d187.jpg');
+                            margin: 0 auto;
+                            min-width: 400px;
+                            max-width: 500px;
+                            min-height: 500px;
+                            border-radius: 8px;
+                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                            text-align: center;
+
+                        }
+                        .header {
+                            background-color: rgb(39, 38, 38);
+                            color: black;
+                            padding: 20px;
+                            border-radius: 8px 8px 0 0;
+                        }
+                        .header h1 {
+                            margin: 0;
+                            font-size: 30px;
+                        }
+                        .content {
+                            padding: 20px;
+                        }
+                        .content p {
+                            font-size: 18px;
+                            color: black;
+                            line-height: 1.5;
+                            margin: 20px 0;
+                        }
+                        .verification-code {
+                            font-size: 32px;
+                            font-weight: bold;
+                            letter-spacing: 2px;
+                            color: black;
+                            background-color: white;
+                            padding: 10px 20px;
+                            border-bottom: solid 5px black;
+                            display: inline-block;
+                            margin: 20px 0;
+                        }
+                        .verification-code-ag {
+                            font-size: 32px;
+                            font-weight: bold;
+                            letter-spacing: 2px;
+                            color: #ffffff;
+                            padding: 10px 6px;
+                            border-radius: 5px;
+                            display: inline-block;
+                            margin: 20px 0;
+                            justify-self: end;
+                        }
+                        .btn {
+                            display: inline-block;
+                            padding: 12px 25px;
+                            font-size: 16px;
+                            color: white;
+                            background-color: #4CAF50;
+                            text-decoration: none;
+                            border-radius: 5px;
+                            margin-top: 20px;
+                        }
+                        .footer {
+                            margin-top: 20px;
+                            font-size: 12px;
+                            color: #777;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="all">
+                        <div class="container">
+                        
+                        <div class="content">
+                            <h1>Modisteria D.L</h1>
+                            <hr>
+                            <p>Este es tu código de verificación para seguir en el proceso de registro</p>
+                            <p>Tu código de verificación es:</p>
+                            <div class="verification-code">${codigo}</div>
+                            <p>Ingresa este código para continuar con tu registro.</p>
+                        </div>
+                        <div class="footer">
+                            <p>Si no has sido tu, ignora este correo.</p>
+                            <p>&copy; 2024 Modisteria D.L. Todos los derechos reservados.</p>
+                        </div>
+                    </div>
+                    </div>
+                </body>
+                </html>`
+        };
+        await transporter.sendMail(emailOpts)
+        res.status(200).json({msg:'Código de verificación enviado'})
+    } catch (error) {
+        
+    }
+    
+}
 
 exports.updateUser = async (req, res) => {
     const { id } = req.params;
@@ -100,7 +218,7 @@ exports.forgotPassword = async (req, res) => {
         expiracion.setMinutes(expiracion.getMinutes() + 10)
         SaveCode(email, code, expiracion)
         const emailOpts = {
-            from: 'camiloyarce11@gmail.com',
+            from: 'modistadonaluz@gmail.com',
             to: email,
             subject: 'Código de recuperación',
             html:`<!DOCTYPE html>

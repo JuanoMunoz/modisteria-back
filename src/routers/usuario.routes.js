@@ -11,7 +11,7 @@ router.get('/getAllUsers', [], getAllUsers);
 
 router.get('/getUserById/:id', [], getUserById);
 
-router.post('/createUser', [emailExist], createUser);
+router.post('/createUser', createUser);
 
 router.put('/updateUser/:id', [], updateUser);
 
