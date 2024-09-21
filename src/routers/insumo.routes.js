@@ -1,8 +1,6 @@
 // const router = require("express").Router();
 const { Router } = require("express");
 const { getAllInsumos, getInsumoById, createInsumo, updateInsumo, deleteInsumo, statusInsumo, getInsumosByCategoria} = require("../controllers/insumo.controller");
-const { verifyToken } = require("../utils/verifyToken");
-const { validateRoleAdmin } = require("../validators/role.validator");
 const router = Router();
 
 router.get('/getAllInsumos', [], getAllInsumos);
