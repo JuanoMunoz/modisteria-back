@@ -183,8 +183,8 @@ exports.getCodeVerification = async (req, res) =>{
 
 exports.verifyUser = async(req, res) =>{
     const {email, codigo, nombre, telefono, password, roleId} = req.body
+    const savedCode = await getCodigoByEmail(email) 
     try {
-        const savedCode = await getCodigoByEmail(email)
         if (savedCode =! codigo) {
             return res.status(400).json({msg:"El código de verificiación ingresado no coincide, intente de nuevo"})
         }
