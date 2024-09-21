@@ -13,8 +13,8 @@ exports.createPedido = async (pedido) => {
     return await Pedido.create(pedido);
 }
 
-exports.updatePedido = async (id, pedido) => {
-    return await Pedido.update(pedido, { where: { id } });
+exports.updatePedido = async (idPedido, pedido) => {
+    return await Pedido.update(pedido, { where: { idPedido } });
 }
 
 exports.statusPedido = async (id) => {

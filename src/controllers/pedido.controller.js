@@ -34,12 +34,12 @@ exports.createPedido = async (req, res) => {
 };
 
 exports.updatePedido = async (req, res) => {
-    const { id } = req.params;
+    const { idPedido } = req.params;
     const Pedido = req.body;
 
 
     try {
-        await updatePedido(id, Pedido);
+        await updatePedido(idPedido, Pedido);
         res.status(201).json({msg: 'Pedido actualizada exitosamente'});
     } catch (error) {
         res.status(500).json(error);
