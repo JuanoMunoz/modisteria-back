@@ -11,7 +11,7 @@ const Cotizacion = sequelize.define('Cotizacion', {
         allowNull: false,
     },
     carritoId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
     },
     estado: {
