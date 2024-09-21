@@ -4,7 +4,7 @@ const { sequelize } = require('../database/connection.js');
 
 const Pedido = sequelize.define('Pedido',
   {
-    id: {
+    idPedido: {
     type: DataTypes.STRING,
     primaryKey: true,
     allowNull: false,
