@@ -185,7 +185,7 @@ exports.verifyUser = async(req, res) =>{
     const {email, codigo, nombre, telefono, password, roleId} = req.body
     const savedCode = await getCodigoByEmail(email) 
     try {
-        if (savedCode =! codigo) {
+        if (savedCode !== codigo) {
             return res.status(400).json({msg:"El código de verificiación ingresado no coincide, intente de nuevo"})
         }
         const encriptada = bcrypt.hashSync(password, 10)
