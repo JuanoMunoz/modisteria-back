@@ -417,4 +417,3 @@ exports.resetPassword = async (req, res) =>{
         res.status(500).send({ msg:'Error al restablecer la contraseña'});
     }
 }
-

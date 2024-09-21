@@ -1,8 +1,8 @@
 // const router = require("express").Router();
 const { Router } = require("express");
 const { getAllUsers, getUserById, createUser, updateUser, statusUser, deleteUser, login, forgotPassword, resetPassword, getCodePassword, getCodeVerification, verifyUser} = require("../controllers/usuario.controller");
-const { verifyToken } = require("../utils/verifyToken");
-const { validateRoleAdmin, emailExist } = require("../validators/role.validator");
+// const { verifyToken } = require("../utils/verifyToken");
+// const { validateRoleAdmin, emailExist } = require("../validators/role.validator");
 const router = Router();
 
 

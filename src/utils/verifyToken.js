@@ -10,8 +10,9 @@ exports.verifyToken = (req, res, next) => {
         req.user = {
             id: decoded.id,
             email: decoded.email,
-            role: decoded.role
+            roleId: decoded.roleId
         };
+        
         next();
     });
 }
