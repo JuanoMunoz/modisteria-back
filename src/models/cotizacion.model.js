@@ -10,8 +10,8 @@ const Cotizacion = sequelize.define('Cotizacion', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    carritoId: {
-        type: DataTypes.STRING,
+    pedidoId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
     },
     estado: {
@@ -19,6 +19,7 @@ const Cotizacion = sequelize.define('Cotizacion', {
         defaultValue: true,
     },
 }, {
+    tableName: 'Cotizaciones',
     timestamps: false,
 });
 

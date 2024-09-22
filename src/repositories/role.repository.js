@@ -16,8 +16,8 @@ exports.createRole = async (nombre, permisosId) => {
     return await Role.create({nombre, permisosId});
 }
 
-exports.updateRole = async (id, role) => {
-    return await Role.update(role, { where: { id } });
+exports.updateRole = async (id, nombre, permisosId) => {
+    return await Role.update({nombre, permisosId}, { where: { id } });
 }
 
 exports.statusRole = async (id) => {

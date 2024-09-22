@@ -1,21 +1,21 @@
 const { getAllCatalogo, getCatalogoById, createCatalogo, updateCatalogo, deleteCatalogo, getCatalogoByCategoria } = require("../repositories/catalogo.repository");
-const {createCatIns} = require('../repositories/catalogo_insumos.repository.js')
+const { createCatIns } = require('../repositories/catalogo_insumos.repository.js')
 const { helperImg, uploadToCloudinary, deleteFromCloudinary, getPublicIdFromUrl } = require('../utils/image.js');
-const fs = require('fs');
-const path = require('path');
+// const fs = require('fs');
+// const path = require('path');
 
 exports.getAllCatalogo = async (req, res) => {
     try {
         const priceLimit = parseInt(req.query.price) || 250000
-        const limit =  parseInt(req.query.limit ) || 9
-        const page =  parseInt(req.query.page ) || 1
+        const limit = parseInt(req.query.limit) || 9
+        const page = parseInt(req.query.page) || 1
         const offset = (page - 1) * limit
-        const catalogo = await getAllCatalogo(offset,limit,priceLimit);
+        const catalogo = await getAllCatalogo(offset, limit, priceLimit);
         res.status(200).json(catalogo);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json(error);
-  }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
 };
 
 exports.getCatalogoById = async (req, res) => {
@@ -37,7 +37,7 @@ exports.getCatalogoByCategoria = async (req, res) => {
         }
         res.status(200).json(insumos);
     } catch (error) {
-        console.error('Error al obtener catalogo:', error); 
+        console.error('Error al obtener catalogo:', error);
         res.status(500).json({ error: 'Error al obtener los catalogo', details: error.message });
     }
 };
@@ -47,7 +47,7 @@ exports.createCatalogo = async (req, res) => {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });
         }
-        const { producto, precio, descripcion, talla, categoriaId, cantidad_utilizada, insumoId} = req.body;
+        const { producto, precio, descripcion, talla, categoriaId, cantidad_utilizada, insumoId } = req.body;
         const tallasProcesadas = req.body.talla.split(',').map(t => t.trim().toLowerCase());
         const processedBuffer = await helperImg(req.file.buffer, 300);
         const result = await uploadToCloudinary(processedBuffer);
@@ -57,14 +57,14 @@ exports.createCatalogo = async (req, res) => {
             descripcion,
             talla: tallasProcesadas,
             categoriaId,
-            imagen: result.url 
+            imagen: result.url
         };
         const catalogoCreado = await createCatalogo(newCatalogo);
         const catalogoId = catalogoCreado['id']
         const catalogo_insumo = {
             cantidad_utilizada: cantidad_utilizada,
-            insumo_id:insumoId,
-            catalogo_id:catalogoId
+            insumo_id: insumoId,
+            catalogo_id: catalogoId
         }
         const catInsCreado = await createCatIns(catalogo_insumo)
         if (catInsCreado) {
@@ -136,7 +136,7 @@ exports.statusCatalogo = async (req, res) => {
     try {
         const { id } = req.params;
         await statusCatalogo(id);
-        res.status(201).json({msg: 'catalogo inactivo'});
+        res.status(201).json({ msg: 'catalogo inactivo' });
     } catch (error) {
         res.status(500).json(error);
     }
@@ -145,7 +145,7 @@ exports.deleteCatalogo = async (req, res) => {
     try {
         const { id } = req.params;
         await deleteCatalogo(id);
-        res.status(201).json({msg: 'catalogo eliminado'});
+        res.status(201).json({ msg: 'catalogo eliminado' });
     } catch (error) {
         res.status(500).json(error);
     }
