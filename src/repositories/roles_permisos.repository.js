@@ -7,5 +7,6 @@ exports.createRolesPermiso = async (roleId, permisosId) => {
 }
 
 exports.deleteRolesPermiso = async (id) => {
-    return await RolesPermisos.destroy( { where: { id } });
+    return await RolesPermisos.destroy( { where: { roleId: id } });
 }
+

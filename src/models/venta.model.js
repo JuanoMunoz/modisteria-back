@@ -18,7 +18,7 @@ const Venta = sequelize.define('Venta', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    carritoId: {
+    idPedido: {
         type: DataTypes.INTEGER,
         allowNull: true,
     },

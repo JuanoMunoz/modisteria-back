@@ -25,17 +25,39 @@ exports.getDomicilioById = async (req, res) => {
 exports.getDomiciliosByDomiciliario = async (req, res) => {
     const { usuarioId } = req.params;
     try {
-        const domicilios = await getDomiciliosByDomiciliario(usuarioId);
-        if (domicilios.length === 0) {
-            return res.status(404).json({ msg: 'No se encontraron domicilios de este domiciliario.' });
+        if (usuarioId == req.userId) {
+            const domicilios = await getDomiciliosByDomiciliario(usuarioId);
+
+            if (domicilios.length === 0) {
+                return res.status(404).json({ msg: 'No se encontraron domicilios de este domiciliario.' });
+            }
+            res.status(200).json(domicilios);
         }
-        res.status(200).json(domicilios);
     } catch (error) {
         console.error(error);
         res.status(500).json({ msg: 'Error al obtener los domicilios.' });
     }
 };
 
+// necesito un pedidoId.usuarioId para saber el cliente que realizó el pedido y que esos sean los unicos registros que me aparezcan
+// exports.getDomiciliosByCliente = async (req, res) => {
+//     const { clienteId } = req.params;
+
+//     try {
+//         const domicilios = await getDomiciliosByCliente(clienteId);
+
+//         if (domicilios.length === 0) {
+//             return res.status(404).json({ msg: 'No se encontraron domicilios de este cliente.' });
+//         }
+
+//         res.status(200).json(domicilios);
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ msg: 'Error al obtener los domicilios.' });
+//     }
+// };
+
+//Modificar el create para que el usuarioId que se use se req.userId del token 
 exports.createDomicilio = async (req, res) => {
     const domicilio = req.body;
 

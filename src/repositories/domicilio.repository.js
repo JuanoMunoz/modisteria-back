@@ -14,6 +14,12 @@ exports.getDomiciliosByDomiciliario = async (usuarioId) => {
     }});
 };
 
+// exports.getDomiciliosByCliente = async (usuarioId) => {
+//     return await Domicilio.findAll({where: {
+//       usuarioId: usuarioId 
+//     }});
+// };
+
 exports.createDomicilio = async (domicilio) => {
     const user = await Usuario.findByPk(domicilio.usuarioId);
     
