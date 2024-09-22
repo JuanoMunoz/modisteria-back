@@ -42,7 +42,7 @@ exports.updatePedido = async (req, res) => {
         await updatePedido(idPedido, Pedido);
         res.status(201).json({msg: 'Pedido actualizada exitosamente'});
     } catch (error) {
-        res.status(500).json(error);
+        res.status(400).json(error);
     }
 };
 
@@ -61,6 +61,6 @@ exports.deletePedido = async (req, res) => {
         await deletePedido(id);
         res.status(201).json({msg: 'Pedido eliminada'});
     } catch (error) {
-        res.status(500).json(error);
+        res.status(400).json(error);
     }
 }

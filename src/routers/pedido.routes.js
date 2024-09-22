@@ -8,7 +8,7 @@ router.get('/getPedidoById/:id', [], getPedidoById);
 
 router.post('/createPedido', createPedido);
 
-router.put('/updatePedido/:id', [], updatePedido);
+router.put('/updatePedido/:idPedido', [], updatePedido);
 
 
 router.delete('/deletePedido/:id', [], deletePedido); 

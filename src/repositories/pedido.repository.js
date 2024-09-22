@@ -5,8 +5,8 @@ exports.getAllPedido = async() =>{
     return await Pedido.findAll();
 }
 
-exports.getPedidoById = async (id) => {
-    return await Pedido.findByPk(id);
+exports.getPedidoById = async (usuarioId) => {
+    return await Pedido.findAll({where:{usuarioId}});
 }
 
 exports.createPedido = async (pedido) => {
