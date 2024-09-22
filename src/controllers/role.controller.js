@@ -1,5 +1,5 @@
 const { getAllRoles, getRoleById, createRole, updateRole, deleteRole } = require("../repositories/role.repository");
-const { createRolesPermiso } = require("../repositories/roles_permisos.repository");
+const { createRolesPermiso, deleteRolesPermiso } = require("../repositories/roles_permisos.repository");
 
 exports.getAllRoles = async (req, res) => {
   try {
@@ -44,11 +44,15 @@ exports.createRole = async (req, res) => {
 //otra opcion db delete todos los permisos que tengan el rol 1 y crear todos permisos de nuevo 
 exports.updateRole = async (req, res) => {
     const { id } = req.params;
-    const role = req.body;
+    const { nombre, permisosId } = req.body;  
     try {
-        await updateRole(id, role);
-        res.status(201).json({msg: 'rol actualizado exitosamente'});
+        await deleteRolesPermiso(id);
+        await updateRole(id, nombre, permisosId );
+        await createRolesPermiso(id, permisosId);
+
+        res.status(201).json({ msg: 'Rol actualizado exitosamente' });
     } catch (error) {
+        console.error(error);
         res.status(500).json(error);
     }
 };

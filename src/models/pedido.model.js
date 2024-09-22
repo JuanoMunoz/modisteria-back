@@ -1,5 +1,8 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/connection.js');
+const { Venta } = require('./venta.model.js');
+const { Domicilio } = require('./domicilio.model.js');
+const { Cotizacion } = require('./cotizacion.model.js');
 
 
 const Pedido = sequelize.define('Pedido',
@@ -35,6 +38,16 @@ const Pedido = sequelize.define('Pedido',
   },
 );
 
+//Relacion venta y carrito (pedido)
+Pedido.hasOne(Venta, { foreignKey: 'idPedido' });
+Venta.belongsTo(Pedido, { foreignKey: 'idPedido' });
 
+//Relacion domicilio y carrito (pedido)
+Pedido.hasOne(Domicilio, { foreignKey: 'pedidoId' });
+Domicilio.belongsTo(Pedido, { foreignKey: 'pedidoId' });
+
+//Relacion cotizacion y carrito (pedido)
+Pedido.hasOne(Cotizacion, { foreignKey: 'pedidoId' });
+Cotizacion.belongsTo(Pedido, { foreignKey: 'pedidoId' });
 
 module.exports = { Pedido };
