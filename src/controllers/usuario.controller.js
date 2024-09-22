@@ -7,7 +7,6 @@ const { Verificacion } = require('../models/verificacion.model.js');
 
 exports.getAllUsers = async (req, res) => {
   try {
-    console.log(req.email);
     const users = await getAllUsers();
     res.status(200).json(users);
   } catch (error) {

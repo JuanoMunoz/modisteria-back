@@ -1,15 +1,19 @@
-const { Role } = require("../models");
+const { Role, RolesPermisos } = require("../models");
 
 exports.getAllRoles = async () => {
     return await Role.findAll();
 };
 
 exports.getRoleById = async (id) => {
-    return await Role.findByPk(id);
+    return await Role.findOne({ 
+        where: { id },
+        include: [ { model: RolesPermisos, as: "roles_permisos"} ], 
+        //raw: true Devuelve el objeto literal desde la bd
+    });
 }
 
-exports.createRole = async (role) => {
-    return await Role.create(role);
+exports.createRole = async (nombre, permisosId) => {
+    return await Role.create({nombre, permisosId});
 }
 
 exports.updateRole = async (id, role) => {

@@ -13,5 +13,6 @@ const { Pedido } = require('./pedido.model.js')
 const { Estado } = require('./estado.model.js')
 const { Venta } = require('./venta.model.js')
 const { Cotizacion } = require('./cotizacion.model.js')
+const { RolesPermisos } = require('./roles_permisos.model.js')
 
-module.exports = { Usuario, Role, Permiso, Insumo, Categoria, Catalogo, Cita, CatalogoInsumos, Domicilio, PQRS, Verificacion, Pedido, Estado, Venta, Cotizacion };
+module.exports = { Usuario, Role, Permiso, Insumo, Categoria, Catalogo, Cita, CatalogoInsumos, Domicilio, PQRS, Verificacion, Pedido, Estado, Venta, Cotizacion, RolesPermisos };
