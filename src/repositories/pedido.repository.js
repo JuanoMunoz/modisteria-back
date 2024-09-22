@@ -20,6 +20,6 @@ exports.updatePedido = async (idPedido, pedido) => {
 exports.statusPedido = async (id) => {
     return await Pedido.update({ estado: false }, { where: { id } });
 }
-exports.deletePedido = async (id) => {
-    return await Pedido.destroy( { where: { id } });
+exports.deletePedido = async (idPedido) => {
+    return await Pedido.destroy( { where: { idPedido } });
 }
