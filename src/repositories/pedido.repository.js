@@ -1,4 +1,4 @@
-const {Pedido} = require('../models');
+const {Pedido, Catalogo} = require('../models');
 const {Op} = require('sequelize');
 
 exports.getAllPedido = async() =>{
@@ -6,7 +6,7 @@ exports.getAllPedido = async() =>{
 }
 
 exports.getPedidoById = async (usuarioId) => {
-    return await Pedido.findAll({where:{usuarioId}});
+    return await Pedido.findAll({ where: { usuarioId }, include: { model: Catalogo, as:'catalogo',attributes:["producto","imagen"]}});
 }
 
 exports.createPedido = async (pedido) => {

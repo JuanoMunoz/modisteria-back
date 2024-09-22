@@ -3,6 +3,7 @@ const { sequelize } = require('../database/connection.js');
 const { Venta } = require('./venta.model.js');
 const { Domicilio } = require('./domicilio.model.js');
 const { Cotizacion } = require('./cotizacion.model.js');
+const {Catalogo} = require('./catalogo.model.js')
 
 
 const Pedido = sequelize.define('Pedido',
@@ -49,5 +50,9 @@ Domicilio.belongsTo(Pedido, { foreignKey: 'pedidoId' });
 //Relacion cotizacion y carrito (pedido)
 Pedido.hasOne(Cotizacion, { foreignKey: 'pedidoId' });
 Cotizacion.belongsTo(Pedido, { foreignKey: 'pedidoId' });
+
+Pedido.belongsTo(Catalogo, { foreignKey: 'catalogoId', as: 'catalogo' });
+Catalogo.hasMany(Pedido, { foreignKey: 'catalogoId', as: 'pedidos' });
+
 
 module.exports = { Pedido };
