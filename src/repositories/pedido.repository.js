@@ -6,7 +6,7 @@ exports.getAllPedido = async() =>{
 }
 
 exports.getPedidoById = async (usuarioId) => {
-    return await Pedido.findAll({ where: { usuarioId }, include: { model: Catalogo, as:'catalogo',attributes:["producto","imagen"]}});
+    return await Pedido.findAll({ where: { usuarioId }, include: { model: Catalogo, as:'catalogo',attributes:["producto","imagen","precio"]}});
 }
 
 exports.createPedido = async (pedido) => {
