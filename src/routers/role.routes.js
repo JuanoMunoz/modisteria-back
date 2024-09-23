@@ -1,8 +1,6 @@
 // const router = require("express").Router();
 const { Router } = require("express");
 const { getAllRoles, getRoleById, createRole, updateRole, deleteRole, statusRole} = require("../controllers/role.controller");
-const { verifyToken } = require("../utils/verifyToken");
-const { validateRoleAdmin } = require("../validators/role.validator");
 const router = Router();
 
 router.get('/getAllRoles', [], getAllRoles);

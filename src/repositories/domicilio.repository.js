@@ -8,9 +8,17 @@ exports.getDomicilioById = async (id) => {
     return await Domicilio.findByPk(id);
 };
 
-exports.getDomiciliosByCliente = async (usuarioId) => {
-    return await Domicilio.findAll({ where: { usuarioId } });
+exports.getDomiciliosByDomiciliario = async (usuarioId) => {
+    return await Domicilio.findAll({where: {
+      usuarioId: usuarioId 
+    }});
 };
+
+// exports.getDomiciliosByCliente = async (usuarioId) => {
+//     return await Domicilio.findAll({where: {
+//       usuarioId: usuarioId 
+//     }});
+// };
 
 exports.createDomicilio = async (domicilio) => {
     const user = await Usuario.findByPk(domicilio.usuarioId);
@@ -18,13 +26,13 @@ exports.createDomicilio = async (domicilio) => {
     if (user) {
       const rol = await Role.findByPk(user.roleId);
   
-      if (rol && rol.nombre === 'Domiciliario') {
+      if (rol && rol.nombre === 'domiciliario') {
         // El usuario tiene el rol 'Domiciliario', se puede crear el domicilio
         return await Domicilio.create(domicilio);
       } else {
         // Si el usuario no tiene el rol 'Domiciliario', lanzamos un error
         const domiciliarios = await Usuario.findAll({
-          include: { model: Role, where: { nombre: 'Domiciliario' } }
+          include: { model: Role, where: { nombre: 'domiciliario' } }
         });
   
         if (domiciliarios.length === 0) {

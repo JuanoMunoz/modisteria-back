@@ -1,6 +1,6 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const { sequelize } = require('../database/connection.js');
-const {Pedido} = require('./pedido.model.js')
+
 
 const Catalogo = sequelize.define('Catalogo', {
     producto: {
@@ -36,8 +36,7 @@ const Catalogo = sequelize.define('Catalogo', {
 });
 
 //Relación catálogo a pedido
-Pedido.hasMany(Catalogo, {foreignKey:'catalogoId', sourceKey:'id', as:'catalogo'})
-Catalogo.belongsTo(Pedido, {foreignKey:'catalogoId', sourceKey:'id', as:'cedido'})
+
 
 module.exports = { Catalogo };
 

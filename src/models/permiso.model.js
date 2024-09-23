@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/connection.js');
-const { Role } = require('./role.model.js');
+const { RolesPermisos } = require('./roles_permisos.model.js');
 
 const Permiso = sequelize.define('Permiso',
   {
@@ -22,8 +22,11 @@ const Permiso = sequelize.define('Permiso',
   },
 );
 
-Permiso.belongsToMany(Role, { through: 'Roles_Permisos' });
-Role.belongsToMany(Permiso, { through: 'Roles_Permisos' });
+// Permiso.belongsToMany(Role, { through: 'Roles_Permisos' });
+// Role.belongsToMany(Permiso, { through: 'Roles_Permisos' });
 
+Permiso.hasMany(RolesPermisos, {foreignKey: 'roleId', sourceKey: 'id', as: 'roles_permisos'});
+RolesPermisos.belongsTo(Permiso, {foreignKey: 'roleId', targetKey: 'id', as: 'permiso'});
 
 module.exports = { Permiso };
+

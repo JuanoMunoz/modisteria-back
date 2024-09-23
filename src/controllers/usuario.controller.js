@@ -1,13 +1,12 @@
 const bcrypt = require('bcrypt');
 const { getAllUsers, getUserById, createUser, updateUser, deleteUser, getUserByEmail, SaveCode, verifyCode, updateAndClear,getCodeByEmail} = require("../repositories/usuario.repository.js");
-const {createVerify, getCodigoByEmail} = require('../repositories/verificacion.repository.js')
+const {createVerify, updateVerify, getCodigoByEmail,getEmailIsInVerification} = require('../repositories/verificacion.repository.js')
 const { generateToken } = require('../utils/generateToken');
 const transporter = require('../utils/mailer');
 const { Verificacion } = require('../models/verificacion.model.js');
 
 exports.getAllUsers = async (req, res) => {
   try {
-    console.log(req.email);
     const users = await getAllUsers();
     res.status(200).json(users);
   } catch (error) {
@@ -49,7 +48,8 @@ exports.createUser = async (req, res) => {
             codigo: code,
             expiracion: expiracion
         };
-        await createVerify(nuevaVerificacion);
+        const isMailInVerification = await getEmailIsInVerification(email)
+        isMailInVerification ? await updateVerify(nuevaVerificacion): await createVerify(nuevaVerificacion);
         const mailOptions = {
             from: "modistadonaluz@gmail.com",
             to: email,
@@ -182,9 +182,9 @@ exports.getCodeVerification = async (req, res) =>{
 
 exports.verifyUser = async(req, res) =>{
     const {email, codigo, nombre, telefono, password, roleId} = req.body
+    const savedCode = await getCodigoByEmail(email) 
     try {
-        savedCode = getCodigoByEmail(email)
-        if (savedCode =! codigo) {
+        if (savedCode !== codigo) {
             return res.status(400).json({msg:"El código de verificiación ingresado no coincide, intente de nuevo"})
         }
         const encriptada = bcrypt.hashSync(password, 10)
@@ -416,4 +416,3 @@ exports.resetPassword = async (req, res) =>{
         res.status(500).send({ msg:'Error al restablecer la contraseña'});
     }
 }
-

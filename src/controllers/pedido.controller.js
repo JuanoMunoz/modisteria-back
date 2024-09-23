@@ -20,6 +20,7 @@ exports.getPedidoById = async (req, res) => {
     }
 };
 
+//Modificar el create para que el usuarioId que se use se req.userId del token 
 exports.createPedido = async (req, res) => {
     const Pedido = req.body;
 
@@ -34,15 +35,15 @@ exports.createPedido = async (req, res) => {
 };
 
 exports.updatePedido = async (req, res) => {
-    const { id } = req.params;
+    const { idPedido } = req.params;
     const Pedido = req.body;
 
 
     try {
-        await updatePedido(id, Pedido);
+        await updatePedido(idPedido, Pedido);
         res.status(201).json({msg: 'Pedido actualizada exitosamente'});
     } catch (error) {
-        res.status(500).json(error);
+        res.status(400).json(error);
     }
 };
 
@@ -61,6 +62,6 @@ exports.deletePedido = async (req, res) => {
         await deletePedido(id);
         res.status(201).json({msg: 'Pedido eliminada'});
     } catch (error) {
-        res.status(500).json(error);
+        res.status(400).json(error);
     }
 }

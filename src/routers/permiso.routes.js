@@ -1,8 +1,6 @@
 // const router = require("express").Router();
 const { Router } = require("express");
 const { getAllPermisos, getPermisoById, createPermiso, updatePermiso, deletePermiso, statusPermiso} = require("../controllers/permiso.controller");
-const { verifyToken } = require("../utils/verifyToken");
-const { validateRoleAdmin } = require("../validators/role.validator");
 const router = Router();
 
 router.get('/getAllPermisos', [], getAllPermisos);
