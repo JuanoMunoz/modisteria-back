@@ -17,11 +17,7 @@ const PQRS = sequelize.define('PQRS', {
     usuarioId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-    },
-    estado: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
-    },
+    }
 }, {
     timestamps: false,
 });

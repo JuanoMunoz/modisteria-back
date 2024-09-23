@@ -16,10 +16,10 @@ const Cita = sequelize.define('Cita',
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    estado: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
-    },
+    estadoId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+  },
     objetivo: {
       type: DataTypes.STRING,
       allowNull: false,
