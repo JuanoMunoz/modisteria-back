@@ -17,10 +17,10 @@ const Categoria = sequelize.define('Categorias',
       type: DataTypes.ENUM('insumo', 'prenda'),
       allowNull: false,
     },
-    estado: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
-    },
+    estadoId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+  },
   },
   {
     timestamps: false,

@@ -14,9 +14,9 @@ const Insumo = sequelize.define('Insumo', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    estado: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
+    estadoId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
     },
 }, {
     timestamps: false,

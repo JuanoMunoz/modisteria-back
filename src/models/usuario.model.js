@@ -31,9 +31,9 @@ const Usuario = sequelize.define('Usuario',
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    estado: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
+    estadoId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
     },
     codigo:{
       type:DataTypes.STRING,

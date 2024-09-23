@@ -12,10 +12,10 @@ const Role = sequelize.define('Role',
       type: DataTypes.ARRAY(DataTypes.INTEGER),
       allowNull: false,
     },
-    estado: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
-    },
+    estadoId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+  },
   },
   {
     timestamps: false,

@@ -12,10 +12,10 @@ const Permiso = sequelize.define('Permiso',
       type: DataTypes.STRING,
       allowNull: false,
     },
-    estado: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
-    },
+    estadoId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+  },
   },
   {
     timestamps: false,
