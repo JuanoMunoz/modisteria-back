@@ -1,22 +1,24 @@
 // const router = require("express").Router();
 const { Router } = require("express");
 const { getAllCatalogo, getCatalogoById, createCatalogo, updateCatalogo, deleteCatalogo, statusCatalogo, getCatalogoByCategoria} = require("../controllers/catalogo.controller");
-const {upload} = require('../utils/image.js')
+const {upload} = require('../utils/image.js');
+const { verifyToken } = require("../utils/verifyToken.js");
+const { validateRolPermisoCatalogo } = require("../validators/validations.validator.js");
 
 const router = Router();
 
-router.get('/getAllCatalogo', [], getAllCatalogo);
+router.get('/getAllCatalogo', [verifyToken, validateRolPermisoCatalogo], getAllCatalogo);
 
-router.get('/getCatalogoById/:id', [], getCatalogoById);
+router.get('/getCatalogoById/:id', [verifyToken, validateRolPermisoCatalogo], getCatalogoById);
 
-router.get('/getCatalogoByCategoria/:categoriaId', [], getCatalogoByCategoria)
+router.get('/getCatalogoByCategoria/:categoriaId', [verifyToken, validateRolPermisoCatalogo], getCatalogoByCategoria)
 
-router.post('/createCatalogo', upload.single('file'), createCatalogo);
+router.post('/createCatalogo', [verifyToken, validateRolPermisoCatalogo, upload.single('file')], createCatalogo);
 
-router.put('/updateCatalogo/:id', upload.single('file'), updateCatalogo);
+router.put('/updateCatalogo/:id', [verifyToken, validateRolPermisoCatalogo, upload.single('file')], updateCatalogo);
 
-router.put('/statusCatalogo/:id', [], statusCatalogo);
+router.put('/statusCatalogo/:id', [verifyToken, validateRolPermisoCatalogo], statusCatalogo);
 
-router.delete('/deleteCatalogo/:id', [], deleteCatalogo);
+router.delete('/deleteCatalogo/:id', [verifyToken, validateRolPermisoCatalogo], deleteCatalogo);
 
 module.exports = router;

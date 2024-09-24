@@ -25,12 +25,12 @@ exports.getRoleById = async (req, res) => {
 
 exports.createRole = async (req, res) => {
     // const role = req.body;
-    const { nombre, permisosId } = req.body;
+    const { nombre, permisosId, estadoId } = req.body;
     console.log("nombre", nombre);
     console.log("permisos", permisosId);
 
     try {
-        const newRole = await createRole(nombre, permisosId);
+        const newRole = await createRole(nombre, permisosId, estadoId);
         createRolesPermiso(newRole.id, permisosId);
         res.status(201).json({msg: 'rol creado exitosamente'});
     } catch (error) {
@@ -44,10 +44,10 @@ exports.createRole = async (req, res) => {
 //otra opcion db delete todos los permisos que tengan el rol 1 y crear todos permisos de nuevo 
 exports.updateRole = async (req, res) => {
     const { id } = req.params;
-    const { nombre, permisosId } = req.body;  
+    const { nombre, permisosId, estadoId } = req.body;  
     try {
         await deleteRolesPermiso(id);
-        await updateRole(id, nombre, permisosId );
+        await updateRole(id, nombre, permisosId, estadoId );
         await createRolesPermiso(id, permisosId);
 
         res.status(201).json({ msg: 'Rol actualizado exitosamente' });

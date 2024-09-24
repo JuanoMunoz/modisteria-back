@@ -38,7 +38,6 @@ exports.updateCategoria = async (req, res) => {
     const { id } = req.params;
     const categoria = req.body;
 
-
     try {
         await updateCategoria(id, categoria);
         res.status(201).json({msg: 'categoria actualizada exitosamente'});

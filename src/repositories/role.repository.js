@@ -12,12 +12,12 @@ exports.getRoleById = async (id) => {
     });
 }
 
-exports.createRole = async (nombre, permisosId) => {
-    return await Role.create({nombre, permisosId});
+exports.createRole = async (nombre, permisosId, estadoId) => {
+    return await Role.create({nombre, permisosId, estadoId});
 }
 
-exports.updateRole = async (id, nombre, permisosId) => {
-    return await Role.update({nombre, permisosId}, { where: { id } });
+exports.updateRole = async (id, nombre, permisosId, estadoId) => {
+    return await Role.update({nombre, permisosId, estadoId}, { where: { id } });
 }
 
 exports.statusRole = async (id) => {
