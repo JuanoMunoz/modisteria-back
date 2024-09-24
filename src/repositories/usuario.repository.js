@@ -26,7 +26,7 @@ exports.deleteUser = async (id) => {
 }
 
 exports.getUserByEmail = async (email) => {
-    return await Usuario.findOne({ where: { email} });
+    return await Usuario.findOne({ where: { email},include: [{model: Role, as: 'role'}] });
 }
 exports.getCodeByEmail = async (email) => {
     try {

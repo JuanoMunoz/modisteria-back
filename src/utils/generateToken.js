@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { use } = require('./mailer');
 exports.generateToken = (user) => {
     payload = {
         id: user.id,
@@ -6,8 +7,8 @@ exports.generateToken = (user) => {
         nombre: user.nombre,
         telefono: user.telefono,
         password: user.password,
-        roleId: user.roleId,
-        direccion: user.direccion
+        direccion: user.direccion,
+        role: user.role
     }
     const token = jwt.sign({ payload }, process.env.KEY_JWT , { expiresIn: '1h' });
     return token;
