@@ -10,6 +10,6 @@ exports.generateToken = (user) => {
         direccion: user.direccion,
         role: user.role
     }
-    const token = jwt.sign({ payload }, process.env.KEY_JWT , { expiresIn: '1h' });
+    const token = jwt.sign({ payload }, process.env.KEY_JWT , { expiresIn: '20h' });
     return token;
 }
