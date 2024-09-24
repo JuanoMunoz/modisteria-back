@@ -36,6 +36,20 @@ exports.getCodeByEmail = async (email) => {
         throw error;
     }
 };
+exports.getRole = async (roleId) => {
+    try {
+        const role = await Role.findOne({ 
+            where: { id: roleId }, 
+            attributes: ['nombre'] 
+        });        
+        if (!role) {
+            throw new Error('Rol no encontrado');
+        }
+        return role.nombre; 
+    } catch (error) {
+        throw error;
+    }
+}
 
 //Consultas de recuperación de contraseña
 exports.verifyCode = async (email, code) => {
@@ -63,3 +77,4 @@ exports.updateAndClear = async (email, encriptada) => {
         return { success: false, error };
     }
 };
+
