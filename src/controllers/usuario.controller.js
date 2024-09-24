@@ -181,7 +181,7 @@ exports.getCodeVerification = async (req, res) =>{
 }
 
 exports.verifyUser = async(req, res) =>{
-    const {email, codigo, nombre, telefono, password, roleId} = req.body
+    const {email, codigo, nombre, telefono, password, roleId, estadoId} = req.body
     const savedCode = await getCodigoByEmail(email) 
     try {
         if (savedCode !== codigo) {
@@ -193,11 +193,11 @@ exports.verifyUser = async(req, res) =>{
             telefono: telefono,
             password: encriptada,
             nombre: nombre,
-            roleId:roleId
-
+            roleId:roleId,
+            estadoId:estadoId
         }
         createUser(newUser)
-        res.status(200).json({msg:"Usuario creado con éxito"})
+        res.status(200).json({msg:"Usuario creado con éxito",newUser})
     } catch (error) {
         console.error(error);
         res.status(500).send({ msg:'Error al crear usuario'});
