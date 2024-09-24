@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const { getAllUsers, getUserById, createUser, updateUser, deleteUser, getUserByEmail, SaveCode, verifyCode, updateAndClear,getCodeByEmail} = require("../repositories/usuario.repository.js");
+const { getAllUsers, getUserById, createUser, updateUser, deleteUser, getUserByEmail, SaveCode, verifyCode, updateAndClear,getCodeByEmail, getRole} = require("../repositories/usuario.repository.js");
 const {createVerify, updateVerify, getCodigoByEmail,getEmailIsInVerification} = require('../repositories/verificacion.repository.js')
 const { generateToken } = require('../utils/generateToken');
 const transporter = require('../utils/mailer');
@@ -187,6 +187,7 @@ exports.verifyUser = async(req, res) =>{
         if (savedCode !== codigo) {
             return res.status(400).json({msg:"El código de verificiación ingresado no coincide, intente de nuevo"})
         }
+        const rolNombre = await getRole(roleId)
         const encriptada = bcrypt.hashSync(password, 10)
         const newUser = {
             email:email,
@@ -196,13 +197,21 @@ exports.verifyUser = async(req, res) =>{
             roleId:roleId,
             estadoId:estadoId
         }
+        const UserWrol = {
+            email:email,
+            telefono: telefono,
+            password: encriptada,
+            nombre: nombre,
+            roleId:roleId,
+            estadoId:estadoId,
+            rol: rolNombre
+        }
         createUser(newUser)
-        res.status(200).json({msg:"Usuario creado con éxito",newUser})
+        res.status(200).json({msg:"Usuario creado con éxito",UserWrol})
     } catch (error) {
         console.error(error);
         res.status(500).send({ msg:'Error al crear usuario'});
-    }
-    
+    } 
 }
 
 
