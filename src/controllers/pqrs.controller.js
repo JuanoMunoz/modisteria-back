@@ -1,4 +1,4 @@
-const { getAllPQRS, getPQRSById, createPQRS, updatePQRS, deletePQRS, getPQRSsByCategoria } = require("../repositories/pqrs.repository");
+const { getAllPQRS, getPQRSById, createPQRS, updatePQRS, deletePQRS } = require("../repositories/pqrs.repository");
 
 exports.getAllPQRS = async (req, res) => {
   try {

@@ -1,20 +1,22 @@
 // const router = require("express").Router();
 const { Router } = require("express");
 const { getAllCategorias, getCategoriaById, createCategoria, updateCategoria, deleteCategoria, statusCategoria, getCategoriaByTipo} = require("../controllers/categoria.controller");
+const { verifyToken } = require("../utils/verifyToken");
+const { validateRolPermisoCategoria } = require("../validators/validations.validator");
 const router = Router();
 
-router.get('/getAllCategorias', [], getAllCategorias);
+router.get('/getAllCategorias', [verifyToken, validateRolPermisoCategoria], getAllCategorias);
 
-router.get('/getCategoriaById/:id', [], getCategoriaById);
+router.get('/getCategoriaById/:id', [verifyToken, validateRolPermisoCategoria], getCategoriaById);
 
-router.get('/getCategoriaByTipo/:tipo', [], getCategoriaByTipo)
+router.get('/getCategoriaByTipo/:tipo', [verifyToken, validateRolPermisoCategoria], getCategoriaByTipo)
 
-router.post('/createCategoria', createCategoria);
+router.post('/createCategoria', [verifyToken, validateRolPermisoCategoria], createCategoria);
 
-router.put('/updateCategoria/:id', [], updateCategoria);
+router.put('/updateCategoria/:id', [verifyToken, validateRolPermisoCategoria], updateCategoria);
 
-router.put('/statusCategoria/:id', [], statusCategoria);
+router.put('/statusCategoria/:id', [verifyToken, validateRolPermisoCategoria], statusCategoria);
 
-router.delete('/deleteCategoria/:id', [], deleteCategoria);
+router.delete('/deleteCategoria/:id', [verifyToken, validateRolPermisoCategoria], deleteCategoria);
 
 module.exports = router;

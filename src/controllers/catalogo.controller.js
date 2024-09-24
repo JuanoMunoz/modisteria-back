@@ -47,7 +47,7 @@ exports.createCatalogo = async (req, res) => {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });
         }
-        const { producto, precio, descripcion, talla, categoriaId, cantidad_utilizada, insumoId } = req.body;
+        const { producto, precio, descripcion, talla, categoriaId, cantidad_utilizada, insumoId, estadoId } = req.body;
         const tallasProcesadas = req.body.talla.split(',').map(t => t.trim().toLowerCase());
         const processedBuffer = await helperImg(req.file.buffer, 300);
         const result = await uploadToCloudinary(processedBuffer);
@@ -57,7 +57,8 @@ exports.createCatalogo = async (req, res) => {
             descripcion,
             talla: tallasProcesadas,
             categoriaId,
-            imagen: result.url
+            imagen: result.url,
+            estadoId
         };
         const catalogoCreado = await createCatalogo(newCatalogo);
         const catalogoId = catalogoCreado['id']
@@ -81,7 +82,7 @@ exports.createCatalogo = async (req, res) => {
 exports.updateCatalogo = async (req, res) => {
     try {
         const { id } = req.params;
-        const { producto, precio, descripcion, talla, categoriaId } = req.body;
+        const { producto, precio, descripcion, talla, categoriaId, estadoId } = req.body;
 
         // Obtener el catálogo existente para acceder a la imagen previa
         const existingCatalogo = await getCatalogoById(id);
@@ -103,7 +104,8 @@ exports.updateCatalogo = async (req, res) => {
             descripcion: descripcion || existingCatalogo.descripcion,
             talla: tallasProcesadas || existingCatalogo.talla,
             categoriaId: categoriaId || existingCatalogo.categoriaId,
-            imagen: existingCatalogo.imagen
+            imagen: existingCatalogo.imagen,
+            estadoId: estadoId || existingCatalogo.estadoId
         };
 
         if (req.file) {
