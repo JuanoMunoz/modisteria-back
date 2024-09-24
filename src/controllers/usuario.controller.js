@@ -215,6 +215,18 @@ exports.verifyUser = async(req, res) =>{
 }
 
 
+exports.updateInfo = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const newInfo = req.body;
+        await updateUser(id, newInfo);
+        const user = await getUserById(id);
+        const token = generateToken(user)
+        res.status(201).json({msg: 'usuario actualizado exitosamente',token});
+    } catch (error) {
+        res.status(500).json(error);
+    }
+};
 exports.updateUser = async (req, res) => {
     const { id } = req.params;
     try {
@@ -429,10 +441,27 @@ exports.isYourCurrentPassword = async (req, res) => {
       const { email, password } = req.body;
     try {
         const user = await getUserByEmail(email);
-        if(!user || !bcrypt.compareSync(password, user.password)) return res.status(401).json({isYourCurrentPassword: false})
+        if(!user || !bcrypt.compareSync(password, user.password)) return res.status(200).json({isYourCurrentPassword: false})
         res.status(200).json({isYourCurrentPassword: true});
 
     } catch (error) {
         res.status(500).json(error);
+    }
+}
+
+exports.resetCurrentPassword = async (req, res) =>{
+    const {email, newPassword} = req.body
+    try {
+        const user = await getUserByEmail(email);
+        if (!user) {
+            return res.status(400).json({msg:'No se encontró el usuario'});
+        }
+        const encriptada = bcrypt.hashSync(newPassword, 10)
+        updateAndClear(email, encriptada)
+        const token = generateToken(user)
+        res.status(200).json({msg:"Contraseña actualizada con éxito.",token:token})
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ msg:'Error al restablecer la contraseña'});
     }
 }

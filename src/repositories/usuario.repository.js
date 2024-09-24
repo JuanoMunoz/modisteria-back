@@ -7,7 +7,7 @@ exports.getAllUsers = async () => {
 };
 
 exports.getUserById = async (id) => {
-    return await Usuario.findByPk(id);
+    return await Usuario.findByPk(id,{include: [{model: Role, as: 'role'}]});
 }
 
 exports.createUser = async (user) => {

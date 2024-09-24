@@ -5,12 +5,14 @@ exports.verifyToken = (req, res, next) => {
 
     if (!token) return res.status(401).json({ msg: 'No han proporcionado el token' });
 
-    jwt.verify(token, process.env.KEY_JWT, (err, {payload}) => {
-        if (err) return res.status(401).json({ msg: 'No está autorizado' });
-        req.userId = payload.id;
-        req.email = payload.email;
-        req.roleId = payload.roleId;
-        
-        next();
+    jwt.verify(token, process.env.KEY_JWT, (err, { payload }) => {
+        if (err) return res.status(401).json({ msg: payload });
+        if (payload) {
+            console.log(payload);     
+            req.id = payload.id;
+            req.email = payload.email;
+            req.roleId = payload.role.id;
+            next();
+        }
     });
 }
