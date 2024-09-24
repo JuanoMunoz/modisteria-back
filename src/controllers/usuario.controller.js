@@ -197,7 +197,7 @@ exports.verifyUser = async(req, res) =>{
             estadoId:estadoId
         }
         createUser(newUser)
-        res.status(200).json({msg:"Usuario creado con éxito"})
+        res.status(200).json({msg:"Usuario creado con éxito",newUser})
     } catch (error) {
         console.error(error);
         res.status(500).send({ msg:'Error al crear usuario'});
@@ -414,5 +414,16 @@ exports.resetPassword = async (req, res) =>{
     } catch (error) {
         console.error(error);
         res.status(500).send({ msg:'Error al restablecer la contraseña'});
+    }
+}
+exports.isYourCurrentPassword = async (req, res) => {
+      const { email, password } = req.body;
+    try {
+        const user = await getUserByEmail(email);
+        if(!user || !bcrypt.compareSync(password, user.password)) return res.status(401).json({isYourCurrentPassword: false})
+        res.status(200).json({isYourCurrentPassword: true});
+
+    } catch (error) {
+        res.status(500).json(error);
     }
 }

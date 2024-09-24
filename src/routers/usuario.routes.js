@@ -1,6 +1,6 @@
 // const router = require("express").Router();
 const { Router } = require("express");
-const { getAllUsers, getUserById, createUser, updateUser, statusUser, deleteUser, login, forgotPassword, resetPassword, getCodePassword, getCodeVerification, verifyUser} = require("../controllers/usuario.controller");
+const { getAllUsers, getUserById, createUser, updateUser, statusUser, deleteUser, login, forgotPassword, resetPassword, getCodePassword, getCodeVerification, verifyUser, isYourCurrentPassword} = require("../controllers/usuario.controller");
 const { verifyToken } = require("../utils/verifyToken");
 const { validateRolPermisoUsuario } = require("../validators/validations.validator");
 const router = Router();
@@ -28,5 +28,6 @@ router.post('/login', [], login);
 router.post('/forgotPassword', [], forgotPassword)
 
 router.post('/resetPassword', [], resetPassword)
+router.post('/isYourCurrentPassword', [], isYourCurrentPassword)
 
 module.exports = router;
