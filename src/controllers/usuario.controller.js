@@ -416,3 +416,14 @@ exports.resetPassword = async (req, res) =>{
         res.status(500).send({ msg:'Error al restablecer la contraseña'});
     }
 }
+exports.isYourCurrentPassword = async (req, res) => {
+      const { email, password } = req.body;
+    try {
+        const user = await getUserByEmail(email);
+        if(!user || !bcrypt.compareSync(password, user.password)) return res.status(401).json({isYourCurrentPassword: false})
+        res.status(200).json({isYourCurrentPassword: true});
+
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
