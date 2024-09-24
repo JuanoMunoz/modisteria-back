@@ -7,7 +7,7 @@ const { validateRolPermisoCatalogo } = require("../validators/validations.valida
 
 const router = Router();
 
-router.get('/getAllCatalogo', [verifyToken, validateRolPermisoCatalogo], getAllCatalogo);
+router.get('/getAllCatalogo', getAllCatalogo);
 
 router.get('/getCatalogoById/:id', [verifyToken, validateRolPermisoCatalogo], getCatalogoById);
 
