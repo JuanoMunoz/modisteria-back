@@ -31,7 +31,7 @@ exports.createCita = async (req, res) => {
             return res.status(400).json({ error: 'No file uploaded' });
         }
 
-        const { fecha, referencia, objetivo, usuarioId, cotizacionId, estadoId } = req.body;
+        const { fecha, objetivo, precio, usuarioId, cotizacionId, estadoId } = req.body;
 
         //Verificar que no pase de los 2 meses la cita
         const fechaActual = new Date()
@@ -84,6 +84,7 @@ exports.createCita = async (req, res) => {
         const newCita = { 
             fecha, 
             objetivo, 
+            precio,
             usuarioId, 
             cotizacionId, 
             estadoId,
@@ -101,7 +102,7 @@ exports.createCita = async (req, res) => {
 exports.updateCita = async (req, res) => {
     console.log(req.body);
     const { id } = req.params;
-    const { fecha, referencia, objetivo, usuarioId, cotizacionId, estadoId } = req.body;
+    const { fecha, objetivo, precio, usuarioId, cotizacionId, estadoId } = req.body;
     try {
         //Verificar que no pase de los 2 meses la cita
         const fechaActual = new Date()
@@ -154,6 +155,7 @@ exports.updateCita = async (req, res) => {
         const updatedCita = { 
             fecha: fecha || existingCita.fecha,
             objetivo: objetivo || existingCita.objetivo,
+            precio: precio || existingCita.precio,
             usuarioId: usuarioId || existingCita.usuarioId,
             cotizacionId: cotizacionId || existingCita.cotizacionId,
             estadoId: estadoId || existingCita.estadoId,

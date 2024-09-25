@@ -1,28 +1,13 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/connection.js');
+const { Domicilio } = require('./domicilio.model.js');
 
 const Venta = sequelize.define('Venta', {
     fecha: {
         type: DataTypes.DATE,
         allowNull: false,
     },
-    valorDomicilio: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-    },
-    valorPrendas: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-    },
-    valorFinal: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    },
-    idPedido: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-    },
-    citaId: {
+    cotizacionId: {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
@@ -33,5 +18,9 @@ const Venta = sequelize.define('Venta', {
 }, {
     timestamps: false,
 });
+
+//Relacion domicilio y venta
+Domicilio.hasMany(Venta, { foreignKey: 'domicilioId', as: 'ventas' });
+Venta.belongsTo(Domicilio, { foreignKey: 'domicilioId', as: 'domicilio' });
 
 module.exports = { Venta };

@@ -10,6 +10,18 @@ const Cotizacion = sequelize.define('Cotizacion', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    valorDomicilio: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    valorPrendas: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    valorFinal: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
     pedidoId: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -22,6 +34,8 @@ const Cotizacion = sequelize.define('Cotizacion', {
     tableName: 'Cotizaciones',
     timestamps: false,
 });
+
+//Relación cotizacion y venta
 
 module.exports = { Cotizacion };
 
