@@ -1,5 +1,6 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const { sequelize } = require('../database/connection.js');
+const { PQRS } = require('./pqrs.model.js');
 
 const Domicilio = sequelize.define('Domicilio',
   {
@@ -24,5 +25,10 @@ const Domicilio = sequelize.define('Domicilio',
     timestamps: false,
   },
 );
+
+//Relacion domicilio y pqrs
+Domicilio.hasMany(PQRS, {foreignKey:'domicilioId', sourceKey:'id', as:"pqrs"})
+PQRS.belongsTo(Domicilio, {foreignKey:'domicilioId', sourceKey:'id', as:'domicilio'})
+
 
 module.exports = { Domicilio };

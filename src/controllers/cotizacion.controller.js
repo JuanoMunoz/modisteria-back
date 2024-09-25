@@ -87,13 +87,16 @@ exports.statusCotizacion = async (req, res) => {
         res.status(500).json(error);
     }
 }
+
 exports.deleteCotizacion = async (req, res) => {
     const { id } = req.params;
 
     try {
+        // Llama a la función que elimina la cotización
         await deleteCotizacion(id);
-        res.status(201).json({ msg: 'Cotizacion eliminado' });
+        res.status(200).json({ msg: 'Cotización eliminada exitosamente' });
     } catch (error) {
-        res.status(500).json(error);
+        console.error('Error en la eliminación de la cotización:', error);
+        res.status(500).json({ error: error.message });
     }
-}
+};

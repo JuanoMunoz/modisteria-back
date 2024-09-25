@@ -1,7 +1,11 @@
 const { Categoria } = require("../models");
 
-exports.getAllCategorias = async () => {
-    return await Categoria.findAll();
+exports.getAllCategorias = async (type) => {
+    const whereClause = {}
+    if (type) {
+        whereClause.tipo = type
+    }
+    return await Categoria.findAll({where: whereClause});
 };
 
 exports.getCategoriaById = async (id) => {

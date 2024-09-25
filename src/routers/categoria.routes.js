@@ -5,7 +5,7 @@ const { verifyToken } = require("../utils/verifyToken");
 const { validateRolPermisoCategoria } = require("../validators/validations.validator");
 const router = Router();
 
-router.get('/getAllCategorias', [verifyToken, validateRolPermisoCategoria], getAllCategorias);
+router.get('/getAllCategorias', [], getAllCategorias);
 
 router.get('/getCategoriaById/:id', [verifyToken, validateRolPermisoCategoria], getCategoriaById);
 

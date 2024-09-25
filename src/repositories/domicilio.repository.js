@@ -26,13 +26,13 @@ exports.createDomicilio = async (domicilio) => {
     if (user) {
       const rol = await Role.findByPk(user.roleId);
   
-      if (rol && rol.nombre === 'domiciliario') {
+      if (rol && rol.nombre === 'DOMICILIARIO') {
         // El usuario tiene el rol 'Domiciliario', se puede crear el domicilio
         return await Domicilio.create(domicilio);
       } else {
         // Si el usuario no tiene el rol 'Domiciliario', lanzamos un error
         const domiciliarios = await Usuario.findAll({
-          include: { model: Role, where: { nombre: 'domiciliario' } }
+          include: { model: Role, where: { nombre: 'DOMICILIARIO' } }
         });
   
         if (domiciliarios.length === 0) {

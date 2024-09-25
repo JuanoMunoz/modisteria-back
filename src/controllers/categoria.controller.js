@@ -1,8 +1,10 @@
 const { getAllCategorias, getCategoriaById, createCategoria, updateCategoria, deleteCategoria, getCategoriaByTipo } = require("../repositories/categoria.repository");
 
 exports.getAllCategorias = async (req, res) => {
-  try {
-    const categorias = await getAllCategorias();
+    try {
+        const type = req.query.type|| false
+        
+    const categorias = await getAllCategorias(type);
     res.status(200).json(categorias);
   } catch (error) {
     console.log(error);

@@ -8,20 +8,24 @@ const Cita = sequelize.define('Cita',
       type: DataTypes.DATE,
       allowNull: false,
     },
-    metodo_pago: {
-      type: DataTypes.ENUM('transferencia', 'efectivo'),
+    referencia: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    objetivo: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     usuarioId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    estadoId: {
+    cotizacionId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-  },
-    objetivo: {
-      type: DataTypes.STRING,
+    },
+    estadoId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
   },

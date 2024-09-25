@@ -67,13 +67,14 @@ exports.statusRole = async (req, res) => {
         res.status(500).json(error);
     }
 }
+
 exports.deleteRole = async (req, res) => {
     const { id } = req.params;
 
     try {
         await deleteRole(id);
-        res.status(201).json({msg: 'rol eliminado'});
+        res.status(201).json({ msg: 'rol eliminado' });
     } catch (error) {
-        res.status(500).json(error);
+        res.status(500).json({ msg: error.message });
     }
 }
