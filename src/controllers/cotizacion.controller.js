@@ -33,12 +33,15 @@ exports.createCotizacion = async (req, res) => {
         const processedBuffer = await helperImg(req.file.buffer, 300);
         const result = await uploadToCloudinary(processedBuffer);
 
+        const valorDomicilioNum = parseFloat(valorDomicilio) || 0;
+        const valorPrendasNum = parseFloat(valorPrendas) || 0;
+
         const newCotizacion = {
             imagen:result.url,
             nombrePersona,
             valorDomicilio,
             valorPrendas,
-            valorFinal: valorDomicilio + valorPrendas,
+            valorFinal: valorDomicilioNum + valorPrendasNum,
             pedidoId,
             estadoId:3
         };
@@ -53,13 +56,20 @@ exports.createCotizacion = async (req, res) => {
 
 exports.updateCotizacion = async (req, res) => {
     const { id } = req.params;
-    const { nombrePersona, pedidoId } = req.body;
+    const { nombrePersona, pedidoId, valorDomicilio, valorPrendas } = req.body;
     try {
         const existingCotizacion = await getCotizacionById(id);
+
+        const valorDomicilioNum = parseFloat(valorDomicilio) || 0;
+        const valorPrendasNum = parseFloat(valorPrendas) || 0;
         const updatedCotizacion = {
             nombrePersona: nombrePersona || existingCotizacion.nombrePersona,
+            valorDomicilio: valorDomicilio || existingCotizacion.valorDomicilio,
+            valorPrendas: valorPrendas || existingCotizacion.valorPrendas,
+            valorFinal: (valorDomicilioNum + valorPrendasNum) || existingCotizacion.valorFinal,
             pedidoId: pedidoId || existingCotizacion.pedidoId,
-            imagen: existingCotizacion.imagen
+            imagen: existingCotizacion.imagen,
+            estadoId:3
         };
 
         if (req.file) {

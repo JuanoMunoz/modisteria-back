@@ -40,8 +40,8 @@ const Pedido = sequelize.define('Pedido',
 );
 
 //Relacion cotizacion y carrito (pedido)
-Pedido.hasOne(Cotizacion, { foreignKey: 'pedidoId' });
-Cotizacion.belongsTo(Pedido, { foreignKey: 'pedidoId' });
+Pedido.hasOne(Cotizacion, { foreignKey: 'pedidoId', as: 'cotizacion' });
+Cotizacion.belongsTo(Pedido, { foreignKey: 'pedidoId', as: 'pedido' });
 
 Pedido.belongsTo(Catalogo, { foreignKey: 'catalogoId', as: 'catalogo' });
 Catalogo.hasMany(Pedido, { foreignKey: 'catalogoId', as: 'pedidos' });
