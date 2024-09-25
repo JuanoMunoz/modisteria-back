@@ -1,7 +1,7 @@
-const { Domicilio, Usuario, Role } = require("../models");
+const { Domicilio, Usuario, Role, Pedido, Catalogo } = require("../models");
 
 exports.getAllDomicilios = async () => {
-    return await Domicilio.findAll();
+    return await Domicilio.findAll({include: [{model: Pedido, as: 'pedido'}]});
 };
 
 exports.getDomicilioById = async (id) => {
@@ -9,16 +9,43 @@ exports.getDomicilioById = async (id) => {
 };
 
 exports.getDomiciliosByDomiciliario = async (usuarioId) => {
-    return await Domicilio.findAll({where: {
-      usuarioId: usuarioId 
-    }});
+  return await Domicilio.findAll({
+    include: [
+        {
+            model: Pedido,
+            as: 'pedido',
+            where: { usuarioId: usuarioId },
+            include: [
+                {
+                    model: Catalogo,
+                    as: 'catalogo',
+                    attributes: ['nombre', 'precio']
+                }
+            ]
+        }
+    ]
+});
 };
 
-// exports.getDomiciliosByCliente = async (usuarioId) => {
-//     return await Domicilio.findAll({where: {
-//       usuarioId: usuarioId 
-//     }});
-// };
+exports.getDomiciliosByCliente = async (clienteId) => {
+  return await Domicilio.findAll({
+      include: [
+          {
+              model: Pedido,
+              as: 'pedido',
+              where: { usuarioId: clienteId },
+              include: [
+                  {
+                      model: Catalogo,
+                      as: 'catalogo',
+                      attributes: ['nombre', 'precio']
+                  }
+              ]
+          }
+      ]
+  });
+};
+
 
 exports.createDomicilio = async (domicilio) => {
     const user = await Usuario.findByPk(domicilio.usuarioId);

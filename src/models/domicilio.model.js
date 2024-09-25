@@ -8,7 +8,7 @@ const Domicilio = sequelize.define('Domicilio',
       type: DataTypes.STRING,
       allowNull: false,
     },
-    pedidoId: {
+    ventaId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

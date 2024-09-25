@@ -29,13 +29,16 @@ exports.createCotizacion = async (req, res) => {
             return res.status(400).json({ error: 'No file uploaded' });
         }
 
-        const { nombrePersona, pedidoId} = req.body;
+        const { nombrePersona, pedidoId, valorDomicilio, valorPrendas } = req.body;
         const processedBuffer = await helperImg(req.file.buffer, 300);
         const result = await uploadToCloudinary(processedBuffer);
 
         const newCotizacion = {
             imagen:result.url,
             nombrePersona,
+            valorDomicilio,
+            valorPrendas,
+            valorFinal: valorDomicilio + valorPrendas,
             pedidoId,
             estadoId:3
         };

@@ -16,6 +16,10 @@ const Cita = sequelize.define('Cita',
       type: DataTypes.STRING,
       allowNull: false,
     },
+    precio: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     usuarioId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -33,9 +37,5 @@ const Cita = sequelize.define('Cita',
     timestamps: false,
   },
 );
-
-//Relacion cita y carrito (pedido)
-Cita.hasOne(Venta, { foreignKey: 'citaId' });
-Venta.belongsTo(Cita, { foreignKey: 'citaId' });
 
 module.exports = { Cita };
