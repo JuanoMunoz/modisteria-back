@@ -11,6 +11,7 @@ const Pedido = sequelize.define('Pedido',
     idPedido: {
     type: DataTypes.UUID,
     allowNull: false,
+    autoIncrement: false,
   },
     catalogoId: {
       type: DataTypes.INTEGER,

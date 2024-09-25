@@ -1,3 +1,4 @@
+// const { sequelize } = require("../database/connection");
 const { Cotizacion } = require("../models");
 
 exports.getAllCotizaciones = async () => {
@@ -22,3 +23,22 @@ exports.statusCotizacion = async (id) => {
 exports.deleteCotizacion = async (id) => {
     return await Cotizacion.destroy({ where: { id } });
 }
+
+// exports.deleteCotizacion = async (id) => {
+//     const t = await sequelize.transaction();
+
+//     try {
+//         const result = await Cotizacion.destroy({ where: { id }, transaction: t });
+        
+//         if (result === 0) {
+//             throw new Error('La cotización no existe o no puede ser eliminada.');
+//         }
+
+//         await t.commit();
+//         return result;
+//     } catch (error) {
+//         await t.rollback();
+//         console.error('Error al eliminar la cotización:', error);
+//         throw new Error(`Error al eliminar la cotización: ${error.message}`);
+//     }
+// };
