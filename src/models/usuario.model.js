@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/connection.js');
 const { Domicilio } = require('./domicilio.model.js');
 const { Pedido } = require('./pedido.model.js');
-
+const { PQRS } = require('./pqrs.model.js');
 
 const Usuario = sequelize.define('Usuario',
   {
@@ -61,5 +61,8 @@ Domicilio.belongsTo(Usuario, {foreignKey: 'usuarioId', targetKey: 'id', as: 'usu
 Usuario.hasMany(Pedido, {foreignKey:'usuarioId', sourceKey:'id', as:"pedido"})
 Pedido.belongsTo(Usuario, {foreignKey:'usuarioId', sourceKey:'id', as:'usuario'})
 
+//Relacion usuario y pqrs
+Usuario.hasMany(PQRS, {foreignKey:'usuarioId', sourceKey:'id', as:"pqrs"})
+PQRS.belongsTo(Usuario, {foreignKey:'usuarioId', sourceKey:'id', as:'usuario'})
 
 module.exports = { Usuario };
