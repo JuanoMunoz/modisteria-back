@@ -8,6 +8,12 @@ exports.getCitaById = async (id) => {
     return await Cita.findByPk(id);
 }
 
+const getCitasByUsuarioId = async (usuarioId) => {
+    return await Cita.findAll({
+        where: { usuarioId }
+    });
+};
+
 exports.createCita = async (cita) => {
     return await Cita.create(cita);
 }
