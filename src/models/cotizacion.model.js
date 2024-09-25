@@ -14,9 +14,9 @@ const Cotizacion = sequelize.define('Cotizacion', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    estado: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
+    estadoId: {
+        type: DataTypes.INTEGER,
+        allowNull:false,
     },
 }, {
     tableName: 'Cotizaciones',

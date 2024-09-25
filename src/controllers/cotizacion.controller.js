@@ -24,21 +24,20 @@ exports.getCotizacionById = async (req, res) => {
 };
 
 exports.createCotizacion = async (req, res) => {
-    const cotizacion = req.body;
-
     try {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });
         }
 
-        const { nombrePersona, pedidoId } = req.body;
+        const { nombrePersona, pedidoId} = req.body;
         const processedBuffer = await helperImg(req.file.buffer, 300);
         const result = await uploadToCloudinary(processedBuffer);
 
         const newCotizacion = {
+            imagen:result.url,
             nombrePersona,
             pedidoId,
-            imagen: result.url
+            estadoId:3
         };
 
         const cotizacionCreada = await createCotizacion(newCotizacion);
@@ -88,13 +87,16 @@ exports.statusCotizacion = async (req, res) => {
         res.status(500).json(error);
     }
 }
+
 exports.deleteCotizacion = async (req, res) => {
     const { id } = req.params;
 
     try {
+        // Llama a la función que elimina la cotización
         await deleteCotizacion(id);
-        res.status(201).json({ msg: 'Cotizacion eliminado' });
+        res.status(200).json({ msg: 'Cotización eliminada exitosamente' });
     } catch (error) {
-        res.status(500).json(error);
+        console.error('Error en la eliminación de la cotización:', error);
+        res.status(500).json({ error: error.message });
     }
-}
+};

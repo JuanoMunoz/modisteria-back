@@ -1,4 +1,4 @@
-const { getAllEstados, getEstadoById, createEstado, updateEstado, deleteEstado, getEstadosByCategoria } = require("../repositories/estado.repository");
+const { getAllEstados, getEstadoById, createEstado, updateEstado, deleteEstado } = require("../repositories/estado.repository");
 
 exports.getAllEstados = async (req, res) => {
   try {
@@ -22,7 +22,6 @@ exports.getEstadoById = async (req, res) => {
     }
 };
 
-//Agregar validacion con consulta de tipo de categoria para que solo se pueda agregar una con tipo Estado
 exports.createEstado = async (req, res) => {
     const estado = req.body;
 
