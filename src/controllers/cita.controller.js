@@ -1,4 +1,5 @@
 const { getAllCitas, getCitaById, createCita, updateCita, deleteCita } = require("../repositories/cita.repository");
+const { helperImg, uploadToCloudinary, getPublicIdFromUrl, deleteFromCloudinary } = require("../utils/image");
 
 exports.getAllCitas = async (req, res) => {
   try {
@@ -25,24 +26,29 @@ exports.getCitaById = async (req, res) => {
 exports.createCita = async (req, res) => {
     try {
         console.log(req.body);
-        const cita = req.body;
+
+        if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+
+        const { fecha, referencia, objetivo, usuarioId, cotizacionId, estadoId } = req.body;
 
         //Verificar que no pase de los 2 meses la cita
-        const fecha = new Date()
+        const fechaActual = new Date()
         const limite = new Date()
         limite.setMonth(limite.getMonth()+2)
 
-        const fechaCita = new Date(cita.fecha)
+        const fechaCita = new Date(fecha)
         if (fechaCita>limite) {
             return res.status(400).json({msg: 'La fecha de la cita no puede ser superior a 2 meses'})
         }
         //Verificar que la fecha enviada ya no haya pasado
-        if (fechaCita<fecha) {
+        if (fechaCita<fechaActual) {
             return res.status(400).json({msg: 'La fecha de la cita ya pasó, intenta de nuevo'})
         }
         //Verificar que sea programada con el tiempo de anticipación requerido
-        const fechaMinima = new Date(fecha);
-        fechaMinima.setDate(fecha.getDate() + 2);
+        const fechaMinima = new Date(fechaActual);
+        fechaMinima.setDate(fechaActual.getDate() + 2);
         if (fechaCita < fechaMinima) {
             return res.status(400).json({ msg: 'La fecha de la cita debe ser programada mínimo con 2 días de anticipación' });
         }
@@ -72,7 +78,19 @@ exports.createCita = async (req, res) => {
             return res.status(400).json({ msg: 'Solo se atiende de 8 a.m a 5 p.m',hora });
         }
         
-        await createCita(cita);
+        const processedBuffer = await helperImg(req.file.buffer, 300);
+        const result = await uploadToCloudinary(processedBuffer);
+
+        const newCita = { 
+            fecha, 
+            objetivo, 
+            usuarioId, 
+            cotizacionId, 
+            estadoId,
+            referencia: result.url
+        }
+
+        await createCita(newCita);
         res.status(201).json({ msg: 'Cita creada exitosamente', hora });
     } catch (error) {
         console.log(error);
@@ -81,13 +99,82 @@ exports.createCita = async (req, res) => {
 };
 
 exports.updateCita = async (req, res) => {
+    console.log(req.body);
     const { id } = req.params;
-
+    const { fecha, referencia, objetivo, usuarioId, cotizacionId, estadoId } = req.body;
     try {
-        const cita = req.body;
-        await updateCita(id, cita);
-        res.status(201).json({msg: 'cita actualizada exitosamente'});
+        //Verificar que no pase de los 2 meses la cita
+        const fechaActual = new Date()
+        const limite = new Date()
+        limite.setMonth(limite.getMonth()+2)
+
+        const fechaCita = new Date(fecha)
+        if (fechaCita>limite) {
+            return res.status(400).json({msg: 'La fecha de la cita no puede ser superior a 2 meses'})
+        }
+        //Verificar que la fecha enviada ya no haya pasado
+        if (fechaCita<fechaActual) {
+            return res.status(400).json({msg: 'La fecha de la cita ya pasó, intenta de nuevo'})
+        }
+        //Verificar que sea programada con el tiempo de anticipación requerido
+        const fechaMinima = new Date(fechaActual);
+        fechaMinima.setDate(fechaActual.getDate() + 2);
+        if (fechaCita < fechaMinima) {
+            return res.status(400).json({ msg: 'La fecha de la cita debe ser programada mínimo con 2 días de anticipación' });
+        }
+        //Verificar que la hora de la cita no intervenga con otras citas
+        const citas = await getAllCitas(); 
+        const minima = new Date(fechaCita);
+        minima.setHours(minima.getHours() - 2);
+        const maxima = new Date(fechaCita);
+        maxima.setHours(maxima.getHours() + 2);
+
+        const conflicto = citas.some(citaExistente => {
+            const fechaExistente = new Date(citaExistente.fecha);
+            return fechaExistente > minima && fechaExistente < maxima;
+        });
+
+        if (conflicto) {
+            return res.status(400).json({ msg: 'Conflicto con otra cita en un rango de 2 horas' });
+        }
+        //Lunes a viernes
+        const dia_semana = fechaCita.getDay();
+        if (dia_semana ==0 || dia_semana==6) {
+            return res.status(400).json({ msg: 'Solo se atiende de lunes a viernes' });
+        }
+        //Horario de atención
+        const hora = fechaCita.getHours()+5;
+        if (hora < 8 || hora > 17) {
+            return res.status(400).json({ msg: 'Solo se atiende de 8 a.m a 5 p.m',hora });
+        }
+        
+        //Modificar imagen
+        const existingCita = await getCitaById(id);
+
+        const updatedCita = { 
+            fecha: fecha || existingCita.fecha,
+            objetivo: objetivo || existingCita.objetivo,
+            usuarioId: usuarioId || existingCita.usuarioId,
+            cotizacionId: cotizacionId || existingCita.cotizacionId,
+            estadoId: estadoId || existingCita.estadoId,
+            referencia: existingCita.referencia
+        }
+
+        if (req.file) {
+            const processedBuffer = await helperImg(req.file.buffer, 300);
+            const result = await uploadToCloudinary(processedBuffer);
+            updatedCita.referencia = result.url;  
+
+            if (existingCita.imagen) {
+                const publicId = getPublicIdFromUrl(existingCita.referencia); 
+                await deleteFromCloudinary(publicId);  
+            }
+        }
+
+        await updateCita(id, updatedCita);
+        res.status(201).json({ msg: 'Cita actualizada exitosamente', hora });
     } catch (error) {
+        console.log(error);
         res.status(500).json(error);
     }
 };

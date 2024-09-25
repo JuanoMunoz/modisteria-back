@@ -24,8 +24,6 @@ exports.getCotizacionById = async (req, res) => {
 };
 
 exports.createCotizacion = async (req, res) => {
-    const cotizacion = req.body;
-
     try {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });
