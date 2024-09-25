@@ -5,8 +5,17 @@ exports.getAllPedido = async() =>{
     return await Pedido.findAll();
 }
 
-exports.getPedidoById = async (usuarioId) => {
-    return await Pedido.findAll({ where: { usuarioId }, include: { model: Catalogo, as:'catalogo',attributes:["producto","imagen","precio"]}});
+exports.getPedidoById = async (usuarioId,catalogoId,talla) => {
+    const whereClause = {
+        usuarioId
+    }
+    if (catalogoId){
+        whereClause.catalogoId = catalogoId
+    }
+    if (talla){
+        whereClause.talla = talla
+    }
+    return await Pedido.findAll({ where: whereClause, include: { model: Catalogo, as:'catalogo',attributes:["producto","imagen","precio"]}});
 }
 
 exports.createPedido = async (pedido) => {

@@ -11,9 +11,11 @@ exports.getAllPedido = async(req, res)=>{
 
 exports.getPedidoById = async (req, res) => {
     const { id } = req.params;
+    const catalogoId = req.query.catalogoId
+    const talla = req.query.talla
     try {
         console.log(id);
-        const Pedido = await getPedidoById(id);
+        const Pedido = await getPedidoById(id,catalogoId,talla);
         res.status(200).json(Pedido);
     } catch (error) {
         res.status(500).json(error);
