@@ -9,7 +9,7 @@ router.get('/getAllEstados', [verifyToken, validateRolPermisoEstado], getAllEsta
 
 router.get('/getEstadoById/:id', [verifyToken, validateRolPermisoEstado], getEstadoById);
 
-router.post('/createEstado', createEstado);
+router.post('/createEstado', [verifyToken, validateRolPermisoEstado], createEstado);
 
 router.put('/updateEstado/:id', [verifyToken, validateRolPermisoEstado], updateEstado);
 
