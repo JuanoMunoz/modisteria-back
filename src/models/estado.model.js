@@ -5,10 +5,11 @@ const {Permiso} = require('../models/permiso.model.js')
 const {Role} = require('../models/role.model.js')
 const {Domicilio} = require('../models/domicilio.model.js')
 const {Cita} = require('../models/cita.model.js')
-//const {Venta} = require('../models/venta.model.js')
+const {Venta} = require('../models/venta.model.js')
 const {Catalogo} = require('../models/catalogo.model.js')
 const {Categoria} = require('../models/categoria.model.js')
 const {Insumo} = require('../models/insumo.model.js');
+const { Cotizacion } = require('./cotizacion.model.js');
 
 
 const Estado = sequelize.define('Estado',
@@ -49,9 +50,9 @@ Estado.hasMany(Domicilio, {foreignKey: 'estadoId', targetKey: 'id', as: 'domicil
 Cita.belongsTo(Estado, {foreignKey: 'estadoId', sourceKey: 'id', as: 'estadoCita'});
 Estado.hasMany(Cita, {foreignKey: 'estadoId', targetKey: 'id', as: 'citas'});
 
-/* //Relación de ventas a estados
+ //Relación de ventas a estados
 Venta.belongsTo(Estado, {foreignKey: 'estadoId', sourceKey: 'id', as: 'estado'});
-Estado.hasMany(Venta, {foreignKey: 'estadoId', targetKey: 'id', as: 'usuario'}); */
+Estado.hasMany(Venta, {foreignKey: 'estadoId', targetKey: 'id', as: 'usuario'}); 
 
 //Relación de catalogo a estados
 Catalogo.belongsTo(Estado, {foreignKey: 'estadoId', sourceKey: 'id', as: 'estadoCatalogo'});
@@ -64,6 +65,12 @@ Estado.hasMany(Categoria, {foreignKey: 'estadoId', targetKey: 'id', as: 'categor
 //Relación de Insumos a estados
 Insumo.belongsTo(Estado, {foreignKey: 'estadoId', sourceKey: 'id', as: 'estadoInsumo'});
 Estado.hasMany(Insumo, {foreignKey: 'estadoId', targetKey: 'id', as: 'insumos'});
+
+//Relación de Insumos a estados
+Cotizacion.belongsTo(Estado, {foreignKey: 'estadoId', sourceKey: 'id', as: 'estadoCotizacion'});
+Estado.hasMany(Cotizacion, {foreignKey: 'estadoId', targetKey: 'id', as: 'cotizacion'});
+
+
 
 
 

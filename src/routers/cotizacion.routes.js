@@ -10,7 +10,7 @@ router.get('/getAllCotizaciones', [verifyToken, validateRolPermisoCotizacion], g
 
 router.get('/getCotizacionById/:id', [verifyToken, validateRolPermisoCotizacion], getCotizacionById);
 
-router.post('/createCotizacion', [verifyToken, upload.single('file')], createCotizacion);
+router.post('/createCotizacion', [upload.single('file')], createCotizacion);
 
 router.put('/updateCotizacion/:id', [verifyToken, upload.single('file')], updateCotizacion);
 

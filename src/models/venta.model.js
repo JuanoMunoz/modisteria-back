@@ -8,11 +8,11 @@ const Venta = sequelize.define('Venta', {
     },
     valorDomicilio: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
     valorPrendas: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
     valorFinal: {
         type: DataTypes.INTEGER,
@@ -26,9 +26,9 @@ const Venta = sequelize.define('Venta', {
         type: DataTypes.INTEGER,
         allowNull: true,
     },
-    estado: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
+    estadoId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
     },
 }, {
     timestamps: false,
