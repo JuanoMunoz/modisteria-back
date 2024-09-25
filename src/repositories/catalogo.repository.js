@@ -1,16 +1,18 @@
 const { Catalogo, Categoria } = require("../models");
 const { Op } = require("sequelize");
 
-exports.getAllCatalogo = async (offset, limit, priceLimit) => {
-    console.log(offset,limit);
-    
+exports.getAllCatalogo = async (offset, limit, priceLimit, category) => {
+    const whereClause = {
+        precio: { [Op.lte]: priceLimit }
+    }
+    if (category) {
+        whereClause.categoriaId = category
+    }
     return await Catalogo.findAndCountAll({
         offset,
         limit,
         order: [["id", "DESC"]],
-        where: {
-            precio:  { [Op.lte]: priceLimit }
-        }
+        where: whereClause
     });
 };
 

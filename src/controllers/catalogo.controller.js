@@ -9,8 +9,9 @@ exports.getAllCatalogo = async (req, res) => {
         const priceLimit = parseInt(req.query.price) || 250000
         const limit = parseInt(req.query.limit) || 9
         const page = parseInt(req.query.page) || 1
+        const category = parseInt(req.query.category) || false
         const offset = (page - 1) * limit
-        const catalogo = await getAllCatalogo(offset, limit, priceLimit);
+        const catalogo = await getAllCatalogo(offset, limit, priceLimit,category);
         res.status(200).json(catalogo);
     } catch (error) {
         console.log(error);
