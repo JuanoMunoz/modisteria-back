@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/connection.js');
-const { Venta } = require('./venta.model.js');
 
 const Cita = sequelize.define('Cita',
   {
@@ -10,7 +9,7 @@ const Cita = sequelize.define('Cita',
     },
     referencia: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     objetivo: {
       type: DataTypes.STRING,
@@ -24,9 +23,9 @@ const Cita = sequelize.define('Cita',
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    cotizacionId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+    tiempo:{
+      type:DataTypes.TIME,
+      allowNull:true
     },
     estadoId: {
       type: DataTypes.INTEGER,
