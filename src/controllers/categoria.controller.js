@@ -63,7 +63,7 @@ exports.deleteCategoria = async (req, res) => {
         await deleteCategoria(id);
         res.status(201).json({msg: 'categoria eliminada'});
     } catch (error) {
-        res.status(500).json(error);
+        return res.status(400).json({ message: error.message });
     }
 }
 

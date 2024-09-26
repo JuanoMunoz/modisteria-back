@@ -1,4 +1,4 @@
-const { Usuario, Role } = require("../models");
+const { Usuario, Role, Domicilio, Pedido, PQRS } = require("../models");
 const { Op } = require("sequelize");
 
 //Consultas básicas
@@ -21,7 +21,22 @@ exports.updateUser = async (id, user) => {
 exports.statusUser = async (id) => {
     return await Usuario.update({ estado: false }, { where: { id } });
 }
+
 exports.deleteUser = async (id) => {
+    const user = await Usuario.findByPk(id);
+    
+    if (!user) {
+        throw new Error("Usuario no encontrado");
+    }
+
+    const existeDomicilio = await Domicilio.findOne({ where: { usuarioId: user.id } }); 
+    const existePedido = await Pedido.findOne({ where: { usuarioId: user.id } });
+    const existePQRS = await PQRS.findOne({ where: { usuarioId: user.id } });
+    
+    if (existeDomicilio || existePedido || existePQRS) {
+        throw new Error("No se puede eliminar el usuario porque está asociado a registros en otras tablas");
+    }
+
     return await Usuario.destroy({ where: { id } });
 }
 
