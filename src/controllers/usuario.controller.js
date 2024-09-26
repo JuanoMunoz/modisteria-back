@@ -153,7 +153,6 @@ exports.createUser = async (req, res) => {
         // Enviar correo
         await transporter.sendMail(mailOptions);
 
-        // Responder éxito
         res.status(200).json({ msg: 'Código de verificación enviado' });
 
     } catch (error) {

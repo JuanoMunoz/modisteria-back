@@ -164,7 +164,6 @@ exports.createDomicilio = async (domicilio) => {
         }
     }
 
-    // Si se llega a este punto, el usuario tiene el rol 'Domiciliario'
     return await Domicilio.create(domicilio);
 };
 
@@ -179,4 +178,3 @@ exports.deleteDomicilio = async (id) => {
     return await Domicilio.destroy({ where: { id } });
 }
 
-//Poner que solo se pueda el usuario de domiciliario y si no hay registros con ese rol que aparezca que no hay domiciliarios disponibles o algo asi

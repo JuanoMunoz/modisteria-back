@@ -73,19 +73,6 @@ async function validadora (roleId, permiso) {
     return (await getRoleById(roleId)).toJSON().permisosId.includes(permiso);
 }
 
-//Opcion2
-// exports.validateRolPermiso = async (req, res, next) => {
-//     const rolesPermisos = (await getRoleById(req.roleId)).toJSON().permisosId
-//     if (req.body.validate == "UserValidate" && rolesPermisos.includes(1)){
-//         return next()
-//         // console.log("AAAA", rolesPermisos);    
-//     } else if (req.body.validate == "CitasValidate" && rolesPermisos.includes(2)) {
-//         return next()
-
-//     }
-//     // next();
-// }
-
 exports.emailExist = async (req, res, next) => {
     const { email } = req.body;
     const user = await getUserByEmail(email);

@@ -1,8 +1,6 @@
 const { getAllCatalogo, getCatalogoById, createCatalogo, updateCatalogo, deleteCatalogo, getCatalogoByCategoria } = require("../repositories/catalogo.repository");
 const { createCatIns } = require('../repositories/catalogo_insumos.repository.js')
 const { helperImg, uploadToCloudinary, deleteFromCloudinary, getPublicIdFromUrl } = require('../utils/image.js');
-// const fs = require('fs');
-// const path = require('path');
 
 exports.getAllCatalogo = async (req, res) => {
     try {
@@ -85,10 +83,8 @@ exports.updateCatalogo = async (req, res) => {
         const { id } = req.params;
         const { producto, precio, descripcion, talla, categoriaId, estadoId } = req.body;
 
-        // Obtener el catálogo existente para acceder a la imagen previa
         const existingCatalogo = await getCatalogoById(id);
 
-        // Procesar la talla si existe
         let tallasProcesadas;
         if (talla) {
             if (typeof talla === 'string') {
@@ -98,7 +94,6 @@ exports.updateCatalogo = async (req, res) => {
             }
         }
 
-        // Inicializar el objeto de actualización con los valores existentes o nuevos
         const updatedCatalogo = {
             producto: producto || existingCatalogo.producto,
             precio: precio || existingCatalogo.precio,
@@ -110,23 +105,17 @@ exports.updateCatalogo = async (req, res) => {
         };
 
         if (req.file) {
-            // Procesar la nueva imagen si se sube
             const processedBuffer = await helperImg(req.file.buffer, 300);
-
-            // Subir la nueva imagen a Cloudinary
             const result = await uploadToCloudinary(processedBuffer);
-            updatedCatalogo.imagen = result.url;  // Actualizar la URL de la imagen
+            updatedCatalogo.imagen = result.url;  
 
-            // Eliminar la imagen previa de Cloudinary si existe
             if (existingCatalogo.imagen) {
-                const publicId = getPublicIdFromUrl(existingCatalogo.imagen); // Extraer el public_id de la imagen anterior
-                await deleteFromCloudinary(publicId);  // Eliminar la imagen previa
+                const publicId = getPublicIdFromUrl(existingCatalogo.imagen);
+                await deleteFromCloudinary(publicId); 
             }
         }
 
-        // Actualizar el catálogo con los nuevos datos
         const updateResult = await updateCatalogo(id, updatedCatalogo);
-
         res.status(200).json({ msg: 'Catálogo actualizado exitosamente' });
     } catch (error) {
         console.error(`Error en updateCatalogo: ${error.message}`);

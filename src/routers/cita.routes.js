@@ -1,4 +1,3 @@
-// const router = require("express").Router();
 const { Router } = require("express");
 const { getAllCitas, getCitaById, createCita, updateCita, deleteCita, statusCita, updateSPT } = require("../controllers/cita.controller");
 const { verifyToken } = require("../utils/verifyToken");
@@ -12,10 +11,8 @@ router.get('/getAllCitas', [verifyToken], getAllCitas);
 router.get('/getCitaById/:id', [verifyToken, validateRolPermisoCita], getCitaById);
 
 router.post('/createCita', [verifyToken, validateRolPermisoCita, upload.single('file')], createCita);
-//router.post('/createCita', [ upload.single('file')], createCita);
 
 router.put('/updateSPT/:id', [verifyToken, validateRolPermisoCita], updateSPT)
-//router.put('/updateSPT/:id', updateSPT)
 
 router.put('/updateCita/:id', [verifyToken, validateRolPermisoCita, upload.single('file')], updateCita);
 

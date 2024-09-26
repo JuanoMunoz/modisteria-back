@@ -1,4 +1,3 @@
-// const router = require("express").Router();
 const { Router } = require("express");
 const { getAllEstados, getEstadoById, createEstado, updateEstado, deleteEstado, statusEstado } = require("../controllers/estado.controller");
 const { verifyToken } = require("../utils/verifyToken");

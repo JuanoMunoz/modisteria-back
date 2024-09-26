@@ -1,5 +1,5 @@
-const {Router} = require('express');
-const {getAllPedido, getPedidoById, createPedido, updatePedido, deletePedido} = require('../controllers/pedido.controller.js');
+const { Router } = require('express');
+const { getAllPedido, getPedidoById, createPedido, updatePedido, deletePedido } = require('../controllers/pedido.controller.js');
 const { verifyToken } = require('../utils/verifyToken.js');
 const { validateRolPermisoPedido } = require('../validators/validations.validator.js');
 const router = Router();

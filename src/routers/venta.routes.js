@@ -1,4 +1,3 @@
-// const router = require("express").Router();
 const { Router } = require("express");
 const { getAllVentas, getVentaById, createVenta } = require("../controllers/venta.controller");
 const { verifyToken } = require("../utils/verifyToken");

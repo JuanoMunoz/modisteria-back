@@ -1,4 +1,3 @@
-// const router = require("express").Router();
 const { Router } = require("express");
 const { getAllCategorias, getCategoriaById, createCategoria, updateCategoria, deleteCategoria, statusCategoria, getCategoriaByTipo} = require("../controllers/categoria.controller");
 const { verifyToken } = require("../utils/verifyToken");

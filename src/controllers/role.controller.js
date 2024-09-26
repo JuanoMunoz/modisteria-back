@@ -24,7 +24,6 @@ exports.getRoleById = async (req, res) => {
 };
 
 exports.createRole = async (req, res) => {
-    // const role = req.body;
     const { nombre, permisosId, estadoId } = req.body;
     console.log("nombre", nombre);
     console.log("permisos", permisosId);

@@ -29,7 +29,7 @@ exports.getCitasByUsuarioId = async (req, res) => {
         const citas = await getCitasByUsuarioId(usuarioId);
         res.status(200).json(citas);
     } catch (error) {
-        console.error(error); // Para depuración
+        console.error(error);
         res.status(500).json({ msg: 'Error al obtener citas', error });
     }
 };
@@ -84,7 +84,7 @@ exports.createCita = async (req, res) => {
             objetivo,
             usuarioId,
             estadoId: 9,
-            referencia // Guardar null o el enlace de la imagen
+            referencia 
         };
 
         await createCita(newCita);

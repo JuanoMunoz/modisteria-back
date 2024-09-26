@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
-const { Pedido } = require("../models");
-const { getAllCotizaciones, getCotizacionById, createCotizacion, updateCotizacion, deleteCotizacion } = require("../repositories/cotizacion.repository");
+const { Pedido, Cotizacion, CotizacionPedidos } = require("../models");
+const { getAllCotizaciones, getCotizacionById, createCotizacion, updateCotizacion, deleteCotizacion, getAllCotizacionPedidos } = require("../repositories/cotizacion.repository");
 const { helperImg, uploadToCloudinary, getPublicIdFromUrl, deleteFromCloudinary } = require("../utils/image");
 const { createCotizacionPedidos, deleteCotizacionPedidos } = require("../repositories/cotizacion_pedidos.repository");
 
@@ -26,6 +26,13 @@ exports.getCotizacionById = async (req, res) => {
     }
 };
 
+const arraysEqual = (arr1, arr2) => {
+    if (arr1.length !== arr2.length) return false;
+    const ordenarArr1 = arr1.slice().sort();
+    const ordenarArr2 = arr2.slice().sort();
+    return ordenarArr1.every((value, index) => value === ordenarArr2[index]);
+};
+
 exports.createCotizacion = async (req, res) => {
     try {
         const { nombrePersona, pedidoId, valorDomicilio, valorPrendas, metodoPago } = req.body;
@@ -45,6 +52,33 @@ exports.createCotizacion = async (req, res) => {
             },
             attributes: ['id', 'usuarioId']
         });
+
+        const cotizacionesExistentes = await Cotizacion.findAll({
+            include: [
+                {
+                    model: CotizacionPedidos,
+                    as: 'cotizacion_pedidos',
+                    include: [
+                        {
+                            model: Pedido,
+                            as: 'pedido',
+                            attributes: ['id']
+                        }
+                    ]
+                }
+            ]
+        });
+
+        // Verificar si ya existe una cotización con la misma combinación de pedidos
+        for (const cotizacion of cotizacionesExistentes) {
+            const pedidoIdsExistentes = cotizacion.cotizacion_pedidos
+                .filter(cotizacion_pedido => cotizacion_pedido.pedido)
+                .map(cotizacion_pedido => cotizacion_pedido.pedido.id);
+
+            if (arraysEqual(pedidoIdsArray, pedidoIdsExistentes)) {
+                return res.status(400).json({ error: 'La combinación de pedidos ya existe en otra cotización' });
+            }
+        }
 
         if (!pedidos.length) {
             return res.status(400).json({ error: 'Pedido(s) inválido(s) proporcionado(s)' });
@@ -88,10 +122,10 @@ exports.createCotizacion = async (req, res) => {
 
         const cotizacionCreada = await createCotizacion(newCotizacion);
         await createCotizacionPedidos(cotizacionCreada.id, cotizacionCreada.pedidoId);
-        res.status(201).json({ msg: 'Cotizacion creado exitosamente' });
+        res.status(201).json({ msg: 'Cotización creada exitosamente' });
     } catch (error) {
         console.log(error);
-        res.status(500).json(error);
+        res.status(500).json({ error: 'Error al crear la cotización' });
     }
 };
 
