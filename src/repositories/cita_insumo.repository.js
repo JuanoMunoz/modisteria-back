@@ -1,4 +1,4 @@
-const { CitaInsumo, Insumo } = require("../models");
+const { CitaInsumo, Insumo, Cita } = require("../models");
 const {getInsumoById} = require('../repositories/insumo.repository')
 
 exports.getAllCitaInsumo = async () => {
@@ -30,3 +30,7 @@ exports.discountInsumo = async(id, cantidad)=>{
     const cantidadT = cantidadI - cantidad
     return await Insumo.update({cantidad:cantidadT}, {where:{id}})
 }
+
+exports.getAllCitaInsumoByCitaID = async (id) => {
+    return await CitaInsumo.findAll({ where: { cita_id: id } });
+};
