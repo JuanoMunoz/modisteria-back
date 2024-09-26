@@ -6,7 +6,7 @@ const { CotizacionPedidos } = require('./cotizacion_pedidos.model.js');
 const Cotizacion = sequelize.define('Cotizacion', {
     imagen: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     nombrePersona: {
         type: DataTypes.STRING,

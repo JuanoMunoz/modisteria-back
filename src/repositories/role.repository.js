@@ -1,4 +1,4 @@
-const { Role, RolesPermisos } = require("../models");
+const { Role, RolesPermisos, Permiso, Estado } = require("../models");
 
 exports.getAllRoles = async () => {
     return await Role.findAll();
@@ -23,6 +23,22 @@ exports.updateRole = async (id, nombre, permisosId, estadoId) => {
 exports.statusRole = async (id) => {
     return await Role.update({ estado: false }, { where: { id } });
 }
+
 exports.deleteRole = async (id) => {
-    return await Role.destroy( { where: { id } });
-}
+    const role = await Role.findOne({
+        where: { id }
+    });
+    
+    if (!role) {
+        throw new Error("Rol no encontrado");
+    }
+
+    const existePermiso = role.permisosId && role.permisosId.length > 0;
+    const existeEstado = await Estado.findOne({ where: { id: role.estadoId } });
+    
+    if (existePermiso || existeEstado) {
+        throw new Error("No se puede eliminar el rol porque está asociado a registros en otras tablas");
+    }
+    
+    return await Role.destroy({ where: { id } });
+};
