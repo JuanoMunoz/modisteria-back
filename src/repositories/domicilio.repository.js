@@ -1,20 +1,31 @@
-const { Domicilio, Usuario, Role, Venta, Cotizacion, Pedido } = require("../models");
+const { Domicilio, Usuario, Role, Venta, Cotizacion, Pedido, CotizacionPedidos } = require("../models");
 
 exports.getAllDomicilios = async () => {
     return await Domicilio.findAll({
         include: [
             {
                 model: Venta,
-                as: 'ventas',
+                as: 'ventas', 
                 include: [
                     {
                         model: Cotizacion,
-                        as: 'cotizacion',
-                        //   attributes: ['id', 'pedidoId'],
+                        as: 'cotizacion', 
                         include: [
                             {
-                                model: Pedido,
-                                as: 'pedido'
+                                model: CotizacionPedidos,
+                                as: 'cotizacion_pedidos',
+                                include: [
+                                    {
+                                        model: Pedido,
+                                        as: 'pedido',
+                                        include: [
+                                            {
+                                                model: Usuario,
+                                                as: 'usuario',
+                                            }
+                                        ]
+                                    }
+                                ]
                             }
                         ]
                     }
@@ -29,16 +40,27 @@ exports.getDomicilioById = async (id) => {
         where: { id }, include: [
             {
                 model: Venta,
-                as: 'ventas',
+                as: 'ventas', 
                 include: [
                     {
                         model: Cotizacion,
-                        as: 'cotizacion',
-                        //   attributes: ['id', 'pedidoId'],
+                        as: 'cotizacion', 
                         include: [
                             {
-                                model: Pedido,
-                                as: 'pedido'
+                                model: CotizacionPedidos,
+                                as: 'cotizacion_pedidos',
+                                include: [
+                                    {
+                                        model: Pedido,
+                                        as: 'pedido',
+                                        include: [
+                                            {
+                                                model: Usuario,
+                                                as: 'usuario',
+                                            }
+                                        ]
+                                    }
+                                ]
                             }
                         ]
                     }
@@ -54,16 +76,27 @@ exports.getDomiciliosByDomiciliario = async (usuarioId) => {
         include: [
             {
                 model: Venta,
-                as: 'ventas',
+                as: 'ventas', 
                 include: [
                     {
                         model: Cotizacion,
-                        as: 'cotizacion',
-                        //   attributes: ['id', 'pedidoId'],
+                        as: 'cotizacion', 
                         include: [
                             {
-                                model: Pedido,
-                                as: 'pedido'
+                                model: CotizacionPedidos,
+                                as: 'cotizacion_pedidos',
+                                include: [
+                                    {
+                                        model: Pedido,
+                                        as: 'pedido',
+                                        include: [
+                                            {
+                                                model: Usuario,
+                                                as: 'usuario',
+                                            }
+                                        ]
+                                    }
+                                ]
                             }
                         ]
                     }
@@ -79,16 +112,28 @@ exports.getDomiciliosByCliente = async (clienteId) => {
         include: [
             {
                 model: Venta,
-                as: 'ventas',
+                as: 'ventas', 
                 include: [
                     {
                         model: Cotizacion,
-                        as: 'cotizacion',
+                        as: 'cotizacion', 
                         include: [
                             {
-                                model: Pedido,
-                                as: 'pedido',
-                                where: { usuarioId: clienteId },  
+                                model: CotizacionPedidos,
+                                as: 'cotizacion_pedidos',
+                                include: [
+                                    {
+                                        model: Pedido,
+                                        as: 'pedido',
+                                        include: [
+                                            {
+                                                model: Usuario,
+                                                as: 'usuario',
+                                                where: { id: clienteId }, 
+                                            }
+                                        ]
+                                    }
+                                ]
                             }
                         ]
                     }
@@ -97,7 +142,6 @@ exports.getDomiciliosByCliente = async (clienteId) => {
         ]
     });
 };
-
 
 exports.createDomicilio = async (domicilio) => {
     const user = await Usuario.findByPk(domicilio.usuarioId);

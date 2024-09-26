@@ -31,7 +31,7 @@ exports.createRole = async (req, res) => {
 
     try {
         const newRole = await createRole(nombre, permisosId, estadoId);
-        createRolesPermiso(newRole.id, permisosId);
+        await createRolesPermiso(newRole.id, permisosId);
         res.status(201).json({msg: 'rol creado exitosamente'});
     } catch (error) {
         console.log(error);
