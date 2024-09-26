@@ -1,4 +1,6 @@
 const { Cita, Usuario, Estado } = require("../models");
+const { Op } = require("sequelize");
+
 
 exports.getAllCitas = async (estadoId) => {
     const whereClause = {}
@@ -46,4 +48,13 @@ exports.deleteCita = async (id) => {
 
     return await Cita.destroy({ where: { id } });
 };
+
+exports.getCitaByUAS = async(usuarioId, estadoId) =>{
+    return await Cita.findOne({
+        where: {
+            usuarioId: usuarioId,
+            estadoId: { [Op.ne]: estadoId } // Busca citas que NO tengan estado 13 (Terminada)
+        }
+    });
+} 
 
