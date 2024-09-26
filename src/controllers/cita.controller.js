@@ -194,8 +194,8 @@ exports.deleteCita = async (req, res) => {
     const { id } = req.params;
     try {
         await deleteCita(id);
-        res.status(201).json({msg: 'cita eliminada'});
+        res.status(201).json({msg: 'Cita eliminada'});
     } catch (error) {
-        res.status(500).json(error);
+        return res.status(400).json({ message: error.message });
     }
 }

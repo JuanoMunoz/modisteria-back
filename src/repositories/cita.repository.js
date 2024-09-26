@@ -1,4 +1,4 @@
-const { Cita } = require("../models");
+const { Cita, Usuario, Estado } = require("../models");
 
 exports.getAllCitas = async () => {
     return await Cita.findAll();
@@ -25,6 +25,21 @@ exports.updateCita = async (id, cita) => {
 exports.statusCita = async (id) => {
     return await Cita.update({ estado: false }, { where: { id } });
 }
+
 exports.deleteCita = async (id) => {
-    return await Cita.destroy( { where: { id } });
-}
+    const cita = await Cita.findByPk(id);
+    
+    if (!cita) {
+        throw new Error("Cita no encontrada");
+    }
+
+    const existeUsuario = await Usuario.findOne({ where: { id: cita.usuarioId } }); 
+    const existeEstado = await Estado.findOne({ where: { id: cita.estadoId } });
+
+    if (existeUsuario || existeEstado) {
+        throw new Error("No se puede eliminar la cita porque está asociada a registros en otras tablas");
+    }
+
+    return await Cita.destroy({ where: { id } });
+};
+

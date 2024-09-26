@@ -3,6 +3,7 @@ const { sequelize } = require('../database/connection.js');
 const { Domicilio } = require('./domicilio.model.js');
 const { Pedido } = require('./pedido.model.js');
 const { PQRS } = require('./pqrs.model.js');
+const { Cita } = require('../models/cita.model.js')
 
 const Usuario = sequelize.define('Usuario',
   {
@@ -51,7 +52,8 @@ const Usuario = sequelize.define('Usuario',
 );
 
 //Relacion usuario y cita
-//has one
+Usuario.hasMany(Cita, {foreignKey: 'usuarioId', sourceKey: 'id', as: 'cita'});
+Cita.belongsTo(Usuario, {foreignKey: 'usuarioId', targetKey: 'id', as: 'usuario'});
 
 //Relacion usuario y domicilio
 Usuario.hasMany(Domicilio, {foreignKey: 'usuarioId', sourceKey: 'id', as: 'domicilio'});

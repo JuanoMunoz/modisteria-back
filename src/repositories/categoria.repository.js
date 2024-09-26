@@ -27,6 +27,19 @@ exports.updateCategoria = async (id, categoria) => {
 exports.statusCategoria = async (id) => {
     return await Categoria.update({ estado: false }, { where: { id } });
 }
+
 exports.deleteCategoria = async (id) => {
-    return await Categoria.destroy( { where: { id } });
+    const categoria = await Categoria.findByPk(id);
+    
+    if (!categoria) {
+        throw new Error("Categoría no encontrada");
+    }
+
+    if (categoria.estadoId === 2) {
+        return await Categoria.destroy({ where: { id } });
+    }
+    else {
+        throw new Error("No se puede eliminar la categoría porque está activa");
+    }
 }
+
