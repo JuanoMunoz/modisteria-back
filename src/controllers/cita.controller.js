@@ -94,6 +94,7 @@ exports.createCita = async (req, res) => {
     }
 };
 
+
 //actualizar estado, precio y estado
 exports.updateSPT = async(req,res)=>{
     
