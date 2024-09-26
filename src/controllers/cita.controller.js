@@ -123,6 +123,9 @@ exports.updateSPT = async(req,res)=>{
         res.status(500).json(error)
     }
 }
+
+
+
 exports.updateCita = async (req, res) => {
     console.log(req.body);
     const { id } = req.params;

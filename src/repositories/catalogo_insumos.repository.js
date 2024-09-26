@@ -22,3 +22,8 @@ exports.statusCatIns = async (id) => {
 exports.deleteCatIns= async (id) => {
     return await CatalogoInsumos.destroy( { where: { id } });
 }
+
+exports.getAllCatInsByCatalogoID = async (id) => {
+    return await CatalogoInsumos.findAll({ where: { catalogo_id: id } });
+};
+

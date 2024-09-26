@@ -60,7 +60,7 @@ exports.createCatalogo = async (req, res) => {
             estadoId
         };
         const catalogoCreado = await createCatalogo(newCatalogo);
-        const catalogoId = catalogoCreado['id']
+        const catalogoId = catalogoCreado.id
         const catalogo_insumo = {
             cantidad_utilizada: cantidad_utilizada,
             insumo_id: insumoId,
