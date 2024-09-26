@@ -1,5 +1,8 @@
+const { Op } = require("sequelize");
+const { Pedido } = require("../models");
 const { getAllCotizaciones, getCotizacionById, createCotizacion, updateCotizacion, deleteCotizacion } = require("../repositories/cotizacion.repository");
 const { helperImg, uploadToCloudinary, getPublicIdFromUrl, deleteFromCloudinary } = require("../utils/image");
+const { createCotizacionPedidos, deleteCotizacionPedidos } = require("../repositories/cotizacion_pedidos.repository");
 
 exports.getAllCotizaciones = async (req, res) => {
     try {
@@ -29,7 +32,36 @@ exports.createCotizacion = async (req, res) => {
             return res.status(400).json({ error: 'No file uploaded' });
         }
 
-        const { nombrePersona, pedidoId, valorDomicilio, valorPrendas } = req.body;
+        const { nombrePersona, pedidoId, valorDomicilio, valorPrendas, metodoPago } = req.body;
+
+        let pedidoIdsArray;
+        if (typeof pedidoId === 'string') {
+            pedidoIdsArray = pedidoId.split(',').map(id => parseInt(id.trim()));
+        } else if (Array.isArray(pedidoId)) {
+            pedidoIdsArray = pedidoId.map(id => parseInt(id));
+        } else {
+            return res.status(400).json({ error: 'Formato de pedidoId inválido' });
+        }
+
+        const pedidos = await Pedido.findAll({
+            where: {
+                id: { [Op.in]: pedidoIdsArray }
+            },
+            attributes: ['id', 'usuarioId']
+        });
+
+        if (!pedidos.length) {
+            return res.status(400).json({ error: 'Pedido(s) inválido(s) proporcionado(s)' });
+        }
+
+        const usuarioIdSet = new Set(pedidos.map(pedido => pedido.usuarioId));
+
+        if (usuarioIdSet.size > 1) {
+            return res.status(400).json({ error: 'Los pedidos pertenecen a múltiples usuarios' });
+        }
+
+        const usuarioId = [...usuarioIdSet][0];
+
         const processedBuffer = await helperImg(req.file.buffer, 300);
         const result = await uploadToCloudinary(processedBuffer);
 
@@ -42,11 +74,13 @@ exports.createCotizacion = async (req, res) => {
             valorDomicilio,
             valorPrendas,
             valorFinal: valorDomicilioNum + valorPrendasNum,
-            pedidoId,
+            metodoPago,
+            pedidoId: pedidoIdsArray,
             estadoId:3
         };
 
         const cotizacionCreada = await createCotizacion(newCotizacion);
+        await createCotizacionPedidos(cotizacionCreada.id, cotizacionCreada.pedidoId);
         res.status(201).json({ msg: 'Cotizacion creado exitosamente' });
     } catch (error) {
         console.log(error);
@@ -56,20 +90,49 @@ exports.createCotizacion = async (req, res) => {
 
 exports.updateCotizacion = async (req, res) => {
     const { id } = req.params;
-    const { nombrePersona, pedidoId, valorDomicilio, valorPrendas } = req.body;
+    const { nombrePersona, pedidoId, valorDomicilio, valorPrendas, metodoPago } = req.body;
+
     try {
         const existingCotizacion = await getCotizacionById(id);
+        if (!existingCotizacion) {
+            return res.status(404).json({ error: 'Cotización no encontrada' });
+        }
 
-        const valorDomicilioNum = parseFloat(valorDomicilio) || 0;
-        const valorPrendasNum = parseFloat(valorPrendas) || 0;
+        let pedidoIdsArray;
+        if (typeof pedidoId === 'string') {
+            pedidoIdsArray = pedidoId.split(',').map(id => parseInt(id.trim()));
+        } else if (Array.isArray(pedidoId)) {
+            pedidoIdsArray = pedidoId.map(id => parseInt(id));
+        } else {
+            return res.status(400).json({ error: 'Formato de pedidoId inválido' });
+        }
+
+        const pedidos = await Pedido.findAll({
+            where: { id: { [Op.in]: pedidoIdsArray } },
+            attributes: ['id', 'usuarioId']
+        });
+
+        if (!pedidos.length) {
+            return res.status(400).json({ error: 'Pedido(s) inválido(s) proporcionado(s)' });
+        }
+
+        const usuarioIdSet = new Set(pedidos.map(pedido => pedido.usuarioId));
+        if (usuarioIdSet.size > 1) {
+            return res.status(400).json({ error: 'Los pedidos pertenecen a múltiples usuarios' });
+        }
+
+        const valorDomicilioNum = parseFloat(valorDomicilio) || existingCotizacion.valorDomicilio;
+        const valorPrendasNum = parseFloat(valorPrendas) || existingCotizacion.valorPrendas;
+
         const updatedCotizacion = {
             nombrePersona: nombrePersona || existingCotizacion.nombrePersona,
-            valorDomicilio: valorDomicilio || existingCotizacion.valorDomicilio,
-            valorPrendas: valorPrendas || existingCotizacion.valorPrendas,
-            valorFinal: (valorDomicilioNum + valorPrendasNum) || existingCotizacion.valorFinal,
-            pedidoId: pedidoId || existingCotizacion.pedidoId,
+            valorDomicilio: valorDomicilioNum,
+            valorPrendas: valorPrendasNum,
+            valorFinal: valorDomicilioNum + valorPrendasNum,
+            metodoPago: metodoPago || existingCotizacion.metodoPago,
+            pedidoId: pedidoIdsArray || existingCotizacion.pedidoId,
             imagen: existingCotizacion.imagen,
-            estadoId:3
+            estadoId: 3
         };
 
         if (req.file) {
@@ -83,10 +146,13 @@ exports.updateCotizacion = async (req, res) => {
             }
         }
 
-        const updateResult = await updateCotizacion(id, updatedCotizacion);
-        res.status(201).json({ msg: 'Cotizacion actualizado exitosamente' });
+        await deleteCotizacionPedidos(id);
+        const cotizacion = await updateCotizacion(id, updatedCotizacion);
+        await createCotizacionPedidos(id, updatedCotizacion.pedidoId);
+        res.status(200).json({ msg: 'Cotización actualizada exitosamente' });
     } catch (error) {
-        res.status(500).json(error);
+        console.error('Error actualizando la cotización:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 };
 
