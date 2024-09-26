@@ -53,9 +53,9 @@ exports.createCita = async (req, res) => {
         }
         // Verificar que sea programada con el tiempo de anticipación requerido
         const fechaMinima = new Date(fechaActual);
-        fechaMinima.setDate(fechaActual.getDate() + 2);
+        fechaMinima.setDate(fechaActual.getDate() + 3);
         if (fechaCita < fechaMinima) {
-            return res.status(400).json({ msg: 'La fecha de la cita debe ser programada mínimo con 2 días de anticipación' });
+            return res.status(400).json({ msg: 'La fecha de la cita debe ser programada mínimo con 3 días de anticipación' });
         }
 
         // Lunes a viernes
@@ -97,7 +97,6 @@ exports.createCita = async (req, res) => {
 
 //actualizar estado, precio y estado
 exports.updateSPT = async(req,res)=>{
-    
     try {
         const {id} = req.params
         const {estadoId, tiempo, precio} = req.body
@@ -110,8 +109,14 @@ exports.updateSPT = async(req,res)=>{
             tiempo,
             precio
         }
-    await updateCita(id, updatedCita)
-    res.status(201).json({msg:'Estado, precio y tiempo de cita actualizado exitosamente'})
+        /* const mailOptions = {
+            from: "modistadonaluz@gmail.com",
+            to: email,
+            subject: 'Código de verificación',
+            html: ``
+        } */
+        await updateCita(id, updatedCita)
+        res.status(201).json({msg:'Estado, precio y tiempo de cita actualizado exitosamente'})
     } catch (error) {
         console.log(error);
         res.status(500).json(error)
