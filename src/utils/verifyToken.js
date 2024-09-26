@@ -7,8 +7,7 @@ exports.verifyToken = (req, res, next) => {
 
     jwt.verify(token, process.env.KEY_JWT, (err, { payload }) => {
         if (err) return res.status(401).json({ msg: payload });
-        if (payload) {
-            console.log(payload);     
+        if (payload) {  
             req.id = payload.id;
             req.email = payload.email;
             req.roleId = payload.role.id;

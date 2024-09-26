@@ -2,8 +2,9 @@ const { getAllCitas, getCitaById, createCita, updateCita, deleteCita } = require
 const { helperImg, uploadToCloudinary, getPublicIdFromUrl, deleteFromCloudinary } = require("../utils/image");
 
 exports.getAllCitas = async (req, res) => {
+    
   try {
-    const citas = await getAllCitas();
+    const citas = await getAllCitas(req.query.estadoId);
     res.status(200).json(citas);
   } catch (error) {
     console.log(error);

@@ -1,7 +1,11 @@
 const { Cita, Usuario, Estado } = require("../models");
 
-exports.getAllCitas = async () => {
-    return await Cita.findAll();
+exports.getAllCitas = async (estadoId) => {
+    const whereClause = {}
+    if (estadoId) {
+        whereClause.estadoId = parseInt(estadoId)
+    }
+    return await Cita.findAll({where: whereClause});
 };
 
 exports.getCitaById = async (id) => {

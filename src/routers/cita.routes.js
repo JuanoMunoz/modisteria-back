@@ -7,7 +7,7 @@ const { upload } = require('../utils/image.js');
 
 const router = Router();
 
-router.get('/getAllCitas', [verifyToken, validateRolPermisoCita], getAllCitas);
+router.get('/getAllCitas', [verifyToken], getAllCitas);
 
 router.get('/getCitaById/:id', [verifyToken, validateRolPermisoCita], getCitaById);
 
