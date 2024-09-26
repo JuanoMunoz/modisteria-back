@@ -39,9 +39,6 @@ exports.createRole = async (req, res) => {
     }
 };
 
-//1 recibir el arreglo de permisos, 2 traer todos los permisos que tiene ese rol (consulta db), 3 dividir cuáles permisos no existen en el arr de db y agregarlos y eliminar los que ya no estan en el que me enviaron (enviado: 4,5) (db: 12345) eliminar delete 123 y dejar 4 y agregar create 5
-
-//otra opcion db delete todos los permisos que tengan el rol 1 y crear todos permisos de nuevo 
 exports.updateRole = async (req, res) => {
     const { id } = req.params;
     const { nombre, permisosId, estadoId } = req.body;  
@@ -62,7 +59,7 @@ exports.statusRole = async (req, res) => {
 
     try {
         await statusRole(id);
-        res.status(201).json({msg: 'rol inactivo'});
+        res.status(201).json({msg: 'Rol inactivo'});
     } catch (error) {
         res.status(500).json(error);
     }
@@ -73,8 +70,8 @@ exports.deleteRole = async (req, res) => {
 
     try {
         await deleteRole(id);
-        res.status(201).json({ msg: 'rol eliminado' });
+        res.status(201).json({ msg: 'Rol eliminado' });
     } catch (error) {
-        res.status(500).json({ msg: error.message });
+        return res.status(400).json({ message: error.message });
     }
 }

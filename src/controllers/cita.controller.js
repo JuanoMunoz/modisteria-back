@@ -96,7 +96,7 @@ exports.createCita = async (req, res) => {
 };
 
 
-//actualizar estado, precio y estado
+//actualizar estado, precio y tiempo
 exports.updateSPT = async(req,res)=>{
     try {
         const {id} = req.params

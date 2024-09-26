@@ -1,4 +1,4 @@
-const { PQRS } = require("../models");
+const { PQRS, Usuario, Domicilio } = require("../models");
 
 exports.getAllPQRS = async () => {
     return await PQRS.findAll();
@@ -21,5 +21,18 @@ exports.statusPQRS = async (id) => {
 }
 
 exports.deletePQRS = async (id) => {
+    const pqrs = await PQRS.findByPk(id);
+    
+    if (!pqrs) {
+        throw new Error("PQRS no encontrado");
+    }
+
+    // const existeDomicilio = await Domicilio.findOne({ where: { id: pqrs.domicilioId } }); 
+    // const existeUsuario = await Usuario.findOne({ where: { id: pqrs.usuarioId } });
+    
+    // if (existeDomicilio || existeUsuario) {
+    //     throw new Error("No se puede eliminar la PQRS porque está asociado a otros registros");
+    // }
+
     return await PQRS.destroy({ where: { id } });
 }

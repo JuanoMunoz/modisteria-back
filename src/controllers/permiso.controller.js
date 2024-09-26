@@ -62,8 +62,8 @@ exports.deletePermiso = async (req, res) => {
 
     try {
         await deletePermiso(id);
-        res.status(201).json({msg: 'permiso eliminado'});
+        res.status(201).json({msg: 'Permiso eliminado'});
     } catch (error) {
-        res.status(500).json(error);
+        return res.status(400).json({ message: error.message });
     }
 }

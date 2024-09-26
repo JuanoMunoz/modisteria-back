@@ -28,10 +28,6 @@ exports.getCotizacionById = async (req, res) => {
 
 exports.createCotizacion = async (req, res) => {
     try {
-        if (!req.file) {
-            return res.status(400).json({ error: 'No file uploaded' });
-        }
-
         const { nombrePersona, pedidoId, valorDomicilio, valorPrendas, metodoPago } = req.body;
 
         let pedidoIdsArray;
@@ -62,21 +58,32 @@ exports.createCotizacion = async (req, res) => {
 
         const usuarioId = [...usuarioIdSet][0];
 
-        const processedBuffer = await helperImg(req.file.buffer, 300);
-        const result = await uploadToCloudinary(processedBuffer);
+        let imagen = null;
+
+        // Verificar el método de pago y gestionar la imagen
+        if (metodoPago === 'efectivo') {
+            imagen = null;
+        } else if (metodoPago === 'transferencia') {
+            if (!req.file) {
+                return res.status(400).json({ error: 'Se requiere una imagen para el método de pago transferencia' });
+            }
+            const processedBuffer = await helperImg(req.file.buffer, 300);
+            const result = await uploadToCloudinary(processedBuffer);
+            imagen = result.url;
+        }
 
         const valorDomicilioNum = parseFloat(valorDomicilio) || 0;
         const valorPrendasNum = parseFloat(valorPrendas) || 0;
 
         const newCotizacion = {
-            imagen:result.url,
+            imagen,
             nombrePersona,
             valorDomicilio,
             valorPrendas,
             valorFinal: valorDomicilioNum + valorPrendasNum,
             metodoPago,
             pedidoId: pedidoIdsArray,
-            estadoId:3
+            estadoId: 3
         };
 
         const cotizacionCreada = await createCotizacion(newCotizacion);
@@ -135,14 +142,21 @@ exports.updateCotizacion = async (req, res) => {
             estadoId: 3
         };
 
-        if (req.file) {
-            const processedBuffer = await helperImg(req.file.buffer, 300);
-            const result = await uploadToCloudinary(processedBuffer);
-            updatedCotizacion.imagen = result.url;  
+        // Verificar el método de pago y gestionar la imagen
+        if (metodoPago === 'efectivo') {
+            updatedCotizacion.imagen = null; 
+        } else if (metodoPago === 'transferencia') {
+            if (req.file) {
+                const processedBuffer = await helperImg(req.file.buffer, 300);
+                const result = await uploadToCloudinary(processedBuffer);
+                updatedCotizacion.imagen = result.url;
 
-            if (existingCotizacion.imagen) {
-                const publicId = getPublicIdFromUrl(existingCotizacion.imagen); 
-                await deleteFromCloudinary(publicId);  
+                if (existingCotizacion.imagen) {
+                    const publicId = getPublicIdFromUrl(existingCotizacion.imagen);
+                    await deleteFromCloudinary(publicId);
+                }
+            } else {
+                return res.status(400).json({ error: 'Se requiere una imagen para el método de pago transferencia' });
             }
         }
 
@@ -171,7 +185,6 @@ exports.deleteCotizacion = async (req, res) => {
     const { id } = req.params;
 
     try {
-        // Llama a la función que elimina la cotización
         await deleteCotizacion(id);
         res.status(200).json({ msg: 'Cotización eliminada exitosamente' });
     } catch (error) {
