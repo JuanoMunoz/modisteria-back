@@ -33,7 +33,6 @@ module.exports = { Estado };
 Usuario.belongsTo(Estado, { foreignKey: 'estadoId', as: 'estadoUsuario' });
 Estado.hasMany(Usuario, { foreignKey: 'estadoId', as: 'usuarios' });
 
-
 //Relación de permiso a estados
 Permiso.belongsTo(Estado, {foreignKey: 'estadoId', as: 'estadoPermisos'});
 Estado.hasMany(Permiso, {foreignKey: 'estadoId', as: 'permisos'});
@@ -50,7 +49,7 @@ Estado.hasMany(Domicilio, {foreignKey: 'estadoId', targetKey: 'id', as: 'domicil
 Cita.belongsTo(Estado, {foreignKey: 'estadoId', sourceKey: 'id', as: 'estadoCita'});
 Estado.hasMany(Cita, {foreignKey: 'estadoId', targetKey: 'id', as: 'citas'});
 
- //Relación de ventas a estados
+//Relación de ventas a estados
 Venta.belongsTo(Estado, {foreignKey: 'estadoId', sourceKey: 'id', as: 'estado'});
 Estado.hasMany(Venta, {foreignKey: 'estadoId', targetKey: 'id', as: 'usuario'}); 
 
@@ -69,8 +68,3 @@ Estado.hasMany(Insumo, {foreignKey: 'estadoId', targetKey: 'id', as: 'insumos'})
 //Relación de Insumos a estados
 Cotizacion.belongsTo(Estado, {foreignKey: 'estadoId', sourceKey: 'id', as: 'estadoCotizacion'});
 Estado.hasMany(Cotizacion, {foreignKey: 'estadoId', targetKey: 'id', as: 'cotizacion'});
-
-
-
-
-

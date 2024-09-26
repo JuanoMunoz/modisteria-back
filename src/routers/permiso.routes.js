@@ -1,4 +1,3 @@
-// const router = require("express").Router();
 const { Router } = require("express");
 const { getAllPermisos, getPermisoById, createPermiso, updatePermiso, deletePermiso, statusPermiso} = require("../controllers/permiso.controller");
 const { verifyToken } = require("../utils/verifyToken");

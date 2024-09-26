@@ -22,7 +22,6 @@ exports.getPedidoById = async (req, res) => {
     }
 };
 
-//Modificar el create para que el usuarioId que se use se req.userId del token 
 exports.createPedido = async (req, res) => {
     const Pedido = req.body;
 

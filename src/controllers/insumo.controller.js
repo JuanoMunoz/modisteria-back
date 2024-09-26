@@ -37,7 +37,6 @@ exports.getInsumoById = async (req, res) => {
     }
 };
 
-//Agregar validacion con consulta de tipo de categoria para que solo se pueda agregar una con tipo Insumo
 exports.createInsumo = async (req, res) => {
     const insumo = req.body;
 

@@ -1,4 +1,3 @@
-// const router = require("express").Router();
 const { Router } = require("express");
 const { getAllDomicilios, getDomicilioById, getDomiciliosByDomiciliario, getDomiciliosByCliente, createDomicilio, updateDomicilio, deleteDomicilio, statusDomicilio} = require("../controllers/domicilio.controller");
 const { verifyToken } = require("../utils/verifyToken");

@@ -35,8 +35,6 @@ const Catalogo = sequelize.define('Catalogo', {
     timestamps: false,
 });
 
-//Relación catálogo a pedido
-
 
 module.exports = { Catalogo };
 

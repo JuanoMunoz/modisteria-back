@@ -1,4 +1,3 @@
-// const router = require("express").Router();
 const { Router } = require("express");
 const { getAllCotizaciones, getCotizacionById, createCotizacion, updateCotizacion, deleteCotizacion, statusCotizacion } = require("../controllers/cotizacion.controller");
 const {upload} = require('../utils/image.js');

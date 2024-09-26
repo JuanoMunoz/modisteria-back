@@ -1,4 +1,3 @@
-// const router = require("express").Router();
 const { Router } = require("express");
 const { getAllUsers, getUserById, createUser, updateUser, statusUser, deleteUser, login, forgotPassword, resetPassword, getCodePassword, getCodeVerification, verifyUser, isYourCurrentPassword, resetCurrentPassword, updateInfo} = require("../controllers/usuario.controller");
 const { verifyToken } = require("../utils/verifyToken");
