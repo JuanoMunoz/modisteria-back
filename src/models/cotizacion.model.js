@@ -1,5 +1,6 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const { sequelize } = require('../database/connection.js');
+const { Venta } = require('./venta.model.js');
 
 const Cotizacion = sequelize.define('Cotizacion', {
     imagen: {
@@ -35,7 +36,9 @@ const Cotizacion = sequelize.define('Cotizacion', {
     timestamps: false,
 });
 
-//Relación cotizacion y venta
+//Relacion venta y cotizacion
+Cotizacion.hasMany(Venta, { foreignKey: 'cotizacionId', as: 'ventas' });
+Venta.belongsTo(Cotizacion, { foreignKey: 'cotizacionId', as: 'cotizacion' });
 
 module.exports = { Cotizacion };
 
