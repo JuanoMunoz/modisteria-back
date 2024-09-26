@@ -19,8 +19,5 @@ const Venta = sequelize.define('Venta', {
     timestamps: false,
 });
 
-//Relacion domicilio y venta
-Domicilio.hasMany(Venta, { foreignKey: 'domicilioId', as: 'ventas' });
-Venta.belongsTo(Domicilio, { foreignKey: 'domicilioId', as: 'domicilio' });
 
 module.exports = { Venta };

@@ -1,6 +1,7 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const { sequelize } = require('../database/connection.js');
 const { PQRS } = require('./pqrs.model.js');
+const { Venta } = require('./venta.model.js');
 
 const Domicilio = sequelize.define('Domicilio',
   {
@@ -30,5 +31,8 @@ const Domicilio = sequelize.define('Domicilio',
 Domicilio.hasMany(PQRS, {foreignKey:'domicilioId', sourceKey:'id', as:"pqrs"})
 PQRS.belongsTo(Domicilio, {foreignKey:'domicilioId', sourceKey:'id', as:'domicilio'})
 
+//Relacion domicilio y venta
+Venta.hasMany(Domicilio, { foreignKey: 'ventaId', as: 'domicilio' });
+Domicilio.belongsTo(Venta, { foreignKey: 'ventaId', as: 'ventas' });
 
 module.exports = { Domicilio };

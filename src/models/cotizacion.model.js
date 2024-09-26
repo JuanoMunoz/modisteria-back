@@ -1,5 +1,7 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const { sequelize } = require('../database/connection.js');
+const { Venta } = require('./venta.model.js');
+const { CotizacionPedidos } = require('./cotizacion_pedidos.model.js');
 
 const Cotizacion = sequelize.define('Cotizacion', {
     imagen: {
@@ -22,8 +24,12 @@ const Cotizacion = sequelize.define('Cotizacion', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
+    metodoPago: {
+        type: DataTypes.ENUM('efectivo', 'transferencia'),
+        allowNull: false,
+    },
     pedidoId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.ARRAY(DataTypes.INTEGER),
         allowNull: false,
     },
     estadoId: {
@@ -35,7 +41,12 @@ const Cotizacion = sequelize.define('Cotizacion', {
     timestamps: false,
 });
 
-//Relación cotizacion y venta
+//Relacion venta y cotizacion
+Cotizacion.hasMany(Venta, { foreignKey: 'cotizacionId', as: 'ventas' });
+Venta.belongsTo(Cotizacion, { foreignKey: 'cotizacionId', as: 'cotizacion' });
+
+Cotizacion.hasMany(CotizacionPedidos, {foreignKey: 'cotizacionId', sourceKey: 'id', as: 'cotizacion_pedidos'});
+CotizacionPedidos.belongsTo(Cotizacion, {foreignKey: 'cotizacionId', targetKey: 'id', as: 'cotizacion'});
 
 module.exports = { Cotizacion };
 

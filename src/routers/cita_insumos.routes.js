@@ -4,6 +4,6 @@ const { createAndDiscount } = require("../controllers/cita_insumo.controller");
 const router = Router();
 
 
-router.post('/createAndDiscount', createAndDiscount);
+router.put('/createAndDiscount', createAndDiscount);
 
 module.exports = router;

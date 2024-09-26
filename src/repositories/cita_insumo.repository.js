@@ -25,7 +25,7 @@ exports.deleteCitaInsumo = async (id) => {
 }
 
 exports.discountInsumo = async(id, cantidad)=>{
-    const insumo = await Insumo.getInsumoById(id)
+    const insumo = await getInsumoById(id)
     const cantidadI = insumo.cantidad
     const cantidadT = cantidadI - cantidad
     return await Insumo.update({cantidad:cantidadT}, {where:{id}})
