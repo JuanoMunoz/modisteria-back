@@ -162,7 +162,7 @@ exports.createUser = async (req, res) => {
 };
 
 exports.createUsuario = async (req, res) => {
-    const {nombre, email, telefono, password, roleId, estadoId} = req.body
+    const {nombre, email, telefono, password, roleId, direccion, estadoId} = req.body
     try {
         const encriptada = bcrypt.hashSync(password, 10)
         const newUser = {
@@ -170,7 +170,8 @@ exports.createUsuario = async (req, res) => {
             telefono: telefono,
             password: encriptada,
             nombre: nombre,
-            roleId:roleId,
+            roleId: roleId,
+            direccion: direccion
             estadoId:estadoId
         }
         console.log();
