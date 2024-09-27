@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { getAllInsumos, getInsumoById, createInsumo, updateInsumo, deleteInsumo, statusInsumo, getInsumosByCategoria} = require("../controllers/insumo.controller");
+const { getAllInsumos, getInsumoById, createInsumo, updateInsumo, deleteInsumo, statusInsumo, getInsumosByCategoria, reponerInsumo} = require("../controllers/insumo.controller");
 const { verifyToken } = require("../utils/verifyToken");
 const { validateRolPermisoInsumo } = require("../validators/validations.validator");
 const router = Router();
@@ -9,6 +9,8 @@ router.get('/getAllInsumos', [verifyToken, validateRolPermisoInsumo], getAllInsu
 router.get('/getInsumoById/:id', [verifyToken, validateRolPermisoInsumo], getInsumoById);
 
 router.get('/getInsumoByCategoria/:categoriaId', [verifyToken, validateRolPermisoInsumo], getInsumosByCategoria);
+
+router.put('/reponerInsumo',[verifyToken, validateRolPermisoInsumo], reponerInsumo);
 
 router.post('/createInsumo', [verifyToken, validateRolPermisoInsumo], createInsumo);
 

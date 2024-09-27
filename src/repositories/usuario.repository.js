@@ -14,6 +14,12 @@ exports.createUser = async (user) => {
     return await Usuario.create(user);
 }
 
+exports.getEmailByUserId = async (usuarioId) => {
+    const usuario = await Usuario.findOne({ where: { id: usuarioId } });
+    return usuario ? usuario.email : null; // Devuelve null si no se encuentra el usuario
+};
+
+
 exports.updateUser = async (id, user) => {
     return await Usuario.update(user, { where: { id } });
 }

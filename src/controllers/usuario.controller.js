@@ -161,6 +161,26 @@ exports.createUser = async (req, res) => {
     }
 };
 
+exports.createUsuario = async (req, res) => {
+    const {nombre, email, telefono, password, roleId, estadoId} = req.body
+    try {
+        const encriptada = bcrypt.hashSync(password, 10)
+        const newUser = {
+            email:email,
+            telefono: telefono,
+            password: encriptada,
+            nombre: nombre,
+            roleId:roleId,
+            estadoId:estadoId
+        }
+        console.log();
+        await createUser(newUser);
+        res.status(201).json({msg: 'Usuario creado exitosamente'});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
+};
 
 exports.getCodeVerification = async (req, res) =>{
     const {email} = req.body
