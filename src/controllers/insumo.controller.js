@@ -1,4 +1,4 @@
-const { getAllInsumos, getInsumoById, createInsumo, updateInsumo, deleteInsumo, getInsumosByCategoria } = require("../repositories/insumo.repository");
+const { getAllInsumos, getInsumoById, createInsumo, updateInsumo, deleteInsumo, getInsumosByCategoria, reponerInsumo } = require("../repositories/insumo.repository");
 
 exports.getAllInsumos = async (req, res) => {
   try {
@@ -24,6 +24,16 @@ exports.getInsumosByCategoria = async (req, res) => {
     }
 };
 
+exports.reponerInsumo = async(req,res)=>{
+    const {id} = req.body;
+    try {
+        await reponerInsumo(id)
+        res.status(201).json({msg:"Reposición de insumos realizada."})
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({error})
+    }
+}
 
 exports.getInsumoById = async (req, res) => {
     const { id } = req.params;

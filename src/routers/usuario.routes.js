@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { getAllUsers, getUserById, createUser, updateUser, statusUser, deleteUser, login, forgotPassword, resetPassword, getCodePassword, getCodeVerification, verifyUser, isYourCurrentPassword, resetCurrentPassword, updateInfo} = require("../controllers/usuario.controller");
+const { getAllUsers, getUserById, createUser, updateUser, statusUser, deleteUser, login, forgotPassword, resetPassword, getCodePassword, getCodeVerification, verifyUser, isYourCurrentPassword, resetCurrentPassword, updateInfo, createUsuario} = require("../controllers/usuario.controller");
 const { verifyToken } = require("../utils/verifyToken");
 const { validateRolPermisoUsuario } = require("../validators/validations.validator");
 const router = Router();
@@ -9,6 +9,7 @@ router.get('/getAllUsers', [verifyToken, validateRolPermisoUsuario], getAllUsers
 router.get('/getUserById/:id', [verifyToken, validateRolPermisoUsuario], getUserById);
 
 router.post('/createUser', [], createUser);
+router.post('/createUsuario', [], createUsuario);
 
 router.post('/getCodeVerification', [], getCodeVerification);
 

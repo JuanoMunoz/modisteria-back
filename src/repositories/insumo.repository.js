@@ -12,6 +12,10 @@ exports.createInsumo = async (insumo) => {
     return await Insumo.create(insumo);
 }
 
+exports.reponerInsumo = async(id)=>{
+    return await Insumo.update({cantidad:0},{where:{id}})
+}
+
 exports.updateInsumo = async (id, insumo) => {
     return await Insumo.update(insumo, { where: { id } });
 }

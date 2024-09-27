@@ -33,8 +33,8 @@ exports.updateCita = async (id, cita) => {
   return await Cita.update(cita, { where: { id } });
 };
 
-exports.statusCita = async (id) => {
-  return await Cita.update({ estado: false }, { where: { id } });
+exports.statusCita = async (id, estadoId) => {
+  return await Cita.update({estadoId}, { where: { id } });
 };
 
 exports.deleteCita = async (id) => {
@@ -58,11 +58,17 @@ exports.deleteCita = async (id) => {
   return await Cita.destroy({ where: { id } });
 };
 
-exports.getCitaByUAS = async (usuarioId, estadoId) => {
+exports.getCitaByUAS = async (usuarioId) => {
   return await Cita.findOne({
     where: {
       usuarioId: usuarioId,
-      estadoId: { [Op.ne]: estadoId }, // Busca citas que NO tengan estado 13 (Terminada)
+      estadoId: {
+        [Op.not]: [12, 13] 
+      }
     },
   });
 };
+
+exports.getCitasAceptadas = async(estadoId)=>{
+  return await Cita.findAll({where: {estadoId}})
+}
