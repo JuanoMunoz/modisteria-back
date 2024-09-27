@@ -234,7 +234,7 @@ exports.updateSPT = async (req, res) => {
     await transporter.sendMail(mailOptions);
 
     const updatedCita = {
-      estadoId: estadoId || existingCita.estadoId,
+      estadoId,
       tiempo,
       precio,
     };
