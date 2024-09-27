@@ -1,9 +1,23 @@
-const {getAllCitas,getCitaById,createCita,updateCita,deleteCita,getCitaByUAS,getCitasByUserId, getCitasAceptadas} = require("../repositories/cita.repository");
-const {helperImg,uploadToCloudinary,getPublicIdFromUrl,deleteFromCloudinary,}= require("../utils/image");
-const transporter = require('../utils/mailer');
+const {
+  getAllCitas,
+  getCitaById,
+  createCita,
+  updateCita,
+  deleteCita,
+  getCitaByUAS,
+  getCitasByUserId,
+  getCitasAceptadas,
+} = require("../repositories/cita.repository");
+const {
+  helperImg,
+  uploadToCloudinary,
+  getPublicIdFromUrl,
+  deleteFromCloudinary,
+} = require("../utils/image");
+const transporter = require("../utils/mailer");
 
-const {getEmailByUserId} = require('../repositories/usuario.repository');
-const moment = require('moment'); 
+const { getEmailByUserId } = require("../repositories/usuario.repository");
+const moment = require("moment");
 const { format } = require("morgan");
 
 exports.getAllCitas = async (req, res) => {
@@ -77,7 +91,7 @@ exports.createCita = async (req, res) => {
         .status(400)
         .json({ msg: "Solo se atiende de lunes a viernes" });
     }
-    const hora = fechaCita.getHours()+5;
+    const hora = fechaCita.getHours();
     if (hora < 8 || hora > 17) {
       return res
         .status(400)
@@ -93,7 +107,7 @@ exports.createCita = async (req, res) => {
       fecha,
       objetivo,
       usuarioId,
-      estadoId: 9, 
+      estadoId: 9,
       referencia,
     };
     await createCita(newCita);
@@ -104,23 +118,24 @@ exports.createCita = async (req, res) => {
   }
 };
 
-
 exports.updateSPT = async (req, res) => {
   try {
     const { id } = req.params;
     const { estadoId, tiempo, precio } = req.body;
-    
+
     const existingCita = await getCitaById(id);
     if (!existingCita) {
-      return res.status(500).json({ msg: "Cita no encontrada, intente de nuevo." });
+      return res
+        .status(500)
+        .json({ msg: "Cita no encontrada, intente de nuevo." });
     }
     const usuarioId = existingCita.usuarioId;
     const email = await getEmailByUserId(usuarioId);
-     const mailOptions = {
-      from:"modistadonaluz@gmail.com",
-      to:email,
-      subject: '¡Cita aprobada por la modista!',
-      html:`<!DOCTYPE html>
+    const mailOptions = {
+      from: "modistadonaluz@gmail.com",
+      to: email,
+      subject: "¡Cita aprobada por la modista!",
+      html: `<!DOCTYPE html>
             <html lang="es">
             <head>
                 <meta charset="UTF-8">
@@ -213,16 +228,16 @@ exports.updateSPT = async (req, res) => {
                 </div>
             </body>
             </html>
-            `
+            `,
     };
-    console.log(email)
-    await transporter.sendMail(mailOptions) 
-    
+    console.log(email);
+    await transporter.sendMail(mailOptions);
+
     const updatedCita = {
       estadoId: estadoId || existingCita.estadoId,
       tiempo,
       precio,
-    }
+    };
     await updateCita(id, updatedCita);
     res.status(201).json({
       msg: "Estado, precio, tiempo y fecha de finalización de cita actualizado exitosamente",
@@ -232,7 +247,6 @@ exports.updateSPT = async (req, res) => {
     res.status(500).json(error);
   }
 };
-
 
 exports.updateCita = async (req, res) => {
   console.log(req.body);
