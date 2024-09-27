@@ -17,7 +17,6 @@ exports.createAndDiscount = async (req, res) => {
             await createCitaInsumo(newCitaI);
             await discountInsumo(insumoId, cantidad_utilizada);
         }
-
         res.status(201).json({ msg: "Insumos descontados exitosamente" });
     } catch (error) {
         console.log(error);
