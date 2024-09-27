@@ -5,6 +5,7 @@ const {
   updateCita,
   deleteCita,
   getCitaByUAS,
+  getCitasByUserId,
 } = require("../repositories/cita.repository");
 const {
   helperImg,
@@ -37,7 +38,7 @@ exports.getCitaById = async (req, res) => {
 exports.getCitasByUsuarioId = async (req, res) => {
   const { usuarioId } = req.params;
   try {
-    const citas = await getCitasByUsuarioId(usuarioId);
+    const citas = await getCitasByUserId(usuarioId);
     res.status(200).json(citas);
   } catch (error) {
     console.error(error);
@@ -53,11 +54,9 @@ exports.createCita = async (req, res) => {
     // Verificar si el usuario ya tiene una cita activa
     const citaActiva = await getCitaByUAS(usuarioId, 13); //GET CITA BY USUARIO AND ESTADO
     if (citaActiva) {
-      return res
-        .status(400)
-        .json({
-          msg: "No puedes crear una nueva cita hasta que la cita anterior haya sido terminada.",
-        });
+      return res.status(400).json({
+        msg: "No puedes crear una nueva cita hasta que la cita anterior haya sido terminada.",
+      });
     }
 
     // Verificar que no pase de los 2 meses la cita
@@ -83,11 +82,9 @@ exports.createCita = async (req, res) => {
     const fechaMinima = new Date(fechaActual);
     fechaMinima.setDate(fechaActual.getDate() + 3);
     if (fechaCita < fechaMinima) {
-      return res
-        .status(400)
-        .json({
-          msg: "La fecha de la cita debe ser programada mínimo con 3 días de anticipación",
-        });
+      return res.status(400).json({
+        msg: "La fecha de la cita debe ser programada mínimo con 3 días de anticipación",
+      });
     }
 
     // Verificar que la cita sea de lunes a viernes
@@ -153,11 +150,9 @@ exports.updateSPT = async (req, res) => {
             html: ``
         }  */
     await updateCita(id, updatedCita);
-    res
-      .status(201)
-      .json({
-        msg: "Estado, precio y tiempo de cita actualizado exitosamente",
-      });
+    res.status(201).json({
+      msg: "Estado, precio y tiempo de cita actualizado exitosamente",
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
@@ -190,11 +185,9 @@ exports.updateCita = async (req, res) => {
     const fechaMinima = new Date(fechaActual);
     fechaMinima.setDate(fechaActual.getDate() + 2);
     if (fechaCita < fechaMinima) {
-      return res
-        .status(400)
-        .json({
-          msg: "La fecha de la cita debe ser programada mínimo con 2 días de anticipación",
-        });
+      return res.status(400).json({
+        msg: "La fecha de la cita debe ser programada mínimo con 2 días de anticipación",
+      });
     }
     //Lunes a viernes
     const dia_semana = fechaCita.getDay();
