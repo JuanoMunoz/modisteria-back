@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { getAllDomicilios, getDomicilioById, getDomiciliosByDomiciliario, getDomiciliosByCliente, createDomicilio, updateDomicilio, deleteDomicilio, statusDomicilio} = require("../controllers/domicilio.controller");
+const { getAllDomicilios, getDomicilioById, getDomiciliosByDomiciliario, getDomiciliosByClienteId, createDomicilio, updateDomicilio, deleteDomicilio, statusDomicilio} = require("../controllers/domicilio.controller");
 const { verifyToken } = require("../utils/verifyToken");
 const { validateRolPermisoDomicilio } = require("../validators/validations.validator");
 const router = Router();
@@ -10,7 +10,7 @@ router.get('/getDomicilioById/:id', [verifyToken, validateRolPermisoDomicilio], 
 
 router.get('/getDomiciliosByDomiciliario/:usuarioId', [verifyToken, validateRolPermisoDomicilio], getDomiciliosByDomiciliario);
 
-router.get('/getDomiciliosByCliente/:usuarioId', [verifyToken, validateRolPermisoDomicilio], getDomiciliosByCliente);
+router.get('/getDomiciliosByClienteId/:id', [verifyToken, validateRolPermisoDomicilio], getDomiciliosByClienteId);
 
 router.post('/createDomicilio', [verifyToken, validateRolPermisoDomicilio], createDomicilio);
 

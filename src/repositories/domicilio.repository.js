@@ -1,4 +1,4 @@
-const { Domicilio, Usuario, Role, Venta, Cotizacion, Pedido, CotizacionPedidos } = require("../models");
+const { Domicilio, Usuario, Role, Venta, Cotizacion, Pedido, CotizacionPedidos, Estado } = require("../models");
 
 exports.getAllDomicilios = async () => {
     return await Domicilio.findAll({
@@ -106,42 +106,60 @@ exports.getDomiciliosByDomiciliario = async (usuarioId) => {
     });
 };
 
-
-exports.getDomiciliosByCliente = async (clienteId) => {
-    return await Domicilio.findAll({
-        include: [
-            {
-                model: Venta,
-                as: 'ventas', 
-                include: [
-                    {
-                        model: Cotizacion,
-                        as: 'cotizacion', 
-                        include: [
-                            {
-                                model: CotizacionPedidos,
-                                as: 'cotizacion_pedidos',
-                                include: [
-                                    {
-                                        model: Pedido,
-                                        as: 'pedido',
-                                        include: [
-                                            {
-                                                model: Usuario,
-                                                as: 'usuario',
-                                                where: { id: clienteId }, 
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
+exports.getDomiciliosByClienteId = async (clienteId) => {
+    try {
+        const domicilios = await Domicilio.findAll({
+            include: [
+                {
+                    model: Venta,
+                    as: 'ventas',
+                    include: [
+                        {
+                            model: Cotizacion,
+                            as: 'cotizacion',
+                            include: [
+                                {
+                                    model: CotizacionPedidos,
+                                    as: 'cotizacion_pedidos',
+                                    include: [
+                                        {
+                                            model: Pedido,
+                                            as: 'pedido',
+                                            include: [
+                                                {
+                                                    model: Usuario,
+                                                    as: 'usuario',
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            where: {
+                '$ventas.cotizacion.cotizacion_pedidos.pedido.usuarioId$': clienteId 
             }
-        ]
-    });
+        });
+
+        if (domicilios.length === 0) {
+            return {
+                message: `No se encontraron domicilios para el cliente con ID ${clienteId}.`,
+                status: 404
+            };
+        }
+
+        return domicilios;
+
+    } catch (error) {
+        console.error("Error al obtener los domicilios:", error);
+        throw error;
+    }
 };
+
+
 
 exports.createDomicilio = async (domicilio) => {
     const user = await Usuario.findByPk(domicilio.usuarioId);
@@ -175,6 +193,20 @@ exports.statusDomicilio = async (id) => {
     return await Domicilio.update({ estado: false }, { where: { id } });
 }
 exports.deleteDomicilio = async (id) => {
+    // const domicilio = await Domicilio.findByPk(id);
+    
+    // if (!domicilio) {
+    //     throw new Error("Domicilio no encontrado");
+    // }
+
+    // const existeUsuario = await Usuario.findOne({ where: { id: domicilio.usuarioId } });
+    // const existeEstado = await Estado.findOne({ where: { id: domicilio.estadoId } });
+    // const existeVenta = await Venta.findOne({ where: { id: domicilio.ventaId } });
+    
+    // if (existeUsuario || existeEstado || existeVenta) {
+    //     throw new Error("No se puede eliminar el domicilio porque está asociado a registros en otras tablas");
+    // }
+
     return await Domicilio.destroy({ where: { id } });
 }
 

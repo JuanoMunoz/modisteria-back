@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { Pedido, Cotizacion, CotizacionPedidos } = require("../models");
+const { Pedido, Cotizacion, CotizacionPedidos, Venta } = require("../models");
 const { getAllCotizaciones, getCotizacionById, createCotizacion, updateCotizacion, deleteCotizacion, getAllCotizacionPedidos } = require("../repositories/cotizacion.repository");
 const { helperImg, uploadToCloudinary, getPublicIdFromUrl, deleteFromCloudinary } = require("../utils/image");
 const { createCotizacionPedidos, deleteCotizacionPedidos } = require("../repositories/cotizacion_pedidos.repository");
@@ -131,54 +131,27 @@ exports.createCotizacion = async (req, res) => {
 
 exports.updateCotizacion = async (req, res) => {
     const { id } = req.params;
-    const { nombrePersona, pedidoId, valorDomicilio, valorPrendas, metodoPago } = req.body;
+    const { metodoPago, estadoId } = req.body;
 
     try {
         const existingCotizacion = await getCotizacionById(id);
         if (!existingCotizacion) {
             return res.status(404).json({ error: 'Cotización no encontrada' });
         }
-
-        let pedidoIdsArray;
-        if (typeof pedidoId === 'string') {
-            pedidoIdsArray = pedidoId.split(',').map(id => parseInt(id.trim()));
-        } else if (Array.isArray(pedidoId)) {
-            pedidoIdsArray = pedidoId.map(id => parseInt(id));
-        } else {
-            return res.status(400).json({ error: 'Formato de pedidoId inválido' });
+        const estadoPermitido = [3, 4, 5];
+        if (estadoId && !estadoPermitido.includes(estadoId)) {
+            return res.status(400).json({ error: 'Estado inválido. Los valores permitidos son Pendiente (3), Aceptado (4) o Rechazado (5).' });
         }
-
-        const pedidos = await Pedido.findAll({
-            where: { id: { [Op.in]: pedidoIdsArray } },
-            attributes: ['id', 'usuarioId']
-        });
-
-        if (!pedidos.length) {
-            return res.status(400).json({ error: 'Pedido(s) inválido(s) proporcionado(s)' });
-        }
-
-        const usuarioIdSet = new Set(pedidos.map(pedido => pedido.usuarioId));
-        if (usuarioIdSet.size > 1) {
-            return res.status(400).json({ error: 'Los pedidos pertenecen a múltiples usuarios' });
-        }
-
-        const valorDomicilioNum = parseFloat(valorDomicilio) || existingCotizacion.valorDomicilio;
-        const valorPrendasNum = parseFloat(valorPrendas) || existingCotizacion.valorPrendas;
 
         const updatedCotizacion = {
-            nombrePersona: nombrePersona || existingCotizacion.nombrePersona,
-            valorDomicilio: valorDomicilioNum,
-            valorPrendas: valorPrendasNum,
-            valorFinal: valorDomicilioNum + valorPrendasNum,
             metodoPago: metodoPago || existingCotizacion.metodoPago,
-            pedidoId: pedidoIdsArray || existingCotizacion.pedidoId,
-            imagen: existingCotizacion.imagen,
-            estadoId: 3
+            estadoId: estadoId || existingCotizacion.estadoId,
+            imagen: existingCotizacion.imagen 
         };
 
         // Verificar el método de pago y gestionar la imagen
         if (metodoPago === 'efectivo') {
-            updatedCotizacion.imagen = null; 
+            updatedCotizacion.imagen = null;
         } else if (metodoPago === 'transferencia') {
             if (req.file) {
                 const processedBuffer = await helperImg(req.file.buffer, 300);
@@ -194,9 +167,18 @@ exports.updateCotizacion = async (req, res) => {
             }
         }
 
-        await deleteCotizacionPedidos(id);
-        const cotizacion = await updateCotizacion(id, updatedCotizacion);
-        await createCotizacionPedidos(id, updatedCotizacion.pedidoId);
+        await updateCotizacion(id, updatedCotizacion);
+
+        if (estadoId === 4) {
+            const nuevaVenta = {
+                fecha: new Date(), 
+                cotizacionId: existingCotizacion.id,
+                estadoId: 1 
+            };
+
+            await Venta.create(nuevaVenta);
+            console.log('Venta creada:', nuevaVenta);
+        }
         res.status(200).json({ msg: 'Cotización actualizada exitosamente' });
     } catch (error) {
         console.error('Error actualizando la cotización:', error);

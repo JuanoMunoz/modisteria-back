@@ -32,6 +32,19 @@ exports.statusCatalogo = async (id) => {
     return await Catalogo.update({ estado: false }, { where: { id } });
 }
 exports.deleteCatalogo = async (id) => {
+    const catalogo = await Catalogo.findByPk(id);
+    
+    if (!catalogo) {
+        throw new Error("Catálogo no encontrado");
+    }
+
+    // const existeCategoria = await Categoria.findOne({ where: { id: catalogo.categoriaId } }); 
+    // const existeEstado = await Estado.findOne({ where: { id: cita.estadoId } });
+    
+    // if (existeCategoria || existeEstado) {
+    //     throw new Error("No se puede eliminar el catálogo porque está asociado a registros en otras tablas");
+    // }
+
     return await Catalogo.destroy({ where: { id } });
 }
 
