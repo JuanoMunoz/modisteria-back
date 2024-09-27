@@ -1,4 +1,4 @@
-const {Pedido, Catalogo} = require('../models');
+const {Pedido, Catalogo, CotizacionPedidos} = require('../models');
 const {Op} = require('sequelize');
 
 exports.getAllPedido = async() =>{
@@ -29,6 +29,20 @@ exports.updatePedido = async (idPedido, pedido) => {
 exports.statusPedido = async (id) => {
     return await Pedido.update({ estado: false }, { where: { id } });
 }
-exports.deletePedido = async (idPedido) => {
-    return await Pedido.destroy( { where: { idPedido } });
+
+exports.deletePedido = async (id) => {
+    const pedido = await Pedido.findByPk(id);
+    
+    if (!pedido) {
+        throw new Error("Pedido no encontrado");
+    }
+
+    // const existeEnCotizacionPedidos = await CotizacionPedidos.findOne({ where: { pedidoId: pedido.id } }); 
+    // const existeCatalogo = await Pedido.findOne({ where: { id: pedido.catalogoId } });
+    
+    // if (existeEnCotizacionPedidos || existeCatalogo) {
+    //     throw new Error("No se puede eliminar el pedido porque está asociado a registros en otras tablas");
+    // }
+
+    return await Pedido.destroy( { where: { id } });
 }

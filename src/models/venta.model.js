@@ -9,7 +9,7 @@ const Venta = sequelize.define('Venta', {
     },
     cotizacionId: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: false,
     },
     estadoId: {
         type: DataTypes.INTEGER,

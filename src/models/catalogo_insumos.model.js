@@ -17,9 +17,8 @@ const CatalogoInsumos = sequelize.define('CatalogoInsumos', {
     tableName: 'catalogo_insumos',
     timestamps: false
 });
-
 // Definir las relaciones
-Catalogo.belongsToMany(Insumo, { through: CatalogoInsumos, foreignKey: 'catalogo_id' });
-Insumo.belongsToMany(Catalogo, { through: CatalogoInsumos, foreignKey: 'insumo_id' });
+Catalogo.belongsToMany(Insumo, { through: CatalogoInsumos, foreignKey: 'catalogo_id', as: 'insumos' });
+Insumo.belongsToMany(Catalogo, { through: CatalogoInsumos, foreignKey: 'insumo_id', as: 'catalogos' });
 
 module.exports = { CatalogoInsumos };

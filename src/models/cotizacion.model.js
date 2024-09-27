@@ -48,5 +48,6 @@ Venta.belongsTo(Cotizacion, { foreignKey: 'cotizacionId', as: 'cotizacion' });
 Cotizacion.hasMany(CotizacionPedidos, {foreignKey: 'cotizacionId', sourceKey: 'id', as: 'cotizacion_pedidos'});
 CotizacionPedidos.belongsTo(Cotizacion, {foreignKey: 'cotizacionId', targetKey: 'id', as: 'cotizacion'});
 
+
 module.exports = { Cotizacion };
 

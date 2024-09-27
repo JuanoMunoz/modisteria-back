@@ -19,6 +19,7 @@ exports.updatePermiso = async (id, permiso) => {
 exports.statusPermiso = async (id) => {
     return await Permiso.update({ estado: false }, { where: { id } });
 }
+
 exports.deletePermiso = async (id) => {
     const permiso = await Permiso.findByPk(id);
     
@@ -26,11 +27,11 @@ exports.deletePermiso = async (id) => {
         throw new Error("Permiso no encontrado");
     }
 
-    const existeEnRolesPermisos = await RolesPermisos.findOne({ where: { permisoId: id } });
+    // const existeEnRolesPermisos = await RolesPermisos.findOne({ where: { permisoId: id } });
     
-    if (existeEnRolesPermisos) {
-        throw new Error("No se puede eliminar el permiso porque está asociado a un rol");
-    }
+    // if (existeEnRolesPermisos) {
+    //     throw new Error("No se puede eliminar el permiso porque está asociado a un rol");
+    // }
 
     if (permiso.estadoId === 2) {
         return await Permiso.destroy( { where: { id } });
