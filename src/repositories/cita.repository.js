@@ -13,9 +13,15 @@ exports.getCitaById = async (id) => {
   return await Cita.findByPk(id);
 };
 
-exports.getCitasByUserId = async (usuarioId) => {
+exports.getCitasByUserId = async (usuarioId, estadoId) => {
+  const whereClause = {
+    usuarioId,
+  };
+  if (estadoId) {
+    whereClause.estadoId = parseInt(estadoId);
+  }
   return await Cita.findAll({
-    where: { usuarioId },
+    where: whereClause,
   });
 };
 

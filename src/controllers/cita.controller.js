@@ -37,8 +37,9 @@ exports.getCitaById = async (req, res) => {
 
 exports.getCitasByUsuarioId = async (req, res) => {
   const { usuarioId } = req.params;
+  const estadoId = req.query.estadoId || false;
   try {
-    const citas = await getCitasByUserId(usuarioId);
+    const citas = await getCitasByUserId(usuarioId, estadoId);
     res.status(200).json(citas);
   } catch (error) {
     console.error(error);

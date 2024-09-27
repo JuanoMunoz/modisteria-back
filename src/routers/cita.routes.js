@@ -7,6 +7,7 @@ const {
   deleteCita,
   statusCita,
   updateSPT,
+  getCitasByUsuarioId,
 } = require("../controllers/cita.controller");
 const { verifyToken } = require("../utils/verifyToken");
 const {
@@ -23,7 +24,7 @@ router.get(
   [verifyToken, validateRolPermisoCita],
   getCitaById
 );
-router.get("/getCitaByUserId/:usuarioId", [verifyToken], getCitaById);
+router.get("/getCitaByUserId/:usuarioId", [verifyToken], getCitasByUsuarioId);
 
 router.post(
   "/createCita",
