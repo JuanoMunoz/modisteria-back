@@ -46,7 +46,7 @@ exports.createCatalogo = async (req, res) => {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });
         }
-        const { producto, precio, descripcion, talla, categoriaId, cantidad_utilizada, insumoId, estadoId } = req.body;
+        const { producto, precio, descripcion, talla, categoriaId, estadoId } = req.body;
         const tallasProcesadas = req.body.talla.split(',').map(t => t.trim().toLowerCase());
         const processedBuffer = await helperImg(req.file.buffer, 300);
         const result = await uploadToCloudinary(processedBuffer);
@@ -60,7 +60,7 @@ exports.createCatalogo = async (req, res) => {
             estadoId
         };
         const catalogoCreado = await createCatalogo(newCatalogo);
-        const catalogoId = catalogoCreado.id
+/*         const catalogoId = catalogoCreado.id
         const catalogo_insumo = {
             cantidad_utilizada: cantidad_utilizada,
             insumo_id: insumoId,
@@ -69,7 +69,7 @@ exports.createCatalogo = async (req, res) => {
         const catInsCreado = await createCatIns(catalogo_insumo)
         if (catInsCreado) {
             console.log("agregado a catalogo insumos")
-        }
+        } */
 
         res.status(201).json({ msg: 'Catálogo creado exitosamente' });
     } catch (error) {
