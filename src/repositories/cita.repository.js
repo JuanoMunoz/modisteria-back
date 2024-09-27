@@ -44,16 +44,12 @@ exports.deleteCita = async (id) => {
     throw new Error("Cita no encontrada");
   }
 
-  const existeUsuario = await Usuario.findOne({
-    where: { id: cita.usuarioId },
-  });
-  const existeEstado = await Estado.findOne({ where: { id: cita.estadoId } });
+    // const existeUsuario = await Usuario.findOne({ where: { id: cita.usuarioId } }); 
+    // const existeEstado = await Estado.findOne({ where: { id: cita.estadoId } });
 
-  if (existeUsuario || existeEstado) {
-    throw new Error(
-      "No se puede eliminar la cita porque está asociada a registros en otras tablas"
-    );
-  }
+    // if (existeUsuario || existeEstado) {
+    //     throw new Error("No se puede eliminar la cita porque está asociada a registros en otras tablas");
+    // }
 
   return await Cita.destroy({ where: { id } });
 };

@@ -65,6 +65,6 @@ Estado.hasMany(Categoria, {foreignKey: 'estadoId', targetKey: 'id', as: 'categor
 Insumo.belongsTo(Estado, {foreignKey: 'estadoId', sourceKey: 'id', as: 'estadoInsumo'});
 Estado.hasMany(Insumo, {foreignKey: 'estadoId', targetKey: 'id', as: 'insumos'});
 
-//Relación de Insumos a estados
+//Relación de cotizacion a estados
 Cotizacion.belongsTo(Estado, {foreignKey: 'estadoId', sourceKey: 'id', as: 'estadoCotizacion'});
 Estado.hasMany(Cotizacion, {foreignKey: 'estadoId', targetKey: 'id', as: 'cotizacion'});

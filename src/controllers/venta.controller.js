@@ -1,4 +1,4 @@
-const { getAllVentas, getVentaById, createVenta } = require("../repositories/venta.repository");
+const { getAllVentas, getVentaById, createVenta, getVentaByUsuarioId } = require("../repositories/venta.repository");
 
 exports.getAllVentas = async (req, res) => {
   try {
@@ -16,6 +16,18 @@ exports.getVentaById = async (req, res) => {
     try {
         console.log(id);
         const venta = await getVentaById(id);
+        res.status(200).json(venta);
+    } catch (error) {
+        res.status(500).json(error);
+    }
+};
+
+exports.getVentaByUsuarioId = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        console.log(id);
+        const venta = await getVentaByUsuarioId(id);
         res.status(200).json(venta);
     } catch (error) {
         res.status(500).json(error);

@@ -63,6 +63,6 @@ exports.deletePedido = async (req, res) => {
         await deletePedido(id);
         res.status(201).json({msg: 'Pedido eliminada'});
     } catch (error) {
-        res.status(400).json(error);
+        return res.status(400).json({ message: error.message });
     }
 }

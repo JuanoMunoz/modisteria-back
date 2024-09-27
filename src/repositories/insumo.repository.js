@@ -23,9 +23,28 @@ exports.updateInsumo = async (id, insumo) => {
 exports.statusInsumo = async (id) => {
     return await Insumo.update({ estado: false }, { where: { id } });
 }
+
 exports.deleteInsumo = async (id) => {
-    return await Insumo.destroy({ where: { id } });
+    const insumo = await Insumo.findByPk(id);
+    
+    if (!insumo) {
+        throw new Error("Insumo no encontrado");
+    }
+
+    // const existeCategoria = await Categoria.findOne({ where: { id: insumo.categoriaId } }); 
+    
+    // if (existeCategoria) {
+    //     throw new Error("No se puede eliminar el insumo porque está asociado a registros en otras tablas");
+    // }
+
+    // if (insumo.estadoId === 2) {
+        return await Insumo.destroy( { where: { id } });
+    // }
+    // else {
+    //     throw new Error("No se puede eliminar el insumo porque está activo");
+    // }
 }
+
 exports.getInsumosByCategoria = async(categoriaId)=>{
     return await Insumo.findAll({
         where:{categoriaId},
