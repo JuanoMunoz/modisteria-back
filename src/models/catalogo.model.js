@@ -19,8 +19,12 @@ const Catalogo = sequelize.define('Catalogo', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    talla: {
-      type: Sequelize.ARRAY(Sequelize.STRING),
+    stock: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    tallaId: {
+      type: Sequelize.ARRAY(Sequelize.INTEGER),
       allowNull: false,
     },
     categoriaId: {

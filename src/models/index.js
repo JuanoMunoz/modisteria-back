@@ -15,6 +15,7 @@ const { Venta } = require('./venta.model.js')
 const { Cotizacion } = require('./cotizacion.model.js')
 const { RolesPermisos } = require('./roles_permisos.model.js')
 const { CitaInsumo} = require('./cita_insumo.model.js')
-const { CotizacionPedidos } = require('./cotizacion_pedidos.model.js')
+const { CotizacionPedidos } = require('./cotizacion_pedidos.model.js');
+const { Talla } = require("./talla.model.js");
 
-module.exports = { Usuario, Role, Permiso, Insumo, Categoria, Catalogo, Cita, CatalogoInsumos, Domicilio, PQRS, Verificacion, Pedido, Estado, Venta, Cotizacion, RolesPermisos, CotizacionPedidos, CitaInsumo };
+module.exports = { Usuario, Role, Permiso, Insumo, Categoria, Catalogo, Cita, CatalogoInsumos, Domicilio, PQRS, Verificacion, Pedido, Estado, Venta, Cotizacion, RolesPermisos, CotizacionPedidos, CitaInsumo, Talla };
