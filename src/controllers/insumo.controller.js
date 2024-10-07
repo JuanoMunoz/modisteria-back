@@ -1,3 +1,4 @@
+const { Catalogo, CatalogoInsumos, Insumo } = require("../models");
 const { getAllInsumos, getInsumoById, createInsumo, updateInsumo, deleteInsumo, getInsumosByCategoria, reponerInsumo } = require("../repositories/insumo.repository");
 
 exports.getAllInsumos = async (req, res) => {
@@ -63,13 +64,66 @@ exports.createInsumo = async (req, res) => {
 exports.updateInsumo = async (req, res) => {
     const { id } = req.params;
     const insumo = req.body;
+
     try {
         await updateInsumo(id, insumo);
-        res.status(201).json({msg: 'insumo actualizado exitosamente'});
+
+        //Actualización del stock en catálogo
+        const catalogoInsumos = await CatalogoInsumos.findAll({
+            where: { insumo_id: id }
+        });
+
+        const catalogoIds = catalogoInsumos.map(item => item.catalogo_id);
+        
+        const catalogos = await Catalogo.findAll({
+            where: {
+                id: catalogoIds
+            }
+        });
+
+        for (const catalogo of catalogos) {
+            const newStock = await calculateStockForCatalogo(catalogo.id);
+            catalogo.stock = newStock;
+            await catalogo.save();
+        }
+
+        res.status(200).json({ msg: 'Insumo actualizado y stock recalculado exitosamente' });
     } catch (error) {
-        res.status(500).json(error);
+        console.error(`Error en updateInsumo: ${error.message}`);
+        res.status(500).json({ error: 'Error al actualizar el insumo' });
     }
 };
+
+const calculateStockForCatalogo = async (catalogoId) => {
+    const catalogoInsumos = await CatalogoInsumos.findAll({
+        where: { catalogo_id: catalogoId }
+    });
+
+    let stock = null;
+
+    for (const item of catalogoInsumos) {
+        const insumo = await Insumo.findByPk(item.insumo_id);
+        if (insumo) {
+            const cantidadUtilizada = item.cantidad_utilizada;
+            const cantidadDisponible = insumo.cantidad;
+
+            if (cantidadUtilizada > 0) {
+                const stockPorInsumo = Math.floor(cantidadDisponible / cantidadUtilizada);
+
+                if (stock === null || stockPorInsumo < stock) {
+                    stock = stockPorInsumo;
+                }
+            }
+        }
+    }
+
+    if (stock === null) {
+        stock = 0;
+    }
+
+    return stock;
+};
+
 
 exports.statusInsumo = async (req, res) => {
     const { id } = req.params;

@@ -1,6 +1,7 @@
+const { Insumo } = require("../models/insumo.model.js");
 const { getAllCatalogo, getCatalogoById, createCatalogo, updateCatalogo, deleteCatalogo, getCatalogoByCategoria } = require("../repositories/catalogo.repository");
-const { createCatIns } = require('../repositories/catalogo_insumos.repository.js')
 const { helperImg, uploadToCloudinary, deleteFromCloudinary, getPublicIdFromUrl } = require('../utils/image.js');
+const { createCatalogoInsumos } = require("./catalogo_insumo.contoller.js");
 
 exports.getAllCatalogo = async (req, res) => {
     try {
@@ -34,7 +35,7 @@ exports.getCatalogoByCategoria = async (req, res) => {
         if (catalogo.length === 0) {
             return res.status(404).json({ error: 'No se encontraron prendas en el catalogo para esta categoría' });
         }
-        res.status(200).json(insumos);
+        res.status(200).json(catalogo);
     } catch (error) {
         console.error('Error al obtener catalogo:', error);
         res.status(500).json({ error: 'Error al obtener los catalogo', details: error.message });
@@ -46,37 +47,77 @@ exports.createCatalogo = async (req, res) => {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });
         }
-        const { producto, precio, descripcion, talla, categoriaId, estadoId } = req.body;
-        const tallasProcesadas = req.body.talla.split(',').map(t => t.trim().toLowerCase());
+
+        const { producto, precio, descripcion, tallaId, categoriaId, estadoId, insumos } = req.body;
+
+        const tallasProcesadas = Array.isArray(tallaId) ? tallaId : tallaId.split(',').map(t => parseInt(t.trim(), 10));
+
+        let parsedInsumos = insumos;
+        if (typeof insumos === 'string') {
+            try {
+                parsedInsumos = JSON.parse(insumos);
+            } catch (error) {
+                return res.status(400).json({ error: 'Insumos debe ser un array o cadena JSON válida' });
+            }
+        }
+
+        if (!Array.isArray(parsedInsumos)) {
+            return res.status(400).json({ error: 'Insumos debe ser un array' });
+        }
+
         const processedBuffer = await helperImg(req.file.buffer, 300);
         const result = await uploadToCloudinary(processedBuffer);
+
+        const insumoIds = parsedInsumos.map(insumo => insumo.insumo_id);
+        const cantidadesUtilizadas = parsedInsumos.map(insumo => insumo.cantidad_utilizada);
+
+        const insumosDisponibles = await Insumo.findAll({
+            where: {
+                id: insumoIds
+            }
+        });
+
+        let stock = null;
+        insumosDisponibles.forEach((insumo, index) => {
+            const cantidadUtilizada = cantidadesUtilizadas[index];
+            const cantidadDisponible = insumo.cantidad;
+            const stockPorInsumo = Math.floor(cantidadDisponible / cantidadUtilizada);
+
+            if (stock === null || stockPorInsumo < stock) {
+                stock = stockPorInsumo;
+            }
+        });
+
         const newCatalogo = {
             producto,
             precio,
             descripcion,
-            talla: tallasProcesadas,
+            tallaId: tallasProcesadas, 
             categoriaId,
             imagen: result.url,
-            estadoId
+            estadoId,
+            stock: stock
         };
         const catalogoCreado = await createCatalogo(newCatalogo);
-/*         const catalogoId = catalogoCreado.id
-        const catalogo_insumo = {
-            cantidad_utilizada: cantidad_utilizada,
-            insumo_id: insumoId,
-            catalogo_id: catalogoId
-        }
-        const catInsCreado = await createCatIns(catalogo_insumo)
-        if (catInsCreado) {
-            console.log("agregado a catalogo insumos")
-        } */
 
-        res.status(201).json({ msg: 'Catálogo creado exitosamente' });
+        const datosInsumos = parsedInsumos.map(insumo => ({
+            insumo_id: insumo.insumo_id,
+            cantidad_utilizada: insumo.cantidad_utilizada
+        }));
+
+        await createCatalogoInsumos({
+            body: {
+                catalogoId: catalogoCreado.id,
+                datosInsumos
+            }
+        }, res);
+
     } catch (error) {
         console.error(`Error en createCatalogo: ${error.message}`);
         res.status(500).json({ success: false, message: 'Error al crear el catálogo' });
     }
 };
+
 
 exports.updateCatalogo = async (req, res) => {
     try {
@@ -103,7 +144,7 @@ exports.updateCatalogo = async (req, res) => {
             imagen: existingCatalogo.imagen,
             estadoId: estadoId || existingCatalogo.estadoId
         };
-
+        
         if (req.file) {
             const processedBuffer = await helperImg(req.file.buffer, 300);
             const result = await uploadToCloudinary(processedBuffer);

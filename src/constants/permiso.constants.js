@@ -12,6 +12,7 @@ const PERMISO_PEDIDO = 11;
 const PERMISO_PERMISO = 12;
 const PERMISO_PQRS = 13;
 const PERMISO_ROLES = 14;
+const PERMISO_TALLA = 15;
 
 module.exports = { 
     PERMISO_USUARIO, 
@@ -27,5 +28,6 @@ module.exports = {
     PERMISO_PEDIDO,
     PERMISO_PERMISO,
     PERMISO_PQRS,
-    PERMISO_ROLES
+    PERMISO_ROLES,
+    PERMISO_TALLA
 };
