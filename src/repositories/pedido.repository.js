@@ -1,4 +1,4 @@
-const {Pedido, Catalogo, CotizacionPedidos} = require('../models');
+const {Pedido, Catalogo, Venta} = require('../models');
 const {Op} = require('sequelize');
 
 exports.getAllPedido = async() =>{
@@ -18,9 +18,17 @@ exports.getPedidoById = async (usuarioId,catalogoId,talla) => {
     return await Pedido.findAll({ where: whereClause, include: { model: Catalogo, as:'catalogo',attributes:["producto","imagen","precio"]}});
 }
 
+exports.getPedidoByUsuarioyEstado = async (id) => {
+    return await Pedido.findAll({ estado: 3 }, { where: { id } });
+}
+
+exports.getPedidoByVenta = async (idVenta) => {
+    return await Pedido.findAll({ estado: 3 }, { where: { ventaId: idVenta } });
+}
+
 exports.createPedido = async (pedido) => {
     return await Pedido.create(pedido);
-}
+}  
 
 exports.updatePedido = async (idPedido, pedido) => {
     return await Pedido.update(pedido, { where: { idPedido } });

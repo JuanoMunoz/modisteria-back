@@ -12,6 +12,10 @@ exports.createVenta = async (venta) => {
     return await Venta.create(venta);
 };
 
+exports.updateVenta = async (id, venta) => {
+    return await Venta.update(venta, { where: { id } });
+}
+
 exports.getAllInfoByVentaID = async (ventaId) => {
     return await Venta.findAll({
         where: { id: ventaId },

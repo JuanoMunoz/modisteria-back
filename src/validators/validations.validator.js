@@ -37,10 +37,6 @@ exports.validateRolPermisoCategoria = async (req, res, next) => {
     validadora(req.roleId, constantsPermisos.PERMISO_CATEGORIA) ? next() : res.status(401).json({ msg: 'No tiene los permisos suficientes' })
 }
 
-exports.validateRolPermisoCotizacion = async (req, res, next) => {
-    validadora(req.roleId, constantsPermisos.PERMISO_COTIZACION) ? next() : res.status(401).json({ msg: 'No tiene los permisos suficientes' })
-}
-
 exports.validateRolPermisoDomicilio = async (req, res, next) => {
     validadora(req.roleId, constantsPermisos.PERMISO_DOMICILIO) ? next() : res.status(401).json({ msg: 'No tiene los permisos suficientes' })
 }

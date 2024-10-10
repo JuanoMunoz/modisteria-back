@@ -45,6 +45,17 @@ exports.createCotizacion = async (req, res) => {
         } else {
             return res.status(400).json({ error: 'Formato de pedidoId inválido' });
         }
+        exports.createPedido = async (req, res) => {
+            const { idPedido, cantidad, tallaId, catalogoId } = req.body;
+            try {
+                console.log(req.body);
+                await createPedido(Pedido);
+                res.status(201).json({msg: 'Pedido creado exitosamente'});
+            } catch (error) {
+                console.log(error);
+                res.status(500).json(error);
+            }
+        };
 
         const pedidos = await Pedido.findAll({
             where: {

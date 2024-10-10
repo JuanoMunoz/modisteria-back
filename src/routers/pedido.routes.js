@@ -6,12 +6,12 @@ const router = Router();
 
 router.get('/getAllPedido', [verifyToken, validateRolPermisoPedido], getAllPedido);
 
-router.get('/getPedidoById/:id', [verifyToken], getPedidoById);
+router.get('/getPedidoById/:id', [verifyToken, validateRolPermisoPedido], getPedidoById);
 
-router.post('/createPedido', [verifyToken], createPedido);
+router.post('/createPedido', [verifyToken, validateRolPermisoPedido], createPedido);
 
-router.put('/updatePedido/:idPedido', [verifyToken], updatePedido);
+router.put('/updatePedido/:idPedido', [verifyToken, validateRolPermisoPedido], updatePedido);
 
-router.delete('/deletePedido/:id', [verifyToken], deletePedido); 
+router.delete('/deletePedido/:id', [verifyToken, validateRolPermisoPedido], deletePedido); 
 
 module.exports = router;
