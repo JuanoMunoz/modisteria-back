@@ -1,4 +1,5 @@
-const {getAllPedido, getPedidoById, createPedido, updatePedido, deletePedido} = require('../repositories/pedido.repository.js')
+const { getCatalogoById } = require('../repositories/catalogo.repository.js');
+const { getAllPedido, getPedidoById, createPedido, updatePedido, deletePedido } = require('../repositories/pedido.repository.js')
 
 exports.getAllPedido = async(req, res)=>{
     try {
@@ -23,11 +24,23 @@ exports.getPedidoById = async (req, res) => {
 };
 
 exports.createPedido = async (req, res) => {
-    const Pedido = req.body;
-
+    const { idPedido, cantidad, tallaId, catalogoId } = req.body;
     try {
-        console.log(req.body);
-        await createPedido(Pedido);
+        const catalogo = await getCatalogoById(catalogoId);
+
+        const newPedido = {
+            idPedido,
+            cantidad,
+            valorUnitario: catalogo.precio,
+            tallaId,
+            usuarioId: req.id,
+            catalogoId,
+            ventaId: null,
+            estadoId: 3 
+        };
+
+        const pedido = await createPedido(newPedido);
+        console.log(pedido);
         res.status(201).json({msg: 'Pedido creado exitosamente'});
     } catch (error) {
         console.log(error);
@@ -42,7 +55,7 @@ exports.updatePedido = async (req, res) => {
 
     try {
         await updatePedido(idPedido, Pedido);
-        res.status(201).json({msg: 'Pedido actualizada exitosamente'});
+        res.status(201).json({msg: 'Pedido actualizado exitosamente'});
     } catch (error) {
         res.status(400).json(error);
     }
@@ -61,7 +74,7 @@ exports.deletePedido = async (req, res) => {
     const { id } = req.params;
     try {
         await deletePedido(id);
-        res.status(201).json({msg: 'Pedido eliminada'});
+        res.status(201).json({msg: 'Pedido eliminado'});
     } catch (error) {
         return res.status(400).json({ message: error.message });
     }
