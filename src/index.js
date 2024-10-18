@@ -25,8 +25,8 @@ app.use('/api/domicilios', require('./routers/domicilio.routes'));
 app.use('/api/pqrs', require('./routers/pqrs.routes'));
 app.use('/api/estados', require('./routers/estado.routes'));
 app.use('/api/ventas', require('./routers/venta.routes'));
-app.use('/api/cotizaciones', require('./routers/cotizacion.routes'));
 app.use('/api/citainsumos', require('./routers/cita_insumos.routes'));
+app.use('/api/tallas', require('./routers/talla.routes'));
 
 app.use('*', (req, res) => {
     res.status(404).json({ message: 'Ruta no encontrada, por favor contacta el administrador' });

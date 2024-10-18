@@ -162,26 +162,6 @@ exports.getDomiciliosByClienteId = async (clienteId) => {
 
 
 exports.createDomicilio = async (domicilio) => {
-    const user = await Usuario.findByPk(domicilio.usuarioId);
-
-    if (!user) {
-        throw new Error('Usuario no encontrado.');
-    }
-
-    const rol = await Role.findByPk(user.roleId);
-
-    if (!rol || rol.nombre !== 'DOMICILIARIO') {
-        const domiciliarios = await Usuario.findAll({
-            include: { model: Role, where: { nombre: 'DOMICILIARIO' } }
-        });
-
-        if (domiciliarios.length === 0) {
-            throw new Error('No hay domiciliarios disponibles.');
-        } else {
-            throw new Error('Solo un usuario con rol domiciliario puede crear un domicilio.');
-        }
-    }
-
     return await Domicilio.create(domicilio);
 };
 

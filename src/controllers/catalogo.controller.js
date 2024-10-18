@@ -46,15 +46,15 @@ exports.createCatalogo = async (req, res) => {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });
         }
-        const { producto, precio, descripcion, talla, categoriaId, estadoId } = req.body;
-        const tallasProcesadas = req.body.talla.split(',').map(t => t.trim().toLowerCase());
+        const { producto, precio, descripcion, tallaId, categoriaId, estadoId } = req.body;
+        const tallasProcesadas = Array.isArray(tallaId) ? tallaId : tallaId.split(',').map(t => parseInt(t.trim(), 10));
         const processedBuffer = await helperImg(req.file.buffer, 300);
         const result = await uploadToCloudinary(processedBuffer);
         const newCatalogo = {
             producto,
             precio,
             descripcion,
-            talla: tallasProcesadas,
+            tallaId: tallasProcesadas,
             categoriaId,
             imagen: result.url,
             estadoId
@@ -81,37 +81,37 @@ exports.createCatalogo = async (req, res) => {
 exports.updateCatalogo = async (req, res) => {
     try {
         const { id } = req.params;
-        const { producto, precio, descripcion, talla, categoriaId, estadoId } = req.body;
+        const { producto, precio, descripcion, tallaId, categoriaId, estadoId } = req.body;
 
         const existingCatalogo = await getCatalogoById(id);
 
         let tallasProcesadas;
-        if (talla) {
-            if (typeof talla === 'string') {
-                tallasProcesadas = talla.split(',').map(t => t.trim().toLowerCase());
-            } else {
-                tallasProcesadas = talla.map(t => t.trim().toLowerCase());
-            }
+        if (Array.isArray(tallaId)) {
+            tallasProcesadas = tallaId.map(t => parseInt(t, 10));
+        } else {
+            return res.status(400).json({ success: false, message: 'Las tallas deben ser un array de números.' });
         }
 
         const updatedCatalogo = {
             producto: producto || existingCatalogo.producto,
             precio: precio || existingCatalogo.precio,
             descripcion: descripcion || existingCatalogo.descripcion,
-            talla: tallasProcesadas || existingCatalogo.talla,
+            tallaId: tallasProcesadas || existingCatalogo.talla,
             categoriaId: categoriaId || existingCatalogo.categoriaId,
             imagen: existingCatalogo.imagen,
             estadoId: estadoId || existingCatalogo.estadoId
         };
 
+        // Procesar la imagen si se carga una nueva
         if (req.file) {
             const processedBuffer = await helperImg(req.file.buffer, 300);
             const result = await uploadToCloudinary(processedBuffer);
-            updatedCatalogo.imagen = result.url;  
+            updatedCatalogo.imagen = result.url;
 
+            // Eliminar la imagen anterior de Cloudinary
             if (existingCatalogo.imagen) {
                 const publicId = getPublicIdFromUrl(existingCatalogo.imagen);
-                await deleteFromCloudinary(publicId); 
+                await deleteFromCloudinary(publicId);
             }
         }
 
@@ -122,7 +122,6 @@ exports.updateCatalogo = async (req, res) => {
         res.status(500).json({ success: false, message: 'Error al actualizar el catálogo' });
     }
 };
-
 
 exports.statusCatalogo = async (req, res) => {
     try {

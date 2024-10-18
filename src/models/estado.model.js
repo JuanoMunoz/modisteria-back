@@ -9,7 +9,7 @@ const {Venta} = require('../models/venta.model.js')
 const {Catalogo} = require('../models/catalogo.model.js')
 const {Categoria} = require('../models/categoria.model.js')
 const {Insumo} = require('../models/insumo.model.js');
-const { Cotizacion } = require('./cotizacion.model.js');
+const { Pedido } = require('./pedido.model.js');
 
 
 const Estado = sequelize.define('Estado',
@@ -65,6 +65,7 @@ Estado.hasMany(Categoria, {foreignKey: 'estadoId', targetKey: 'id', as: 'categor
 Insumo.belongsTo(Estado, {foreignKey: 'estadoId', sourceKey: 'id', as: 'estadoInsumo'});
 Estado.hasMany(Insumo, {foreignKey: 'estadoId', targetKey: 'id', as: 'insumos'});
 
-//Relación de cotizacion a estados
-Cotizacion.belongsTo(Estado, {foreignKey: 'estadoId', sourceKey: 'id', as: 'estadoCotizacion'});
-Estado.hasMany(Cotizacion, {foreignKey: 'estadoId', targetKey: 'id', as: 'cotizacion'});
+//Relación de Pedido a estados
+Pedido.belongsTo(Estado, {foreignKey: 'estadoId', sourceKey: 'id', as: 'estadoPedido'});
+Estado.hasMany(Pedido, {foreignKey: 'estadoId', targetKey: 'id', as: 'pedidos'});
+
