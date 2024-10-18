@@ -1,14 +1,33 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/connection.js');
-const { Domicilio } = require('./domicilio.model.js');
 
 const Venta = sequelize.define('Venta', {
     fecha: {
         type: DataTypes.DATE,
         allowNull: false,
     },
-    cotizacionId: {
+    imagen: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    nombrePersona: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
+    valorDomicilio: {
         type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    valorPrendas: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
+    valorFinal: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    metodoPago: {
+        type: DataTypes.ENUM('efectivo', 'transferencia'),
         allowNull: false,
     },
     estadoId: {
@@ -18,6 +37,9 @@ const Venta = sequelize.define('Venta', {
 }, {
     timestamps: false,
 });
+
+// Cotizacion.hasMany(Venta, { foreignKey: 'cotizacionId', as: 'ventas' });
+// Venta.belongsTo(Cotizacion, { foreignKey: 'cotizacionId', as: 'cotizacion' });
 
 
 module.exports = { Venta };

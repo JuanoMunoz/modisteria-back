@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { getAllVentas, getVentaById, createVenta, getVentaByUsuarioId } = require("../controllers/venta.controller");
+const { getAllVentas, getVentaById, createVenta, getVentaByUsuarioId, confirmarVenta } = require("../controllers/venta.controller");
 const { verifyToken } = require("../utils/verifyToken");
 const { validateRolPermisoVenta } = require("../validators/validations.validator");
 const router = Router();
@@ -11,5 +11,7 @@ router.get('/getVentaById/:id', [verifyToken, validateRolPermisoVenta], getVenta
 router.get('/getVentaByUsuarioId/:id', [verifyToken, validateRolPermisoVenta], getVentaByUsuarioId);
 
 router.post('/createVenta', [verifyToken, validateRolPermisoVenta], createVenta);
+
+router.post('/confirmarVenta/:id', [verifyToken, validateRolPermisoVenta], confirmarVenta);
 
 module.exports = router;
