@@ -18,11 +18,8 @@ const Talla = sequelize.define(
 
 Catalogo.belongsToMany(Talla, { through: "CatalogoTalla" });
 Talla.belongsToMany(Catalogo, { through: "CatalogoTalla" });
-Pedido.hasMany(Talla, { foreignKey: "tallaId", sourceKey: "id", as: "tallas" });
-Talla.belongsTo(Pedido, {
-  foreignKey: "catalogoId",
-  targetKey: "id",
-  as: "pedido",
-});
+Pedido.belongsTo(Talla, { foreignKey: "tallaId" });
+
+Talla.hasMany(Pedido, { foreignKey: "tallaId" });
 
 module.exports = { Talla };
