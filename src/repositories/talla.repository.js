@@ -1,4 +1,4 @@
-const { Talla, Pedido } = require("../models");
+const { Talla, Pedido, Catalogo } = require("../models");
 
 exports.getAllTallas = async () => {
   return await Talla.findAll();
@@ -27,8 +27,11 @@ exports.deleteTalla = async (id) => {
     throw new Error("Talla no encontrada");
   }
 
-  const existeEnCatalogoTalla = await CatalogoTalla.findOne({
-    where: { TallaId: id },
+  const existeEnCatalogoTalla = await Catalogo.findOne({
+    include: {
+      model: Talla,
+      where: id,
+    },
   });
   if (existeEnCatalogoTalla) {
     throw new Error(
