@@ -30,7 +30,7 @@ exports.deleteTalla = async (id) => {
   const existeEnCatalogoTalla = await Catalogo.findOne({
     include: {
       model: Talla,
-      where: id,
+      where: { id },
     },
   });
   if (existeEnCatalogoTalla) {
@@ -45,5 +45,5 @@ exports.deleteTalla = async (id) => {
       "No se puede eliminar la talla porque está asociado a un pedido"
     );
   }
-  return await Talla.destroy({ where: id });
+  return await Talla.destroy({ where: { id } });
 };
