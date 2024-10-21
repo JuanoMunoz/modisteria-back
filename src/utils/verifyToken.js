@@ -10,7 +10,7 @@ exports.verifyToken = (req, res, next) => {
         if (payload) {  
             req.id = payload.id;
             req.email = payload.email;
-            req.roleId = payload.role.id;
+            req.roleId = payload.roleId;
             next();
         }
     });

@@ -1,17 +1,17 @@
 const { Router } = require('express');
 const { getAllPedido, getPedidoById, createPedido, updatePedido, deletePedido } = require('../controllers/pedido.controller.js');
 const { verifyToken } = require('../utils/verifyToken.js');
-const { validateRolPermisoPedido } = require('../validators/validations.validator.js');
+const { buscarPermiso } = require('../validators/validations.validator.js');
 const router = Router();
 
-router.get('/getAllPedido', [verifyToken, validateRolPermisoPedido], getAllPedido);
+router.get('/getAllPedido', [verifyToken, buscarPermiso('PEDIDO')], getAllPedido);
 
-router.get('/getPedidoById/:id', [verifyToken, validateRolPermisoPedido], getPedidoById);
+router.get('/getPedidoById/:id', [verifyToken, buscarPermiso('PEDIDO')], getPedidoById);
 
-router.post('/createPedido', [verifyToken, validateRolPermisoPedido], createPedido);
+router.post('/createPedido', [verifyToken, buscarPermiso('PEDIDO')], createPedido);
 
-router.put('/updatePedido/:idPedido', [verifyToken, validateRolPermisoPedido], updatePedido);
+router.put('/updatePedido/:idPedido', [verifyToken, buscarPermiso('PEDIDO')], updatePedido);
 
-router.delete('/deletePedido/:id', [verifyToken, validateRolPermisoPedido], deletePedido); 
+router.delete('/deletePedido/:id', [verifyToken, buscarPermiso('PEDIDO')], deletePedido); 
 
 module.exports = router;

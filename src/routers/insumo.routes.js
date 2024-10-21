@@ -1,23 +1,23 @@
 const { Router } = require("express");
 const { getAllInsumos, getInsumoById, createInsumo, updateInsumo, deleteInsumo, statusInsumo, getInsumosByCategoria, reponerInsumo} = require("../controllers/insumo.controller");
 const { verifyToken } = require("../utils/verifyToken");
-const { validateRolPermisoInsumo } = require("../validators/validations.validator");
+const { buscarPermiso } = require("../validators/validations.validator");
 const router = Router();
 
-router.get('/getAllInsumos', [verifyToken, validateRolPermisoInsumo], getAllInsumos);
+router.get('/getAllInsumos', [verifyToken, buscarPermiso('INSUMO')], getAllInsumos);
 
-router.get('/getInsumoById/:id', [verifyToken, validateRolPermisoInsumo], getInsumoById);
+router.get('/getInsumoById/:id', [verifyToken, buscarPermiso('INSUMO')], getInsumoById);
 
-router.get('/getInsumoByCategoria/:categoriaId', [verifyToken, validateRolPermisoInsumo], getInsumosByCategoria);
+router.get('/getInsumoByCategoria/:categoriaId', [verifyToken, buscarPermiso('INSUMO')], getInsumosByCategoria);
 
-router.put('/reponerInsumo',[verifyToken, validateRolPermisoInsumo], reponerInsumo);
+router.put('/reponerInsumo',[verifyToken, buscarPermiso('INSUMO')], reponerInsumo);
 
-router.post('/createInsumo', [verifyToken, validateRolPermisoInsumo], createInsumo);
+router.post('/createInsumo', [verifyToken, buscarPermiso('INSUMO')], createInsumo);
 
-router.put('/updateInsumo/:id', [verifyToken, validateRolPermisoInsumo], updateInsumo);
+router.put('/updateInsumo/:id', [verifyToken, buscarPermiso('INSUMO')], updateInsumo);
 
-router.put('/statusInsumo/:id', [verifyToken, validateRolPermisoInsumo], statusInsumo);
+router.put('/statusInsumo/:id', [verifyToken, buscarPermiso('INSUMO')], statusInsumo);
 
-router.delete('/deleteInsumo/:id', [verifyToken, validateRolPermisoInsumo], deleteInsumo);
+router.delete('/deleteInsumo/:id', [verifyToken, buscarPermiso('INSUMO')], deleteInsumo);
 
 module.exports = router;

@@ -1,19 +1,19 @@
 const { Router } = require("express");
 const { getAllPermisos, getPermisoById, createPermiso, updatePermiso, deletePermiso, statusPermiso} = require("../controllers/permiso.controller");
 const { verifyToken } = require("../utils/verifyToken");
-const { validateRolPermisoPermiso } = require("../validators/validations.validator");
+const { buscarPermiso } = require("../validators/validations.validator");
 const router = Router();
 
-router.get('/getAllPermisos', [verifyToken, validateRolPermisoPermiso], getAllPermisos);
+router.get('/getAllPermisos', [verifyToken, buscarPermiso('PERMISO')], getAllPermisos);
 
-router.get('/getPermisoById/:id', [verifyToken, validateRolPermisoPermiso], getPermisoById);
+router.get('/getPermisoById/:id', [verifyToken, buscarPermiso('PERMISO')], getPermisoById);
 
-router.post('/createPermiso', [verifyToken, validateRolPermisoPermiso], createPermiso);
+router.post('/createPermiso', [verifyToken, buscarPermiso('PERMISO')], createPermiso);
 
-router.put('/updatePermiso/:id', [verifyToken, validateRolPermisoPermiso], updatePermiso);
+router.put('/updatePermiso/:id', [verifyToken, buscarPermiso('PERMISO')], updatePermiso);
 
-router.put('/statusPermiso/:id', [verifyToken, validateRolPermisoPermiso], statusPermiso);
+router.put('/statusPermiso/:id', [verifyToken, buscarPermiso('PERMISO')], statusPermiso);
 
-router.delete('/deletePermiso/:id', [verifyToken, validateRolPermisoPermiso], deletePermiso);
+router.delete('/deletePermiso/:id', [verifyToken, buscarPermiso('PERMISO')], deletePermiso);
 
 module.exports = router;
