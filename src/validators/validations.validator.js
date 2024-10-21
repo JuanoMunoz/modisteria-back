@@ -2,6 +2,7 @@ const constantsRoles = require('../constants/role.constants');
 const constantsPermisos = require('../constants/permiso.constants');
 const { getRoleById } = require('../repositories/role.repository');
 const { getUserByEmail } = require('../repositories/usuario.repository');
+const { sequelize } = require('../database/connection');
 
 exports.validateRoleAdmin = (req, res, next) => {
     if (req.roleId !== constantsRoles.ROL_ADMIN) return res.status(403).json({ msg: 'No tiene los permisos suficientes' });
@@ -13,65 +14,42 @@ exports.validateRoleAdminAndDomiciliario = (req, res, next) => {
     next();
 }
 
-exports.validateRolPermisoUsuario = async (req, res, next) => {
-    validadora(req.roleId, constantsPermisos.PERMISO_USUARIO) ? next() : res.status(401).json({ msg: 'No tiene los permisos suficientes' })
-}
+exports.buscarPermiso = (permiso) => {
+    return async (req, res, next) => {
+        const roleId = req.roleId;
 
-exports.validateRolPermisoCita = async (req, res, next) => {
-    validadora(req.roleId, constantsPermisos.PERMISO_CITAS) ? next() : res.status(401).json({ msg: 'No tiene los permisos suficientes' })
-}
+        if (!roleId) {
+            return res.status(403).json({ message: 'Rol no encontrado' });
+        }
 
-exports.validateRolPermisoVenta = async (req, res, next) => {
-    validadora(req.roleId, constantsPermisos.PERMISO_VENTAS) ? next() : res.status(401).json({ msg: 'No tiene los permisos suficientes' })
-}
+        try {
+            // Usar Sequelize para hacer la consulta
+            const results = await sequelize.query(`
+                SELECT p.nombre
+                FROM "Permisos" p
+                JOIN "roles_permisos" rp ON p.id = rp."permisoId"
+                JOIN "Roles" r ON rp."roleId" = r.id
+                WHERE r.id = ?
+            `, {
+                replacements: [roleId],
+                type: sequelize.QueryTypes.SELECT
+            });
+            
+            const permisos = Array.isArray(results) ? results.map(result => result.nombre) : [results.nombre];
+            console.log('Permisos:', permisos);
+            
+            if (!permisos.includes(permiso)) {
+                return res.status(403).json({ message: 'No tienes permiso para acceder a esta ruta.' });
+            }
 
-exports.validateRolPermisoDashboard = async (req, res, next) => {
-    validadora(req.roleId, constantsPermisos.PERMISO_DASHBOARD) ? next() : res.status(401).json({ msg: 'No tiene los permisos suficientes' })
-}
+            next();
+        } catch (err) {
+            console.error('Error al obtener los permisos del rol:', err);
+            return res.status(500).json({ message: 'Error en el servidor' });
+        }
+    };
+};
 
-exports.validateRolPermisoCatalogo = async (req, res, next) => {
-    validadora(req.roleId, constantsPermisos.PERMISO_CATALOGO) ? next() : res.status(401).json({ msg: 'No tiene los permisos suficientes' })
-}
-
-exports.validateRolPermisoCategoria = async (req, res, next) => {
-    validadora(req.roleId, constantsPermisos.PERMISO_CATEGORIA) ? next() : res.status(401).json({ msg: 'No tiene los permisos suficientes' })
-}
-
-exports.validateRolPermisoDomicilio = async (req, res, next) => {
-    validadora(req.roleId, constantsPermisos.PERMISO_DOMICILIO) ? next() : res.status(401).json({ msg: 'No tiene los permisos suficientes' })
-}
-
-exports.validateRolPermisoEstado = async (req, res, next) => {
-    validadora(req.roleId, constantsPermisos.PERMISO_ESTADO) ? next() : res.status(401).json({ msg: 'No tiene los permisos suficientes' })
-}
-
-exports.validateRolPermisoInsumo = async (req, res, next) => {
-    validadora(req.roleId, constantsPermisos.PERMISO_INSUMO) ? next() : res.status(401).json({ msg: 'No tiene los permisos suficientes' })
-}
-
-exports.validateRolPermisoPedido = async (req, res, next) => {
-    validadora(req.roleId, constantsPermisos.PERMISO_PEDIDO) ? next() : res.status(401).json({ msg: 'No tiene los permisos suficientes' })
-}
-
-exports.validateRolPermisoPermiso = async (req, res, next) => {
-    validadora(req.roleId, constantsPermisos.PERMISO_PERMISO) ? next() : res.status(401).json({ msg: 'No tiene los permisos suficientes' })
-}
-
-exports.validateRolPermisoPQRS = async (req, res, next) => {
-    validadora(req.roleId, constantsPermisos.PERMISO_PQRS) ? next() : res.status(401).json({ msg: 'No tiene los permisos suficientes' })
-}
-
-exports.validateRolPermisoRoles = async (req, res, next) => {
-    validadora(req.roleId, constantsPermisos.PERMISO_ROLES) ? next() : res.status(401).json({ msg: 'No tiene los permisos suficientes' })
-}
-
-exports.validateRolPermisoTalla = async (req, res, next) => {
-    validadora(req.roleId, constantsPermisos.PERMISO_TALLA) ? next() : res.status(401).json({ msg: 'No tiene los permisos suficientes' })
-}
-
-async function validadora (roleId, permiso) {
-    return (await getRoleById(roleId)).toJSON().permisosId.includes(permiso);
-}
 
 exports.emailExist = async (req, res, next) => {
     const { email } = req.body;

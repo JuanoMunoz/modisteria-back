@@ -1,69 +1,26 @@
 const { Router } = require("express");
-const {
-  getAllUsers,
-  getUserById,
-  createUser,
-  updateUser,
-  statusUser,
-  deleteUser,
-  login,
-  forgotPassword,
-  resetPassword,
-  getCodePassword,
-  getCodeVerification,
-  verifyUser,
-  isYourCurrentPassword,
-  resetCurrentPassword,
-  updateInfo,
-  createUsuario,
-} = require("../controllers/usuario.controller");
+const { getAllUsers, getUserById, createUser, updateUser, statusUser, deleteUser, login, forgotPassword, resetPassword, getCodePassword, getCodeVerification, verifyUser, isYourCurrentPassword, resetCurrentPassword, updateInfo, createUsuario} = require("../controllers/usuario.controller");
 const { verifyToken } = require("../utils/verifyToken");
-const {
-  validateRolPermisoUsuario,
-} = require("../validators/validations.validator");
+const { buscarPermiso } = require("../validators/validations.validator");
 const router = Router();
 
-router.get(
-  "/getAllUsers",
-  [verifyToken, validateRolPermisoUsuario],
-  getAllUsers
-);
+router.get("/getAllUsers", [verifyToken, buscarPermiso('USUARIO')], getAllUsers);
 
-router.get(
-  "/getUserById/:id",
-  [verifyToken, validateRolPermisoUsuario],
-  getUserById
-);
+router.get("/getUserById/:id", [verifyToken, buscarPermiso('USUARIO')], getUserById);
 
 router.post("/createUser", [], createUser);
-router.post(
-  "/createUsuario",
-  [verifyToken, validateRolPermisoUsuario],
-  createUsuario
-);
+router.post("/createUsuario", [verifyToken, buscarPermiso('USUARIO')], createUsuario);
 
 router.post("/getCodeVerification", [], getCodeVerification);
 
 router.post("/verifyUser", [], verifyUser);
 
-router.put(
-  "/updateUser/:id",
-  [verifyToken, validateRolPermisoUsuario],
-  updateUser
-);
+router.put("/updateUser/:id", [verifyToken, buscarPermiso('USUARIO')], updateUser);
 router.put("/updateInfo/:id", [verifyToken], updateInfo);
 
-router.put(
-  "/statusUser/:id",
-  [verifyToken, validateRolPermisoUsuario],
-  statusUser
-);
+router.put("/statusUser/:id", [verifyToken, buscarPermiso('USUARIO')], statusUser);
 
-router.delete(
-  "/deleteUser/:id",
-  [verifyToken, validateRolPermisoUsuario],
-  deleteUser
-);
+router.delete("/deleteUser/:id", [verifyToken, buscarPermiso('USUARIO')], deleteUser);
 
 router.post("/getCodePass", [], getCodePassword);
 

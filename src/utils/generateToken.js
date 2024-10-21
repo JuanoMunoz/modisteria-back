@@ -8,7 +8,7 @@ exports.generateToken = (user) => {
         telefono: user.telefono,
         password: user.password,
         direccion: user.direccion,
-        role: user.role
+        roleId: user.roleId
     }
     const token = jwt.sign({ payload }, process.env.KEY_JWT , { expiresIn: '20h' });
     return token;
