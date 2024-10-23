@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/connection.js');
+const {Venta} = require('../models/venta.model.js')
 
 const Cita = sequelize.define('Cita',
   {
@@ -39,28 +40,5 @@ const Cita = sequelize.define('Cita',
 
 module.exports = { Cita };
 
-
-/*
-TRIGGER EN POSTGRESQL
-
-CREATE OR REPLACE FUNCTION eliminar_cita_no_aceptada()
-RETURNS TRIGGER AS $$
-BEGIN
-    IF NEW.estadoId = 10 THEN
-        IF NEW.fecha <= NOW() + INTERVAL '1 day' THEN
-            DELETE FROM "Citas" WHERE id = NEW.id;
-        END IF;
-    END IF;
-    RETURN NULL; 
-END;
-$$ LANGUAGE plpgsql;
-
-
-CREATE TRIGGER verificar_cita_estado
-AFTER UPDATE OF "estadoId"
-ON "Cita"
-FOR EACH ROW
-WHEN (NEW."estadoId" = 10)
-EXECUTE FUNCTION eliminar_cita_no_aceptada();
-
-*/
+Cita.hasOne(Venta, { foreignKey: 'citaId', as: 'venta' });
+Venta.belongsTo(Cita, { foreignKey: 'citaId', as: 'cita' });
