@@ -1,7 +1,12 @@
-const { Role, RolesPermisos, Permiso, Estado } = require("../models");
+const { Role, RolesPermisos, Permiso, Estado, Usuario } = require("../models");
 
 exports.getAllRoles = async () => {
-  return await Role.findAll({ include: { model: Permiso } });
+  return await Role.findAll({
+    include: [
+      { model: Permiso, attributes: ["id", "nombre"] },
+      { model: Usuario, as: "usuarios", attributes: ["id", "nombre"] },
+    ],
+  });
 };
 
 exports.getRoleById = async (id) => {
