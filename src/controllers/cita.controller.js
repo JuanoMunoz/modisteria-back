@@ -118,7 +118,7 @@ exports.createCita = async (req, res) => {
   }
 };
 
-exports.updateSPT = async (req, res) => {
+exports.updateSPT = async (req, res) => { //Update Status Price and Time
   try {
     const { id } = req.params;
     const { estadoId, tiempo, precio } = req.body;

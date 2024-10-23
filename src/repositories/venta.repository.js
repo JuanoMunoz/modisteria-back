@@ -1,4 +1,6 @@
 const { Venta, Cotizacion, CotizacionPedidos, Pedido, Catalogo, Usuario } = require("../models");
+const {getPriceById, getDateById} = require('../repositories/cita.repository.js')
+const {Cita} = require('../models/cita.model.js') 
 
 exports.getAllVentas = async () => {
     return await Venta.findAll();
@@ -11,6 +13,30 @@ exports.getVentaById = async (id) => {
 exports.createVenta = async (venta) => {
     return await Venta.create(venta);
 };
+
+exports.createVentaAC = async (citaId) => {
+    try {
+        const cita = await Cita.findByPk(citaId); 
+
+        if (!cita) {
+            throw new Error('Cita no encontrada');
+        }
+        const nuevaVenta = await Venta.create({
+            fecha: new Date(),
+            citaId: cita.id, 
+            valorFinal: cita.precio,
+            estadoId: 14, 
+            metodoPago: 'efectivo'
+        });
+
+        return nuevaVenta;
+        
+    } catch (error) {
+        console.error('Error al crear la venta:', error);
+        throw error; 
+    }
+};
+
 
 exports.updateVenta = async (id, venta) => {
     return await Venta.update(venta, { where: { id } });

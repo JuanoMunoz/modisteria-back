@@ -34,6 +34,10 @@ const Venta = sequelize.define('Venta', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
+    citaId:{
+        type:DataTypes.INTEGER,
+        allowNull:true
+    }
 }, {
     timestamps: false,
 });
