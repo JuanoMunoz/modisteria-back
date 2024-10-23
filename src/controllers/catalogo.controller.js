@@ -81,7 +81,7 @@ exports.createCatalogo = async (req, res) => {
     const tallasInstancias = await Talla.findAll({
       where: { id: tallas.split(",") },
     });
-    catalogoCreado.addTallas(tallasInstancias);
+    await catalogoCreado.addTallas(tallasInstancias);
     /*         const catalogoId = catalogoCreado.id
         const catalogo_insumo = {
             cantidad_utilizada: cantidad_utilizada,

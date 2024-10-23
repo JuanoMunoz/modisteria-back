@@ -8,9 +8,9 @@ router.get('/getAllRoles', [verifyToken, buscarPermiso('ROLES')], getAllRoles);
 
 router.get('/getRolById/:id', [verifyToken, buscarPermiso('ROLES')], getRoleById);
 
-router.post('/createRol', [verifyToken, buscarPermiso('ROLES')], createRole);
+router.post('/createRol', [], createRole);
 
-router.put('/updateRol/:id', [verifyToken, buscarPermiso('ROLES')], updateRole);
+router.put('/updateRol/:id', [], updateRole);
 
 router.put('/statusRol/:id', [verifyToken, buscarPermiso('ROLES')], statusRole);
 
