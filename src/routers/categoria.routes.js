@@ -16,37 +16,37 @@ router.get("/getAllCategorias", getAllCategorias);
 
 router.get(
   "/getCategoriaById/:id",
-  [verifyToken, buscarPermiso("CATEGORIA")],
+  [verifyToken, buscarPermiso("Categorías")],
   getCategoriaById
 );
 
 router.get(
   "/getCategoriaByTipo/:tipo",
-  [verifyToken, buscarPermiso("CATEGORIA")],
+  [verifyToken, buscarPermiso("Categorías")],
   getCategoriaByTipo
 );
 
 router.post(
   "/createCategoria",
-  [verifyToken, buscarPermiso("CATEGORIA")],
+  [verifyToken, buscarPermiso("Categorías")],
   createCategoria
 );
 
 router.put(
   "/updateCategoria/:id",
-  [verifyToken, buscarPermiso("CATEGORIA")],
+  [verifyToken, buscarPermiso("Categorías")],
   updateCategoria
 );
 
 router.put(
   "/statusCategoria/:id",
-  [verifyToken, buscarPermiso("CATEGORIA")],
+  [verifyToken, buscarPermiso("Categorías")],
   statusCategoria
 );
 
 router.delete(
   "/deleteCategoria/:id",
-  [verifyToken, buscarPermiso("CATEGORIA")],
+  [verifyToken, buscarPermiso("Categorías")],
   deleteCategoria
 );
 

@@ -1,17 +1,43 @@
-const { Router } = require('express');
-const { getAllPedido, getPedidoById, createPedido, updatePedido, deletePedido } = require('../controllers/pedido.controller.js');
-const { verifyToken } = require('../utils/verifyToken.js');
-const { buscarPermiso } = require('../validators/validations.validator.js');
+const { Router } = require("express");
+const {
+  getAllPedido,
+  getPedidoById,
+  createPedido,
+  updatePedido,
+  deletePedido,
+} = require("../controllers/pedido.controller.js");
+const { verifyToken } = require("../utils/verifyToken.js");
+const { buscarPermiso } = require("../validators/validations.validator.js");
 const router = Router();
 
-router.get('/getAllPedido', [verifyToken, buscarPermiso('PEDIDO')], getAllPedido);
+router.get(
+  "/getAllPedido",
+  [verifyToken, buscarPermiso("Pedidos")],
+  getAllPedido
+);
 
-router.get('/getPedidoById/:id', [verifyToken, buscarPermiso('PEDIDO')], getPedidoById);
+router.get(
+  "/getPedidoById/:id",
+  [verifyToken, buscarPermiso("Pedidos")],
+  getPedidoById
+);
 
-router.post('/createPedido', [verifyToken, buscarPermiso('PEDIDO')], createPedido);
+router.post(
+  "/createPedido",
+  [verifyToken, buscarPermiso("Pedidos")],
+  createPedido
+);
 
-router.put('/updatePedido/:idPedido', [verifyToken, buscarPermiso('PEDIDO')], updatePedido);
+router.put(
+  "/updatePedido/:idPedido",
+  [verifyToken, buscarPermiso("Pedidos")],
+  updatePedido
+);
 
-router.delete('/deletePedido/:id', [verifyToken, buscarPermiso('PEDIDO')], deletePedido); 
+router.delete(
+  "/deletePedido/:id",
+  [verifyToken, buscarPermiso("Pedidos")],
+  deletePedido
+);
 
 module.exports = router;

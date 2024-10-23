@@ -1,19 +1,50 @@
 const { Router } = require("express");
-const { getAllTallas, getTallaById, createTalla, updateTalla, deleteTalla, statusTalla} = require("../controllers/talla.controller");
+const {
+  getAllTallas,
+  getTallaById,
+  createTalla,
+  updateTalla,
+  deleteTalla,
+  statusTalla,
+} = require("../controllers/talla.controller");
 const { verifyToken } = require("../utils/verifyToken");
 const { buscarPermiso } = require("../validators/validations.validator");
 const router = Router();
 
-router.get('/getAllTallas', [verifyToken, buscarPermiso('TALLA')], getAllTallas);
+router.get(
+  "/getAllTallas",
+  [verifyToken, buscarPermiso("Tallas")],
+  getAllTallas
+);
 
-router.get('/getTallaById/:id', [verifyToken, buscarPermiso('TALLA')], getTallaById);
+router.get(
+  "/getTallaById/:id",
+  [verifyToken, buscarPermiso("Tallas")],
+  getTallaById
+);
 
-router.post('/createTalla', [verifyToken, buscarPermiso('TALLA')], createTalla);
+router.post(
+  "/createTalla",
+  [verifyToken, buscarPermiso("Tallas")],
+  createTalla
+);
 
-router.put('/updateTalla/:id', [verifyToken, buscarPermiso('TALLA')], updateTalla);
+router.put(
+  "/updateTalla/:id",
+  [verifyToken, buscarPermiso("Tallas")],
+  updateTalla
+);
 
-router.put('/statusTalla/:id', [verifyToken, buscarPermiso('TALLA')], statusTalla);
+router.put(
+  "/statusTalla/:id",
+  [verifyToken, buscarPermiso("Tallas")],
+  statusTalla
+);
 
-router.delete('/deleteTalla/:id', [verifyToken, buscarPermiso('TALLA')], deleteTalla);
+router.delete(
+  "/deleteTalla/:id",
+  [verifyToken, buscarPermiso("Tallas")],
+  deleteTalla
+);
 
 module.exports = router;

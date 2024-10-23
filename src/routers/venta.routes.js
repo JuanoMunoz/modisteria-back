@@ -1,17 +1,43 @@
 const { Router } = require("express");
-const { getAllVentas, getVentaById, createVenta, getVentaByUsuarioId, confirmarVenta } = require("../controllers/venta.controller");
+const {
+  getAllVentas,
+  getVentaById,
+  createVenta,
+  getVentaByUsuarioId,
+  confirmarVenta,
+} = require("../controllers/venta.controller");
 const { verifyToken } = require("../utils/verifyToken");
 const { buscarPermiso } = require("../validators/validations.validator");
 const router = Router();
 
-router.get('/getAllVentas', [verifyToken, buscarPermiso('VENTAS')], getAllVentas);
+router.get(
+  "/getAllVentas",
+  [verifyToken, buscarPermiso("Ventas")],
+  getAllVentas
+);
 
-router.get('/getVentaById/:id', [verifyToken, buscarPermiso('VENTAS')], getVentaById);
+router.get(
+  "/getVentaById/:id",
+  [verifyToken, buscarPermiso("Ventas")],
+  getVentaById
+);
 
-router.get('/getVentaByUsuarioId/:id', [verifyToken, buscarPermiso('VENTAS')], getVentaByUsuarioId);
+router.get(
+  "/getVentaByUsuarioId/:id",
+  [verifyToken, buscarPermiso("Ventas")],
+  getVentaByUsuarioId
+);
 
-router.post('/createVenta', [verifyToken, buscarPermiso('VENTAS')], createVenta);
+router.post(
+  "/createVenta",
+  [verifyToken, buscarPermiso("Ventas")],
+  createVenta
+);
 
-router.post('/confirmarVenta/:id', [verifyToken, buscarPermiso('VENTAS')], confirmarVenta);
+router.post(
+  "/confirmarVenta/:id",
+  [verifyToken, buscarPermiso("Ventas")],
+  confirmarVenta
+);
 
 module.exports = router;

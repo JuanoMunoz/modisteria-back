@@ -1,19 +1,34 @@
 const { Router } = require("express");
-const { getAllRoles, getRoleById, createRole, updateRole, deleteRole, statusRole} = require("../controllers/role.controller");
+const {
+  getAllRoles,
+  getRoleById,
+  createRole,
+  updateRole,
+  deleteRole,
+  statusRole,
+} = require("../controllers/role.controller");
 const { buscarPermiso } = require("../validators/validations.validator");
 const { verifyToken } = require("../utils/verifyToken");
 const router = Router();
 
-router.get('/getAllRoles', [verifyToken, buscarPermiso('ROLES')], getAllRoles);
+router.get("/getAllRoles", [verifyToken, buscarPermiso("Roles")], getAllRoles);
 
-router.get('/getRolById/:id', [verifyToken, buscarPermiso('ROLES')], getRoleById);
+router.get(
+  "/getRolById/:id",
+  [verifyToken, buscarPermiso("Roles")],
+  getRoleById
+);
 
-router.post('/createRol', [verifyToken, buscarPermiso('ROLES')], createRole);
+router.post("/createRol", [verifyToken, buscarPermiso("Roles")], createRole);
 
-router.put('/updateRol/:id', [verifyToken, buscarPermiso('ROLES')], updateRole);
+router.put("/updateRol/:id", [verifyToken, buscarPermiso("Roles")], updateRole);
 
-router.put('/statusRol/:id', [verifyToken, buscarPermiso('ROLES')], statusRole);
+router.put("/statusRol/:id", [verifyToken, buscarPermiso("Roles")], statusRole);
 
-router.delete('/deleteRol/:id', [verifyToken, buscarPermiso('ROLES')], deleteRole);
+router.delete(
+  "/deleteRol/:id",
+  [verifyToken, buscarPermiso("Roles")],
+  deleteRole
+);
 
 module.exports = router;
