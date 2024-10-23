@@ -15,19 +15,19 @@ const router = Router();
 
 router.get(
   "/getAllInsumos",
-  [verifyToken, buscarPermiso("INSUMO")],
+  [verifyToken, buscarPermiso("Insumos")],
   getAllInsumos
 );
 
 router.get(
   "/getInsumoById/:id",
-  [verifyToken, buscarPermiso("INSUMO")],
+  [verifyToken, buscarPermiso("Insumos")],
   getInsumoById
 );
 
 router.get(
   "/getInsumoByCategoria/:categoriaId",
-  [verifyToken, buscarPermiso("INSUMO")],
+  [verifyToken, buscarPermiso("Insumos")],
   getInsumosByCategoria
 );
 
