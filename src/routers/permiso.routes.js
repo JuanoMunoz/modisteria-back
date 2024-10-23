@@ -8,7 +8,7 @@ router.get('/getAllPermisos', [verifyToken, buscarPermiso('PERMISO')], getAllPer
 
 router.get('/getPermisoById/:id', [verifyToken, buscarPermiso('PERMISO')], getPermisoById);
 
-router.post('/createPermiso', [], createPermiso);
+router.post('/createPermiso', [verifyToken, buscarPermiso('PERMISO')], createPermiso);
 
 router.put('/updatePermiso/:id', [verifyToken, buscarPermiso('PERMISO')], updatePermiso);
 
