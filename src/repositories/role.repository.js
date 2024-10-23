@@ -6,14 +6,14 @@ exports.getAllRoles = async () => {
 
 exports.getRoleById = async (id) => {
     return await Role.findOne({ 
-        where: { id },
-        include: [ { model: RolesPermisos, as: "roles_permisos"} ], 
+        where: { id }
+        // include: [ { model: RolesPermisos, as: "roles_permisos"} ], 
         //raw: true Devuelve el objeto literal desde la bd
     });
 }
 
-exports.createRole = async (nombre, permisosId, estadoId) => {
-    return await Role.create({nombre, permisosId, estadoId});
+exports.createRole = async (role) => {
+    return await Role.create(role);
 }
 
 exports.updateRole = async (id, nombre, permisosId, estadoId) => {

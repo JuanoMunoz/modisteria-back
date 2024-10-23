@@ -1,14 +1,15 @@
+const { Permiso, Role } = require("../models");
 const { getAllRoles, getRoleById, createRole, updateRole, deleteRole } = require("../repositories/role.repository");
 const { createRolesPermiso, deleteRolesPermiso } = require("../repositories/roles_permisos.repository");
 
 exports.getAllRoles = async (req, res) => {
-  try {
-    const roles = await getAllRoles();
-    res.status(200).json(roles);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json(error);
-  }
+    try {
+        const roles = await getAllRoles();
+        res.status(200).json(roles);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
 };
 
 exports.getRoleById = async (req, res) => {
@@ -29,9 +30,16 @@ exports.createRole = async (req, res) => {
     console.log("permisos", permisosId);
 
     try {
-        const newRole = await createRole(nombre, permisosId, estadoId);
-        await createRolesPermiso(newRole.id, permisosId);
-        res.status(201).json({msg: 'rol creado exitosamente'});
+        const newRole = {
+            nombre,
+            estadoId
+        }
+        const rolCreado = await createRole(newRole);
+        const permisosInstancias = await Permiso.findAll({
+            where: { id: permisosId },
+        })
+        await rolCreado.addPermisos(permisosInstancias)
+        res.status(201).json({ msg: 'rol creado exitosamente' });
     } catch (error) {
         console.log(error);
         res.status(500).json(error);
@@ -39,17 +47,35 @@ exports.createRole = async (req, res) => {
 };
 
 exports.updateRole = async (req, res) => {
-    const { id } = req.params;
-    const { nombre, permisosId, estadoId } = req.body;  
     try {
-        await deleteRolesPermiso(id);
-        await updateRole(id, nombre, permisosId, estadoId );
-        await createRolesPermiso(id, permisosId);
+        const { id } = req.params;
+        const { nombre, permisosId, estadoId } = req.body;
 
-        res.status(201).json({ msg: 'Rol actualizado exitosamente' });
+        const existingRole = await Role.findByPk(id);
+        if (!existingRole) {
+            return res.status(404).json({ error: 'Rol no encontrado' });
+        }
+
+        const updatedRole = {
+            nombre: nombre || existingRole.nombre,
+            estadoId: estadoId || existingRole.estadoId,
+        };
+
+        if (permisosId && permisosId.length > 0) {
+            await existingRole.setPermisos([]);
+
+            const permisosInstancias = await Permiso.findAll({
+                where: { id: permisosId },
+            });
+
+            await existingRole.addPermisos(permisosInstancias);
+        }
+
+        await existingRole.update(updatedRole);
+        res.status(200).json({ msg: 'Rol actualizado exitosamente' });
     } catch (error) {
-        console.error(error);
-        res.status(500).json(error);
+        console.error(`Error en updateRole: ${error.message}`);
+        res.status(500).json({ error: 'Error al actualizar el rol' });
     }
 };
 
@@ -58,7 +84,7 @@ exports.statusRole = async (req, res) => {
 
     try {
         await statusRole(id);
-        res.status(201).json({msg: 'Rol inactivo'});
+        res.status(201).json({ msg: 'Rol inactivo' });
     } catch (error) {
         res.status(500).json(error);
     }

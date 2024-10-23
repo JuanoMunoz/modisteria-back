@@ -22,8 +22,8 @@ const Permiso = sequelize.define('Permiso',
   },
 );
 
-Permiso.hasMany(RolesPermisos, {foreignKey: 'permisoId', sourceKey: 'id', as: 'roles_permisos'});
-RolesPermisos.belongsTo(Permiso, {foreignKey: 'permisoId', targetKey: 'id', as: 'permiso'});
+// Permiso.hasMany(RolesPermisos, {foreignKey: 'permisoId', sourceKey: 'id', as: 'roles_permisos'});
+// RolesPermisos.belongsTo(Permiso, {foreignKey: 'permisoId', targetKey: 'id', as: 'permiso'});
 
 module.exports = { Permiso };
 
