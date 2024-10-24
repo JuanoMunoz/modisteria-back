@@ -38,10 +38,9 @@ exports.deleteRole = async (id) => {
     throw new Error("Rol no encontrado");
   }
 
-  const existePermiso = role.permisosId && role.permisosId.length > 0;
-  const existeEstado = await Estado.findOne({ where: { id: role.estadoId } });
+  const existeUsuario = await Usuario.findOne({ where: { roleId: role.id } });
 
-  if (existePermiso || existeEstado) {
+  if (existeUsuario) {
     throw new Error(
       "No se puede eliminar el rol porque está asociado a registros en otras tablas"
     );
