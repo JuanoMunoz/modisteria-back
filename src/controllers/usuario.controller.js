@@ -28,7 +28,7 @@ exports.getAllUsers = async (req, res) => {
     res.status(200).json(users);
   } catch (error) {
     console.log(error);
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -39,7 +39,7 @@ exports.getUserById = async (req, res) => {
     const user = await getUserById(id);
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -48,11 +48,9 @@ exports.createUser = async (req, res) => {
   console.log(email);
   const user = await getUserByEmail(email);
   if (user) {
-    return res
-      .status(400)
-      .json({
-        msg: "El correo ingresado ya se encuentra registrado, intente de nuevo",
-      });
+    return res.status(400).json({
+      msg: "El correo ingresado ya se encuentra registrado, intente de nuevo",
+    });
   }
 
   function codigoRandom() {
@@ -202,7 +200,7 @@ exports.createUsuario = async (req, res) => {
     res.status(201).json({ msg: "Usuario creado exitosamente" });
   } catch (error) {
     console.log(error);
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -214,11 +212,9 @@ exports.getCodeVerification = async (req, res) => {
       res.status(200).json({ msg: `${code}` });
       return true;
     } else {
-      res
-        .status(200)
-        .json({
-          msg: `El correo ${email} no tiene ningún código de recuperación asociado.`,
-        });
+      res.status(200).json({
+        msg: `El correo ${email} no tiene ningún código de recuperación asociado.`,
+      });
       return false;
     }
   } catch (error) {
@@ -233,11 +229,9 @@ exports.verifyUser = async (req, res) => {
   const savedCode = await getCodigoByEmail(email);
   try {
     if (savedCode !== codigo) {
-      return res
-        .status(400)
-        .json({
-          msg: "El código de verificiación ingresado no coincide, intente de nuevo",
-        });
+      return res.status(400).json({
+        msg: "El código de verificiación ingresado no coincide, intente de nuevo",
+      });
     }
     const rolNombre = await getRole(roleId);
     const encriptada = bcrypt.hashSync(password, 10);
@@ -275,7 +269,7 @@ exports.updateInfo = async (req, res) => {
     const token = generateToken(user);
     res.status(201).json({ msg: "usuario actualizado exitosamente", token });
   } catch (error) {
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };
 exports.updateUser = async (req, res) => {
@@ -285,7 +279,7 @@ exports.updateUser = async (req, res) => {
     await updateUser(id, user);
     res.status(201).json({ msg: "usuario actualizado exitosamente" });
   } catch (error) {
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -295,7 +289,7 @@ exports.statusUser = async (req, res) => {
     await statusUser(id);
     res.status(201).json({ msg: "usuario inactivo" });
   } catch (error) {
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };
 exports.deleteUser = async (req, res) => {
@@ -317,7 +311,7 @@ exports.login = async (req, res) => {
     const token = generateToken(user);
     res.status(200).json({ token });
   } catch (error) {
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -466,11 +460,9 @@ exports.getCodePassword = async (req, res) => {
     if (code != null) {
       res.status(200).json({ msg: `${code}` });
     } else {
-      res
-        .status(200)
-        .json({
-          msg: `El correo ${email} no tiene ningún código de recuperación asociado.`,
-        });
+      res.status(200).json({
+        msg: `El correo ${email} no tiene ningún código de recuperación asociado.`,
+      });
     }
   } catch (error) {
     console.error(error);
@@ -502,7 +494,7 @@ exports.isYourCurrentPassword = async (req, res) => {
       return res.status(200).json({ isYourCurrentPassword: false });
     res.status(200).json({ isYourCurrentPassword: true });
   } catch (error) {
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };
 

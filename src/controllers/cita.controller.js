@@ -26,7 +26,7 @@ exports.getAllCitas = async (req, res) => {
     res.status(200).json(citas);
   } catch (error) {
     console.log(error);
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -37,7 +37,7 @@ exports.getCitaById = async (req, res) => {
     const cita = await getCitaById(id);
     res.status(200).json(cita);
   } catch (error) {
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -114,11 +114,12 @@ exports.createCita = async (req, res) => {
     res.status(201).json({ msg: "Cita creada exitosamente" });
   } catch (error) {
     console.log(error);
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };
 
-exports.updateSPT = async (req, res) => { //Update Status Price and Time
+exports.updateSPT = async (req, res) => {
+  //Update Status Price and Time
   try {
     const { id } = req.params;
     const { estadoId, tiempo, precio } = req.body;
@@ -244,7 +245,7 @@ exports.updateSPT = async (req, res) => { //Update Status Price and Time
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -319,7 +320,7 @@ exports.updateCita = async (req, res) => {
     res.status(201).json({ msg: "Cita actualizada exitosamente" });
   } catch (error) {
     console.log(error);
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -329,7 +330,7 @@ exports.statusCita = async (req, res) => {
     await statusCita(id);
     res.status(201).json({ msg: "cita inactiva" });
   } catch (error) {
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };
 exports.deleteCita = async (req, res) => {

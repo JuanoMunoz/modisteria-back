@@ -1,4 +1,10 @@
-const { getAllPQRS, getPQRSById, createPQRS, updatePQRS, deletePQRS } = require("../repositories/pqrs.repository");
+const {
+  getAllPQRS,
+  getPQRSById,
+  createPQRS,
+  updatePQRS,
+  deletePQRS,
+} = require("../repositories/pqrs.repository");
 
 exports.getAllPQRS = async (req, res) => {
   try {
@@ -6,63 +12,63 @@ exports.getAllPQRS = async (req, res) => {
     res.status(200).json(pqrs);
   } catch (error) {
     console.log(error);
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };
 
 exports.getPQRSById = async (req, res) => {
-    const { id } = req.params;
+  const { id } = req.params;
 
-    try {
-        console.log(id);
-        const pqrs = await getPQRSById(id);
-        res.status(200).json(pqrs);
-    } catch (error) {
-        res.status(500).json(error);
-    }
+  try {
+    console.log(id);
+    const pqrs = await getPQRSById(id);
+    res.status(200).json(pqrs);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
 exports.createPQRS = async (req, res) => {
-    const pqrs = req.body;
+  const pqrs = req.body;
 
-    try {
-        console.log(req.body);
-        await createPQRS(pqrs);
-        res.status(201).json({msg: 'PQRS creado exitosamente'});
-    } catch (error) {
-        console.log(error);
-        res.status(500).json(error);
-    }
+  try {
+    console.log(req.body);
+    await createPQRS(pqrs);
+    res.status(201).json({ msg: "PQRS creado exitosamente" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error: error.message });
+  }
 };
 
 exports.updatePQRS = async (req, res) => {
-    const { id } = req.params;
-    const pqrs = req.body;
-    try {
-        await updatePQRS(id, pqrs);
-        res.status(201).json({msg: 'PQRS actualizado exitosamente'});
-    } catch (error) {
-        res.status(500).json(error);
-    }
+  const { id } = req.params;
+  const pqrs = req.body;
+  try {
+    await updatePQRS(id, pqrs);
+    res.status(201).json({ msg: "PQRS actualizado exitosamente" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
 exports.statusPQRS = async (req, res) => {
-    const { id } = req.params;
+  const { id } = req.params;
 
-    try {
-        await statusPQRS(id);
-        res.status(201).json({msg: 'PQRS inactivo'});
-    } catch (error) {
-        res.status(500).json(error);
-    }
-}
+  try {
+    await statusPQRS(id);
+    res.status(201).json({ msg: "PQRS inactivo" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 exports.deletePQRS = async (req, res) => {
-    const { id } = req.params;
+  const { id } = req.params;
 
-    try {
-        await deletePQRS(id);
-        res.status(201).json({msg: 'PQRS eliminado'});
-    } catch (error) {
-        return res.status(400).json({ message: error.message });
-    }
-}
+  try {
+    await deletePQRS(id);
+    res.status(201).json({ msg: "PQRS eliminado" });
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
+};

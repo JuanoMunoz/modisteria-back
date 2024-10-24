@@ -28,7 +28,7 @@ exports.getAllCatalogo = async (req, res) => {
     res.status(200).json(catalogo);
   } catch (error) {
     console.log(error);
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -39,7 +39,7 @@ exports.getCatalogoById = async (req, res) => {
     const catalogo = await getCatalogoById(id);
     res.status(200).json(catalogo);
   } catch (error) {
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };
 exports.getCatalogoByCategoria = async (req, res) => {
@@ -147,7 +147,7 @@ exports.statusCatalogo = async (req, res) => {
     await statusCatalogo(id);
     res.status(201).json({ msg: "catalogo inactivo" });
   } catch (error) {
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };
 exports.deleteCatalogo = async (req, res) => {
@@ -156,6 +156,6 @@ exports.deleteCatalogo = async (req, res) => {
     await deleteCatalogo(id);
     res.status(201).json({ msg: "catalogo eliminado" });
   } catch (error) {
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };

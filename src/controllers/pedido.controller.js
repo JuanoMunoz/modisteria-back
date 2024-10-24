@@ -12,7 +12,7 @@ exports.getAllPedido = async (req, res) => {
     const pedidos = await getAllPedido();
     res.status(200).json(pedidos);
   } catch (error) {
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -25,7 +25,7 @@ exports.getPedidoById = async (req, res) => {
     const Pedido = await getPedidoById(id, catalogoId, tallaId);
     res.status(200).json(Pedido);
   } catch (error) {
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -50,7 +50,7 @@ exports.createPedido = async (req, res) => {
     res.status(201).json({ msg: "Pedido creado exitosamente" });
   } catch (error) {
     console.log(error);
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -72,7 +72,7 @@ exports.statusPedido = async (req, res) => {
     await statusPedido(id);
     res.status(201).json({ msg: "Pedido inactivo" });
   } catch (error) {
-    res.status(500).json(error);
+    res.status(400).json({ error: error.message });
   }
 };
 exports.deletePedido = async (req, res) => {
