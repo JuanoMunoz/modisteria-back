@@ -43,31 +43,18 @@ exports.updateVenta = async (id, venta) => {
 }
 
 exports.getAllInfoByVentaID = async (ventaId) => {
-    return await Venta.findAll({
+    return await Venta.findOne({
         where: { id: ventaId },
         include: [
             {
-                model: Cotizacion,
-                as: 'cotizacion',
-                attributes: ['metodoPago', 'nombrePersona', 'valorFinal'],
+                model: Pedido,
+                as: 'pedidos',
+                attributes: ['catalogoId', 'tallaId', 'cantidad', 'usuarioId'],
                 include: [
                     {
-                        model: CotizacionPedidos,
-                        as: 'cotizacion_pedidos',
-                        include: [
-                            {
-                                model: Pedido,
-                                as: 'pedido',
-                                attributes: ['catalogoId', 'talla', 'cantidad', 'usuarioId'],
-                                include: [
-                                    {
-                                        model: Catalogo,
-                                        as: 'catalogo',
-                                        attributes: ['id', 'producto', 'precio'],
-                                    }
-                                ]
-                            }
-                        ]
+                        model: Catalogo,
+                        as: 'catalogo',
+                        attributes: ['id', 'producto', 'precio'],
                     }
                 ]
             }
@@ -76,35 +63,24 @@ exports.getAllInfoByVentaID = async (ventaId) => {
     });
 };
 
+
 exports.getVentaByUsuarioId = async (usuarioId) => {
     const ventaByUsuario = await Venta.findAll({
+        where: {
+            '$pedidos.usuarioId$': usuarioId 
+        },
         include: [
             {
-                model: Cotizacion,
-                as: 'cotizacion',
+                model: Pedido,
+                as: 'pedidos', 
                 include: [
                     {
-                        model: CotizacionPedidos,
-                        as: 'cotizacion_pedidos',
-                        include: [
-                            {
-                                model: Pedido,
-                                as: 'pedido',
-                                include: [
-                                    {
-                                        model: Usuario,
-                                        as: 'usuario',
-                                    }
-                                ]
-                            }
-                        ]
+                        model: Usuario,
+                        as: 'usuario', 
                     }
                 ]
             }
-        ],
-        where: {
-            '$cotizacion.cotizacion_pedidos.pedido.usuarioId$': usuarioId 
-        }
+        ]
     });
 
     if (ventaByUsuario.length === 0) {
@@ -116,3 +92,4 @@ exports.getVentaByUsuarioId = async (usuarioId) => {
 
     return ventaByUsuario;
 };
+
