@@ -37,7 +37,7 @@ exports.deleteCategoria = async (id) => {
   const isCategoriaBeingUsedOnInsumos = await Insumo.findOne({
     where: { categoriaId: id },
   });
-  const isCategoriaBeingUsedOnCatalogo = Catalogo.findOne({
+  const isCategoriaBeingUsedOnCatalogo = await Catalogo.findOne({
     where: { categoriaId: id },
   });
   if (isCategoriaBeingUsedOnInsumos) {
