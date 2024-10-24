@@ -5,27 +5,15 @@ exports.getAllDomicilios = async () => {
         include: [
             {
                 model: Venta,
-                as: 'ventas', 
+                as: 'ventas',
                 include: [
                     {
-                        model: Cotizacion,
-                        as: 'cotizacion', 
+                        model: Pedido,
+                        as: 'pedidos',
                         include: [
                             {
-                                model: CotizacionPedidos,
-                                as: 'cotizacion_pedidos',
-                                include: [
-                                    {
-                                        model: Pedido,
-                                        as: 'pedido',
-                                        include: [
-                                            {
-                                                model: Usuario,
-                                                as: 'usuario',
-                                            }
-                                        ]
-                                    }
-                                ]
+                                model: Usuario,
+                                as: 'usuario',
                             }
                         ]
                     }
@@ -37,30 +25,19 @@ exports.getAllDomicilios = async () => {
 
 exports.getDomicilioById = async (id) => {
     return await Domicilio.findOne({
-        where: { id }, include: [
+        where: { id },
+        include: [
             {
                 model: Venta,
-                as: 'ventas', 
+                as: 'ventas',
                 include: [
                     {
-                        model: Cotizacion,
-                        as: 'cotizacion', 
+                        model: Pedido,
+                        as: 'pedidos', 
                         include: [
                             {
-                                model: CotizacionPedidos,
-                                as: 'cotizacion_pedidos',
-                                include: [
-                                    {
-                                        model: Pedido,
-                                        as: 'pedido',
-                                        include: [
-                                            {
-                                                model: Usuario,
-                                                as: 'usuario',
-                                            }
-                                        ]
-                                    }
-                                ]
+                                model: Usuario,
+                                as: 'usuario',
                             }
                         ]
                     }
@@ -70,33 +47,22 @@ exports.getDomicilioById = async (id) => {
     });
 };
 
+
 exports.getDomiciliosByDomiciliario = async (usuarioId) => {
     return await Domicilio.findAll({
-        where: { usuarioId: usuarioId },
         include: [
             {
                 model: Venta,
-                as: 'ventas', 
+                as: 'ventas',
                 include: [
                     {
-                        model: Cotizacion,
-                        as: 'cotizacion', 
+                        model: Pedido,
+                        as: 'pedidos',
                         include: [
                             {
-                                model: CotizacionPedidos,
-                                as: 'cotizacion_pedidos',
-                                include: [
-                                    {
-                                        model: Pedido,
-                                        as: 'pedido',
-                                        include: [
-                                            {
-                                                model: Usuario,
-                                                as: 'usuario',
-                                            }
-                                        ]
-                                    }
-                                ]
+                                model: Usuario,
+                                as: 'usuario',
+                                where: { id: usuarioId }
                             }
                         ]
                     }
@@ -105,6 +71,7 @@ exports.getDomiciliosByDomiciliario = async (usuarioId) => {
         ]
     });
 };
+
 
 exports.getDomiciliosByClienteId = async (clienteId) => {
     try {
@@ -115,24 +82,12 @@ exports.getDomiciliosByClienteId = async (clienteId) => {
                     as: 'ventas',
                     include: [
                         {
-                            model: Cotizacion,
-                            as: 'cotizacion',
+                            model: Pedido,
+                            as: 'pedidos',
                             include: [
                                 {
-                                    model: CotizacionPedidos,
-                                    as: 'cotizacion_pedidos',
-                                    include: [
-                                        {
-                                            model: Pedido,
-                                            as: 'pedido',
-                                            include: [
-                                                {
-                                                    model: Usuario,
-                                                    as: 'usuario',
-                                                }
-                                            ]
-                                        }
-                                    ]
+                                    model: Usuario,
+                                    as: 'usuario'
                                 }
                             ]
                         }
@@ -140,7 +95,7 @@ exports.getDomiciliosByClienteId = async (clienteId) => {
                 }
             ],
             where: {
-                '$ventas.cotizacion.cotizacion_pedidos.pedido.usuarioId$': clienteId 
+                '$ventas.pedidos.usuarioId$': clienteId 
             }
         });
 
@@ -158,6 +113,7 @@ exports.getDomiciliosByClienteId = async (clienteId) => {
         throw error;
     }
 };
+
 
 
 
