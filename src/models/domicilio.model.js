@@ -7,7 +7,7 @@ const Domicilio = sequelize.define('Domicilio',
   {
     novedades: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     ventaId: {
       type: DataTypes.INTEGER,

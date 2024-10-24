@@ -1,4 +1,5 @@
 const { Domicilio, Usuario, Role, Venta, Cotizacion, Pedido, CotizacionPedidos, Estado } = require("../models");
+const { getAllDomiciliarios } = require("./usuario.repository");
 
 exports.getAllDomicilios = async () => {
     return await Domicilio.findAll({
@@ -114,11 +115,38 @@ exports.getDomiciliosByClienteId = async (clienteId) => {
     }
 };
 
-
-
-
 exports.createDomicilio = async (domicilio) => {
     return await Domicilio.create(domicilio);
+};
+
+exports.createDomicilioVenta = async (ventaId) => {
+    try {
+        const venta = await Venta.findByPk(ventaId); 
+
+        if (!venta) {
+            throw new Error('Venta no encontrada');
+        }
+
+        const domiciliarios = await getAllDomiciliarios(4);
+
+        if (domiciliarios.length === 0) {
+            throw new Error('No se encontraron domiciliarios disponibles');
+        }
+
+        const domiciliarioAleatorio = domiciliarios[Math.floor(Math.random() * domiciliarios.length)];
+
+        const nuevoDomicilio = await Domicilio.create({
+            ventaId: venta.id, 
+            usuarioId: domiciliarioAleatorio.id,
+            estadoId: 3,
+        });
+
+        return nuevoDomicilio;
+        
+    } catch (error) {
+        console.error('Error al crear el domicilio para la venta:', error);
+        throw error; 
+    }
 };
 
 exports.updateDomicilio = async (id, domicilio) => {

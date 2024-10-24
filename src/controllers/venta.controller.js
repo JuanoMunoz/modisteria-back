@@ -1,8 +1,8 @@
 const { Pedido } = require("../models");
+const { createDomicilioVenta } = require("../repositories/domicilio.repository");
 const {
   getPedidoByUsuarioyEstado,
   getPedidoByVenta,
-  updatePedido,
 } = require("../repositories/pedido.repository");
 const {
   getAllVentas,
@@ -73,19 +73,20 @@ exports.createVenta = async (req, res) => {
     console.log("Pedidos obtenidos:", pedidos);
 
     let total = 0;
-    const proceso = await Promise.all(
-      pedidos.map(async (producto) => {
-        try {
+    try {
+      const proceso = await Promise.all(
+        pedidos.map(async (producto) => {
           const pedidoActualizado = await Pedido.update(
             { ventaId: venta.id },
             { where: { id: producto.id } }
           );
           total += producto.valorUnitario * producto.cantidad;
-        } catch (error) {
-          console.error(`Error actualizando pedido ${producto.id}:`, error);
-        }
-      })
-    );
+          return pedidoActualizado;
+        })
+      );
+    } catch (error) {
+      console.error("Error actualizando pedidos:", error);
+    }    
 
     const valorDomicilio = 0;
     const cambio = {
@@ -95,6 +96,10 @@ exports.createVenta = async (req, res) => {
     };
     const ventaActualizada = await updateVenta(venta.id, cambio);
     console.log("Venta actualizada:", ventaActualizada);
+
+    if (valorDomicilio > 0){
+      const crearDomicilio = await createDomicilioVenta(venta.id)
+    }
 
     res.status(201).json({ msg: "Venta creada y actualizada exitosamente" });
   } catch (error) {
