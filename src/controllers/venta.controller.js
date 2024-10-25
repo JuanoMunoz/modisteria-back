@@ -11,6 +11,7 @@ const {
   getVentaByUsuarioId,
   updateVenta,
 } = require("../repositories/venta.repository");
+const { helperImg, uploadToCloudinary } = require("../utils/image");
 
 exports.getAllVentas = async (req, res) => {
   try {
