@@ -1,4 +1,4 @@
-const { Catalogo, Categoria, Talla } = require("../models");
+const { Catalogo, Categoria, Talla, Insumo } = require("../models");
 const { Op } = require("sequelize");
 
 exports.getAllCatalogo = async (offset, limit, priceLimit, category) => {
@@ -13,7 +13,7 @@ exports.getAllCatalogo = async (offset, limit, priceLimit, category) => {
     limit,
     order: [["id", "DESC"]],
     where: whereClause,
-    include: { model: Talla },
+    include: [{ model: Talla }, {model: Insumo, as: 'insumos'}]  ,
   });
 };
 

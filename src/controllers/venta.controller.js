@@ -47,7 +47,7 @@ exports.getVentaByUsuarioId = async (req, res) => {
 };
 
 exports.createVenta = async (req, res) => {
-  const { metodoPago, valorDomicilio } = req.body;
+  const { metodoPago, valorDomicilio, nombrePersona } = req.body;
 
   try {
     console.log("Iniciando proceso de creación de venta...");
@@ -64,7 +64,7 @@ exports.createVenta = async (req, res) => {
     const newVenta = {
       fecha: new Date(),
       imagen: imagen,
-      nombrePersona: null,
+      nombrePersona: metodoPago === 'transferencia' ? nombrePersona : null,
       valorDomicilio: Number(valorDomicilio) || 0,
       valorPrendas: 0,
       valorFinal: 0,
@@ -155,13 +155,11 @@ exports.confirmarVenta = async (req, res) => {
   const { id } = req.params;
 
   try {
-    // Verificar si la venta existe
     const venta = await getVentaById(id);
     if (!venta) {
       return res.status(404).json({ msg: "Venta no encontrada" });
     }
 
-    // Obtener los pedidos asociados a la venta
     const pedidos = await getPedidoByVenta(id);
     if (pedidos.length === 0) {
       return res
@@ -179,11 +177,9 @@ exports.confirmarVenta = async (req, res) => {
       })
     );
 
-    // Actualizar el estado de la venta a pagada
     const cambio = { estadoId: 14 }; // Estado Pagado
     await updateVenta(id, cambio);
 
-    // Responder con éxito
     res
       .status(200)
       .json({ msg: "Venta confirmada y pedidos actualizados exitosamente" });
