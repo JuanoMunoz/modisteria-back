@@ -1,31 +1,20 @@
 const { Domicilio, Usuario, Role, Venta, Cotizacion, Pedido, CotizacionPedidos, Estado } = require("../models");
+const { getAllDomiciliarios } = require("./usuario.repository");
 
 exports.getAllDomicilios = async () => {
     return await Domicilio.findAll({
         include: [
             {
                 model: Venta,
-                as: 'ventas', 
+                as: 'ventas',
                 include: [
                     {
-                        model: Cotizacion,
-                        as: 'cotizacion', 
+                        model: Pedido,
+                        as: 'pedidos',
                         include: [
                             {
-                                model: CotizacionPedidos,
-                                as: 'cotizacion_pedidos',
-                                include: [
-                                    {
-                                        model: Pedido,
-                                        as: 'pedido',
-                                        include: [
-                                            {
-                                                model: Usuario,
-                                                as: 'usuario',
-                                            }
-                                        ]
-                                    }
-                                ]
+                                model: Usuario,
+                                as: 'usuario',
                             }
                         ]
                     }
@@ -37,30 +26,19 @@ exports.getAllDomicilios = async () => {
 
 exports.getDomicilioById = async (id) => {
     return await Domicilio.findOne({
-        where: { id }, include: [
+        where: { id },
+        include: [
             {
                 model: Venta,
-                as: 'ventas', 
+                as: 'ventas',
                 include: [
                     {
-                        model: Cotizacion,
-                        as: 'cotizacion', 
+                        model: Pedido,
+                        as: 'pedidos', 
                         include: [
                             {
-                                model: CotizacionPedidos,
-                                as: 'cotizacion_pedidos',
-                                include: [
-                                    {
-                                        model: Pedido,
-                                        as: 'pedido',
-                                        include: [
-                                            {
-                                                model: Usuario,
-                                                as: 'usuario',
-                                            }
-                                        ]
-                                    }
-                                ]
+                                model: Usuario,
+                                as: 'usuario',
                             }
                         ]
                     }
@@ -70,33 +48,22 @@ exports.getDomicilioById = async (id) => {
     });
 };
 
+
 exports.getDomiciliosByDomiciliario = async (usuarioId) => {
     return await Domicilio.findAll({
-        where: { usuarioId: usuarioId },
         include: [
             {
                 model: Venta,
-                as: 'ventas', 
+                as: 'ventas',
                 include: [
                     {
-                        model: Cotizacion,
-                        as: 'cotizacion', 
+                        model: Pedido,
+                        as: 'pedidos',
                         include: [
                             {
-                                model: CotizacionPedidos,
-                                as: 'cotizacion_pedidos',
-                                include: [
-                                    {
-                                        model: Pedido,
-                                        as: 'pedido',
-                                        include: [
-                                            {
-                                                model: Usuario,
-                                                as: 'usuario',
-                                            }
-                                        ]
-                                    }
-                                ]
+                                model: Usuario,
+                                as: 'usuario',
+                                where: { id: usuarioId }
                             }
                         ]
                     }
@@ -105,6 +72,7 @@ exports.getDomiciliosByDomiciliario = async (usuarioId) => {
         ]
     });
 };
+
 
 exports.getDomiciliosByClienteId = async (clienteId) => {
     try {
@@ -115,24 +83,12 @@ exports.getDomiciliosByClienteId = async (clienteId) => {
                     as: 'ventas',
                     include: [
                         {
-                            model: Cotizacion,
-                            as: 'cotizacion',
+                            model: Pedido,
+                            as: 'pedidos',
                             include: [
                                 {
-                                    model: CotizacionPedidos,
-                                    as: 'cotizacion_pedidos',
-                                    include: [
-                                        {
-                                            model: Pedido,
-                                            as: 'pedido',
-                                            include: [
-                                                {
-                                                    model: Usuario,
-                                                    as: 'usuario',
-                                                }
-                                            ]
-                                        }
-                                    ]
+                                    model: Usuario,
+                                    as: 'usuario'
                                 }
                             ]
                         }
@@ -140,7 +96,7 @@ exports.getDomiciliosByClienteId = async (clienteId) => {
                 }
             ],
             where: {
-                '$ventas.cotizacion.cotizacion_pedidos.pedido.usuarioId$': clienteId 
+                '$ventas.pedidos.usuarioId$': clienteId 
             }
         });
 
@@ -159,10 +115,38 @@ exports.getDomiciliosByClienteId = async (clienteId) => {
     }
 };
 
-
-
 exports.createDomicilio = async (domicilio) => {
     return await Domicilio.create(domicilio);
+};
+
+exports.createDomicilioVenta = async (ventaId) => {
+    try {
+        const venta = await Venta.findByPk(ventaId); 
+
+        if (!venta) {
+            throw new Error('Venta no encontrada');
+        }
+
+        const domiciliarios = await getAllDomiciliarios(4);
+
+        if (domiciliarios.length === 0) {
+            throw new Error('No se encontraron domiciliarios disponibles');
+        }
+
+        const domiciliarioAleatorio = domiciliarios[Math.floor(Math.random() * domiciliarios.length)];
+
+        const nuevoDomicilio = await Domicilio.create({
+            ventaId: venta.id, 
+            usuarioId: domiciliarioAleatorio.id,
+            estadoId: 3,
+        });
+
+        return nuevoDomicilio;
+        
+    } catch (error) {
+        console.error('Error al crear el domicilio para la venta:', error);
+        throw error; 
+    }
 };
 
 exports.updateDomicilio = async (id, domicilio) => {

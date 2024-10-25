@@ -71,6 +71,16 @@ exports.createDomicilio = async (req, res) => {
   const domicilio = req.body;
 
   try {
+    const newDomicilio = {
+      novedades: null,
+      ventaId: 0,
+      valorPrendas: 0,
+      valorFinal: 0,
+      metodoPago,
+      estadoId: 3,
+    };
+    const venta = await createVenta(newVenta);
+    console.log("Venta creada:", venta);
     console.log(req.body);
     await createDomicilio(domicilio);
     res.status(201).json({ msg: "Domicilio creado exitosamente" });

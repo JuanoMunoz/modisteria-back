@@ -6,6 +6,10 @@ exports.getAllUsers = async () => {
     return await Usuario.findAll({include: [{model: Role, as: 'role'}]});
 };
 
+exports.getAllDomiciliarios = async (rolDomiciliario) => {
+    return await Usuario.findAll({ where: { roleId: rolDomiciliario } });
+};
+
 exports.getUserById = async (id) => {
     return await Usuario.findByPk(id,{include: [{model: Role, as: 'role'}]});
 }
