@@ -26,14 +26,14 @@ exports.createCatalogo = async (catalogo) => {
 };
 
 exports.updateCatalogo = async (id, catalogo) => {
-  return await Catalogo.update(catalogo, { where: { id: id } });
+  return await Catalogo.update(catalogo, { where: { idPedido: id } });
 };
 
 exports.statusCatalogo = async (id) => {
   return await Catalogo.update({ estado: false }, { where: { id } });
 };
 exports.deleteCatalogo = async (id) => {
-  const catalogo = await Catalogo.findByPk(id);
+  const catalogo = await Catalogo.findOne({ where: { idPedido: id } });
 
   if (!catalogo) {
     throw new Error("Catálogo no encontrado");
