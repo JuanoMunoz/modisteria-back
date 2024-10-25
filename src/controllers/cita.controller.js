@@ -287,7 +287,7 @@ exports.updateCita = async (req, res) => {
         .json({ msg: "Solo se atiende de lunes a viernes" });
     }
     //Horario de atención
-    const hora = fechaCita.getHours() + 5;
+    const hora = fechaCita.getHours();
     if (hora < 8 || hora > 17) {
       return res
         .status(400)
