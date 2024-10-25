@@ -93,7 +93,9 @@ exports.createCatalogo = async (req, res) => {
             console.log("agregado a catalogo insumos")
         } */
 
-    res.status(201).json({ msg: "Catálogo creado exitosamente" });
+    res
+      .status(201)
+      .json({ msg: "Catálogo creado exitosamente", data: catalogoCreado });
   } catch (error) {
     console.error(`Error en createCatalogo: ${error.message}`);
     res
