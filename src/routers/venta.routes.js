@@ -30,7 +30,7 @@ router.get(
 
 router.post(
   "/createVenta",
-  [verifyToken, buscarPermiso("Ventas")],
+  [verifyToken, buscarPermiso("Ventas"), upload.single("file")],
   createVenta
 );
 
