@@ -30,13 +30,13 @@ router.get(
 
 router.post(
   "/createCatalogo",
-  [verifyToken, buscarPermiso("Catálogo"), upload.single("file")],
+  [verifyToken, buscarPermiso("Catálogo"), upload.array("file", 5)],
   createCatalogo
 );
 
 router.put(
   "/updateCatalogo/:id",
-  [verifyToken, buscarPermiso("Catálogo"), upload.single("file")],
+  [verifyToken, buscarPermiso("Catálogo"), upload.array("file", 5)],
   updateCatalogo
 );
 
