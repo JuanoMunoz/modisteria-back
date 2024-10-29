@@ -62,26 +62,35 @@ exports.getCatalogoByCategoria = async (req, res) => {
 
 exports.createCatalogo = async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ error: "No file uploaded" });
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: "No hay archivos subidos" });
     }
-    const { producto, precio, descripcion, tallas, categoriaId, estadoId } =
-      req.body;
-    const processedBuffer = await helperImg(req.file.buffer, 300);
-    const result = await uploadToCloudinary(processedBuffer);
+    
+    const { producto, precio, descripcion, tallas, categoriaId, estadoId } = req.body;
+    const imageUrls = [];
+
+    for (const file of req.files) {
+      const processedBuffer = await helperImg(file.buffer, 300);
+      const result = await uploadToCloudinary(processedBuffer);
+      imageUrls.push(result.url);
+    }
+
     const newCatalogo = {
       producto,
       precio,
       descripcion,
       categoriaId,
-      imagen: result.url,
+      imagen: imageUrls,
       estadoId,
     };
+
     const catalogoCreado = await createCatalogo(newCatalogo);
+
     const tallasInstancias = await Talla.findAll({
       where: { id: tallas.split(",") },
     });
     await catalogoCreado.addTallas(tallasInstancias);
+
     /*         const catalogoId = catalogoCreado.id
         const catalogo_insumo = {
             cantidad_utilizada: cantidad_utilizada,
@@ -93,14 +102,10 @@ exports.createCatalogo = async (req, res) => {
             console.log("agregado a catalogo insumos")
         } */
 
-    res
-      .status(201)
-      .json({ msg: "Catálogo creado exitosamente", data: catalogoCreado });
+    res.status(201).json({ msg: "Catálogo creado exitosamente", data: catalogoCreado });
   } catch (error) {
     console.error(`Error en createCatalogo: ${error.message}`);
-    res
-      .status(500)
-      .json({ success: false, message: "Error al crear el catálogo" });
+    res.status(500).json({ success: false, message: "Error al crear el catálogo" });
   }
 };
 
@@ -116,20 +121,26 @@ exports.updateCatalogo = async (req, res) => {
       precio: precio || existingCatalogo.precio,
       descripcion: descripcion || existingCatalogo.descripcion,
       categoriaId: categoriaId || existingCatalogo.categoriaId,
-      imagen: existingCatalogo.imagen,
+      imagen: existingCatalogo.imagen, 
       estadoId: estadoId || existingCatalogo.estadoId,
     };
 
-    // Procesar la imagen si se carga una nueva
-    if (req.file) {
-      const processedBuffer = await helperImg(req.file.buffer, 300);
-      const result = await uploadToCloudinary(processedBuffer);
-      updatedCatalogo.imagen = result.url;
+    if (req.files && req.files.length > 0) {
+      const newImageUrls = [];
 
-      // Eliminar la imagen anterior de Cloudinary
-      if (existingCatalogo.imagen) {
-        const publicId = getPublicIdFromUrl(existingCatalogo.imagen);
-        await deleteFromCloudinary(publicId);
+      for (const file of req.files) {
+        const processedBuffer = await helperImg(file.buffer, 300);
+        const result = await uploadToCloudinary(processedBuffer);
+        newImageUrls.push(result.url);
+      }
+
+      updatedCatalogo.imagen = newImageUrls;
+
+      if (existingCatalogo.imagen && Array.isArray(existingCatalogo.imagen)) {
+        for (const oldImageUrl of existingCatalogo.imagen) {
+          const publicId = getPublicIdFromUrl(oldImageUrl);
+          await deleteFromCloudinary(publicId);
+        }
       }
     }
 
@@ -142,6 +153,7 @@ exports.updateCatalogo = async (req, res) => {
       .json({ success: false, message: "Error al actualizar el catálogo" });
   }
 };
+
 
 exports.statusCatalogo = async (req, res) => {
   try {
