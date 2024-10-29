@@ -1,4 +1,5 @@
 const { Talla } = require("../models/talla.model.js");
+const { Imagen } = require("../models/imagen.model.js");
 const {
   getAllCatalogo,
   getCatalogoById,
@@ -65,7 +66,7 @@ exports.createCatalogo = async (req, res) => {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ error: "No hay archivos subidos" });
     }
-    
+
     const { producto, precio, descripcion, tallas, categoriaId, estadoId } = req.body;
     const imageUrls = [];
 
@@ -80,29 +81,26 @@ exports.createCatalogo = async (req, res) => {
       precio,
       descripcion,
       categoriaId,
-      imagen: imageUrls,
       estadoId,
     };
 
     const catalogoCreado = await createCatalogo(newCatalogo);
 
-    const tallasInstancias = await Talla.findAll({
-      where: { id: tallas.split(",") },
+    for (const imageUrl of imageUrls) {
+      await Imagen.create({ url: imageUrl, catalogoId: catalogoCreado.id });
+    }
+
+    if (tallas) {
+      const tallasInstancias = await Talla.findAll({
+        where: { id: tallas.split(",") },
+      });
+      await catalogoCreado.addTallas(tallasInstancias);
+    }
+
+    res.status(201).json({
+      msg: "Catálogo creado exitosamente",
+      data: catalogoCreado,
     });
-    await catalogoCreado.addTallas(tallasInstancias);
-
-    /*         const catalogoId = catalogoCreado.id
-        const catalogo_insumo = {
-            cantidad_utilizada: cantidad_utilizada,
-            insumo_id: insumoId,
-            catalogo_id: catalogoId
-        }
-        const catInsCreado = await createCatIns(catalogo_insumo)
-        if (catInsCreado) {
-            console.log("agregado a catalogo insumos")
-        } */
-
-    res.status(201).json({ msg: "Catálogo creado exitosamente", data: catalogoCreado });
   } catch (error) {
     console.error(`Error en createCatalogo: ${error.message}`);
     res.status(500).json({ success: false, message: "Error al crear el catálogo" });
@@ -112,48 +110,55 @@ exports.createCatalogo = async (req, res) => {
 exports.updateCatalogo = async (req, res) => {
   try {
     const { id } = req.params;
-    const { producto, precio, descripcion, categoriaId, estadoId } = req.body;
+    const { producto, precio, descripcion, categoriaId, estadoId, tallas } = req.body;
 
     const existingCatalogo = await getCatalogoById(id);
+
+    if (!existingCatalogo) {
+      return res.status(404).json({ success: false, message: "Catálogo no encontrado" });
+    }
 
     const updatedCatalogo = {
       producto: producto || existingCatalogo.producto,
       precio: precio || existingCatalogo.precio,
       descripcion: descripcion || existingCatalogo.descripcion,
       categoriaId: categoriaId || existingCatalogo.categoriaId,
-      imagen: existingCatalogo.imagen, 
       estadoId: estadoId || existingCatalogo.estadoId,
     };
 
     if (req.files && req.files.length > 0) {
-      const newImageUrls = [];
+      const imagenesExistentes = await Imagen.findAll({ where: { catalogoId: id } });
+      for (const imagen of imagenesExistentes) {
+        const publicId = getPublicIdFromUrl(imagen.url);
+        await deleteFromCloudinary(publicId);
+        await imagen.destroy();
+      }
 
       for (const file of req.files) {
         const processedBuffer = await helperImg(file.buffer, 300);
         const result = await uploadToCloudinary(processedBuffer);
-        newImageUrls.push(result.url);
-      }
-
-      updatedCatalogo.imagen = newImageUrls;
-
-      if (existingCatalogo.imagen && Array.isArray(existingCatalogo.imagen)) {
-        for (const oldImageUrl of existingCatalogo.imagen) {
-          const publicId = getPublicIdFromUrl(oldImageUrl);
-          await deleteFromCloudinary(publicId);
-        }
+        await Imagen.create({
+          url: result.url,
+          catalogoId: id,
+        });
       }
     }
 
-    const updateResult = await updateCatalogo(id, updatedCatalogo);
+    await updateCatalogo(id, updatedCatalogo);
+
+    if (tallas) {
+      const tallasInstancias = await Talla.findAll({
+        where: { id: tallas.split(",") },
+      });
+      await existingCatalogo.setTallas(tallasInstancias);
+    }
+
     res.status(200).json({ msg: "Catálogo actualizado exitosamente" });
   } catch (error) {
     console.error(`Error en updateCatalogo: ${error.message}`);
-    res
-      .status(500)
-      .json({ success: false, message: "Error al actualizar el catálogo" });
+    res.status(500).json({ success: false, message: "Error al actualizar el catálogo" });
   }
 };
-
 
 exports.statusCatalogo = async (req, res) => {
   try {

@@ -26,7 +26,7 @@ exports.createCatalogo = async (catalogo) => {
 };
 
 exports.updateCatalogo = async (id, catalogo) => {
-  return await Catalogo.update(catalogo, { where: { idPedido: id } });
+  return await Catalogo.update(catalogo, { where: { id } });
 };
 
 exports.statusCatalogo = async (id) => {

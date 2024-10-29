@@ -16,10 +16,6 @@ const Catalogo = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    imagen: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-      allowNull: false,
-    },
     categoriaId: {
       type: DataTypes.INTEGER,
       allowNull: false,
