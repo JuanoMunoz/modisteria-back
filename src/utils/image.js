@@ -14,7 +14,7 @@ async function helperImg(buffer, width) {
     try {
         const processedBuffer = await sharp(buffer)
             .resize(width)
-            .toBuffer(); 
+            .toBuffer();
         return processedBuffer;
     } catch (error) {
         console.error(`Error procesando la imagen: ${error.message}`);
@@ -23,22 +23,16 @@ async function helperImg(buffer, width) {
 }
 
 async function uploadToCloudinary(buffer) {
-    try {
-        return new Promise((resolve, reject) => {
-            const uploadStream = cloudinary.uploader.upload_stream((error, result) => {
-                if (error) {
-                    console.error('Error subiendo archivo a Cloudinary:', error);
-                    return reject(error);
-                }
-                resolve(result);
-            });
-            
-            uploadStream.end(buffer);
+    return new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream((error, result) => {
+            if (error) {
+                console.error('Error subiendo archivo a Cloudinary:', error);
+                return reject(error);
+            }
+            resolve(result);
         });
-    } catch (error) {
-        console.error(`Error subiendo archivo a Cloudinary:`, error);
-        throw error;
-    }
+        uploadStream.end(buffer);
+    });
 }
 
 async function deleteFromCloudinary(publicId) {
@@ -50,13 +44,13 @@ async function deleteFromCloudinary(publicId) {
     }
 }
 
+
 function getPublicIdFromUrl(url) {
     const parts = url.split('/');
     const publicIdWithExtension = parts[parts.length - 1];
-    const publicId = publicIdWithExtension.split('.')[0]; 
+    const publicId = publicIdWithExtension.split('.')[0];
     return publicId;
 }
-
 
 module.exports = {
     upload,

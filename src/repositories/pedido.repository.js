@@ -49,7 +49,7 @@ exports.statusPedido = async (id) => {
 };
 
 exports.deletePedido = async (id) => {
-  const pedido = await Pedido.findByPk(id);
+  const pedido = await Pedido.findOne({ where: { idPedido: id } });
 
   if (!pedido) {
     throw new Error("Pedido no encontrado");
@@ -62,5 +62,5 @@ exports.deletePedido = async (id) => {
   //     throw new Error("No se puede eliminar el pedido porque está asociado a registros en otras tablas");
   // }
 
-  return await Pedido.destroy({ where: { id } });
+  return await Pedido.destroy({ where: { idPedido: id } });
 };

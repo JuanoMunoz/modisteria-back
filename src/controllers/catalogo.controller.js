@@ -1,4 +1,5 @@
 const { Talla } = require("../models/talla.model.js");
+const { Imagen } = require("../models/imagen.model.js");
 const {
   getAllCatalogo,
   getCatalogoById,
@@ -62,82 +63,100 @@ exports.getCatalogoByCategoria = async (req, res) => {
 
 exports.createCatalogo = async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ error: "No file uploaded" });
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: "No hay archivos subidos" });
     }
-    const { producto, precio, descripcion, tallas, categoriaId, estadoId } =
-      req.body;
-    const processedBuffer = await helperImg(req.file.buffer, 300);
-    const result = await uploadToCloudinary(processedBuffer);
+
+    const { producto, precio, descripcion, tallas, categoriaId, estadoId } = req.body;
+    const imageUrls = [];
+
+    for (const file of req.files) {
+      const processedBuffer = await helperImg(file.buffer, 300);
+      const result = await uploadToCloudinary(processedBuffer);
+      imageUrls.push(result.url);
+    }
+
     const newCatalogo = {
       producto,
       precio,
       descripcion,
       categoriaId,
-      imagen: result.url,
       estadoId,
     };
-    const catalogoCreado = await createCatalogo(newCatalogo);
-    const tallasInstancias = await Talla.findAll({
-      where: { id: tallas.split(",") },
-    });
-    await catalogoCreado.addTallas(tallasInstancias);
-    /*         const catalogoId = catalogoCreado.id
-        const catalogo_insumo = {
-            cantidad_utilizada: cantidad_utilizada,
-            insumo_id: insumoId,
-            catalogo_id: catalogoId
-        }
-        const catInsCreado = await createCatIns(catalogo_insumo)
-        if (catInsCreado) {
-            console.log("agregado a catalogo insumos")
-        } */
 
-    res.status(201).json({ msg: "Catálogo creado exitosamente" });
+    const catalogoCreado = await createCatalogo(newCatalogo);
+
+    for (const imageUrl of imageUrls) {
+      await Imagen.create({ url: imageUrl, catalogoId: catalogoCreado.id });
+    }
+
+    if (tallas) {
+      const tallasInstancias = await Talla.findAll({
+        where: { id: tallas.split(",") },
+      });
+      await catalogoCreado.addTallas(tallasInstancias);
+    }
+
+    res.status(201).json({
+      msg: "Catálogo creado exitosamente",
+      data: catalogoCreado,
+    });
   } catch (error) {
     console.error(`Error en createCatalogo: ${error.message}`);
-    res
-      .status(500)
-      .json({ success: false, message: "Error al crear el catálogo" });
+    res.status(500).json({ success: false, message: "Error al crear el catálogo" });
   }
 };
 
 exports.updateCatalogo = async (req, res) => {
   try {
     const { id } = req.params;
-    const { producto, precio, descripcion, categoriaId, estadoId } = req.body;
+    const { producto, precio, descripcion, categoriaId, estadoId, tallas } = req.body;
 
     const existingCatalogo = await getCatalogoById(id);
+
+    if (!existingCatalogo) {
+      return res.status(404).json({ success: false, message: "Catálogo no encontrado" });
+    }
 
     const updatedCatalogo = {
       producto: producto || existingCatalogo.producto,
       precio: precio || existingCatalogo.precio,
       descripcion: descripcion || existingCatalogo.descripcion,
       categoriaId: categoriaId || existingCatalogo.categoriaId,
-      imagen: existingCatalogo.imagen,
       estadoId: estadoId || existingCatalogo.estadoId,
     };
 
-    // Procesar la imagen si se carga una nueva
-    if (req.file) {
-      const processedBuffer = await helperImg(req.file.buffer, 300);
-      const result = await uploadToCloudinary(processedBuffer);
-      updatedCatalogo.imagen = result.url;
-
-      // Eliminar la imagen anterior de Cloudinary
-      if (existingCatalogo.imagen) {
-        const publicId = getPublicIdFromUrl(existingCatalogo.imagen);
+    if (req.files && req.files.length > 0) {
+      const imagenesExistentes = await Imagen.findAll({ where: { catalogoId: id } });
+      for (const imagen of imagenesExistentes) {
+        const publicId = getPublicIdFromUrl(imagen.url);
         await deleteFromCloudinary(publicId);
+        await imagen.destroy();
+      }
+
+      for (const file of req.files) {
+        const processedBuffer = await helperImg(file.buffer, 300);
+        const result = await uploadToCloudinary(processedBuffer);
+        await Imagen.create({
+          url: result.url,
+          catalogoId: id,
+        });
       }
     }
 
-    const updateResult = await updateCatalogo(id, updatedCatalogo);
+    await updateCatalogo(id, updatedCatalogo);
+
+    if (tallas) {
+      const tallasInstancias = await Talla.findAll({
+        where: { id: tallas.split(",") },
+      });
+      await existingCatalogo.setTallas(tallasInstancias);
+    }
+
     res.status(200).json({ msg: "Catálogo actualizado exitosamente" });
   } catch (error) {
     console.error(`Error en updateCatalogo: ${error.message}`);
-    res
-      .status(500)
-      .json({ success: false, message: "Error al actualizar el catálogo" });
+    res.status(500).json({ success: false, message: "Error al actualizar el catálogo" });
   }
 };
 

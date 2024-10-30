@@ -11,6 +11,7 @@ const {
   getVentaByUsuarioId,
   updateVenta,
 } = require("../repositories/venta.repository");
+const { helperImg, uploadToCloudinary } = require("../utils/image");
 
 exports.getAllVentas = async (req, res) => {
   try {
@@ -47,58 +48,83 @@ exports.getVentaByUsuarioId = async (req, res) => {
 };
 
 exports.createVenta = async (req, res) => {
-  const { metodoPago } = req.body;
+  const { metodoPago, valorDomicilio, nombrePersona } = req.body;
 
   try {
-    console.log("Inicio del proceso de creación de venta...");
+    console.log("Iniciando proceso de creación de venta...");
 
-    const imagen = await gestionImagen(req, metodoPago);
-    console.log("Imagen gestionada:", imagen);
+    let imagen;
+    try {
+      imagen = await gestionImagen(req, metodoPago);
+      console.log("Imagen gestionada:", imagen);
+    } catch (error) {
+      console.error("Error gestionando imagen:", error);
+      return res.status(400).json({ msg: "Error gestionando la imagen" });
+    }
 
     const newVenta = {
       fecha: new Date(),
       imagen: imagen,
-      nombrePersona: null,
-      valorDomicilio: 0,
+      nombrePersona: metodoPago === 'transferencia' ? nombrePersona : null,
+      valorDomicilio: Number(valorDomicilio) || 0,
       valorPrendas: 0,
       valorFinal: 0,
       metodoPago,
       estadoId: 3,
     };
+
     const venta = await createVenta(newVenta);
     console.log("Venta creada:", venta);
 
     const usuario = req.id;
     const pedidos = await getPedidoByUsuarioyEstado(usuario);
+    
+    if (!pedidos || pedidos.length === 0) {
+      return res.status(400).json({ msg: "No hay pedidos disponibles para el usuario" });
+    }
+
     console.log("Pedidos obtenidos:", pedidos);
 
     let total = 0;
+
     try {
       const proceso = await Promise.all(
         pedidos.map(async (producto) => {
-          const pedidoActualizado = await Pedido.update(
-            { ventaId: venta.id },
-            { where: { id: producto.id } }
-          );
-          total += producto.valorUnitario * producto.cantidad;
-          return pedidoActualizado;
+          try {
+            const pedidoActualizado = await Pedido.update(
+              { ventaId: venta.id },
+              { where: { id: producto.id } }
+            );
+            total += producto.valorUnitario * producto.cantidad;
+            return pedidoActualizado;
+          } catch (error) {
+            throw new Error("Error actualizando pedidos: " + error.message);
+          }
         })
       );
+      console.log("Pedidos actualizados:", proceso);
     } catch (error) {
-      console.error("Error actualizando pedidos:", error);
-    }    
+      console.error("Error en el proceso de actualización de pedidos:", error);
+      return res.status(500).json({ msg: "Error actualizando los pedidos" });
+    }
 
-    const valorDomicilio = 0;
     const cambio = {
       valorPrendas: total,
-      valorDomicilio: valorDomicilio,
-      valorFinal: total + valorDomicilio,
+      valorDomicilio: Number(valorDomicilio) || 0,
+      valorFinal: total + (Number(valorDomicilio) || 0),
     };
+
     const ventaActualizada = await updateVenta(venta.id, cambio);
     console.log("Venta actualizada:", ventaActualizada);
 
-    if (valorDomicilio > 0){
-      const crearDomicilio = await createDomicilioVenta(venta.id)
+    if (valorDomicilio > 0) {
+      try {
+        const crearDomicilio = await createDomicilioVenta(venta.id);
+        console.log("Domicilio creado:", crearDomicilio);
+      } catch (error) {
+        console.error("Error creando domicilio:", error);
+        return res.status(500).json({ msg: "Error al crear el domicilio" });
+      }
     }
 
     res.status(201).json({ msg: "Venta creada y actualizada exitosamente" });
@@ -130,13 +156,11 @@ exports.confirmarVenta = async (req, res) => {
   const { id } = req.params;
 
   try {
-    // Verificar si la venta existe
     const venta = await getVentaById(id);
     if (!venta) {
       return res.status(404).json({ msg: "Venta no encontrada" });
     }
 
-    // Obtener los pedidos asociados a la venta
     const pedidos = await getPedidoByVenta(id);
     if (pedidos.length === 0) {
       return res
@@ -154,11 +178,9 @@ exports.confirmarVenta = async (req, res) => {
       })
     );
 
-    // Actualizar el estado de la venta a pagada
     const cambio = { estadoId: 14 }; // Estado Pagado
     await updateVenta(id, cambio);
 
-    // Responder con éxito
     res
       .status(200)
       .json({ msg: "Venta confirmada y pedidos actualizados exitosamente" });

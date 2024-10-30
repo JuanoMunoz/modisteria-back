@@ -7,6 +7,7 @@ const {
   confirmarVenta,
 } = require("../controllers/venta.controller");
 const { verifyToken } = require("../utils/verifyToken");
+const { upload } = require("../utils/image");
 const { buscarPermiso } = require("../validators/validations.validator");
 const router = Router();
 
@@ -30,7 +31,7 @@ router.get(
 
 router.post(
   "/createVenta",
-  [verifyToken, buscarPermiso("Ventas")],
+  [verifyToken, buscarPermiso("Ventas"), upload.single("file")],
   createVenta
 );
 

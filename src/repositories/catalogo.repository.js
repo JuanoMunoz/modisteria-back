@@ -1,4 +1,4 @@
-const { Catalogo, Categoria, Talla } = require("../models");
+const { Catalogo, Categoria, Talla, Insumo } = require("../models");
 const { Op } = require("sequelize");
 
 exports.getAllCatalogo = async (offset, limit, priceLimit, category) => {
@@ -13,7 +13,7 @@ exports.getAllCatalogo = async (offset, limit, priceLimit, category) => {
     limit,
     order: [["id", "DESC"]],
     where: whereClause,
-    include: { model: Talla },
+    include: [{ model: Talla }, {model: Insumo, as: 'insumos'}]  ,
   });
 };
 
@@ -26,14 +26,14 @@ exports.createCatalogo = async (catalogo) => {
 };
 
 exports.updateCatalogo = async (id, catalogo) => {
-  return await Catalogo.update(catalogo, { where: { id: id } });
+  return await Catalogo.update(catalogo, { where: { id } });
 };
 
 exports.statusCatalogo = async (id) => {
   return await Catalogo.update({ estado: false }, { where: { id } });
 };
 exports.deleteCatalogo = async (id) => {
-  const catalogo = await Catalogo.findByPk(id);
+  const catalogo = await Catalogo.findOne({ where: { idPedido: id } });
 
   if (!catalogo) {
     throw new Error("Catálogo no encontrado");

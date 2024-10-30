@@ -286,77 +286,24 @@ exports.cancelarCita = async(req, res)=>{
 exports.updateCita = async (req, res) => {
   console.log(req.body);
   const { id } = req.params;
-  const { fecha, objetivo, usuarioId } = req.body;
+  const { estadoId, tiempo, precio } = req.body;
   try {
-    //Verificar que no pase de los 2 meses la cita
-    const fechaActual = new Date();
-    const limite = new Date();
-    limite.setMonth(limite.getMonth() + 2);
-
-    const fechaCita = new Date(fecha);
-    if (fechaCita > limite) {
-      return res
-        .status(400)
-        .json({ msg: "La fecha de la cita no puede ser superior a 2 meses" });
-    }
-    //Verificar que la fecha enviada ya no haya pasado
-    if (fechaCita < fechaActual) {
-      return res
-        .status(400)
-        .json({ msg: "La fecha de la cita ya pasó, intenta de nuevo" });
-    }
-    //Verificar que sea programada con el tiempo de anticipación requerido
-    const fechaMinima = new Date(fechaActual);
-    fechaMinima.setDate(fechaActual.getDate() + 2);
-    if (fechaCita < fechaMinima) {
-      return res.status(400).json({
-        msg: "La fecha de la cita debe ser programada mínimo con 2 días de anticipación",
-      });
-    }
-    //Lunes a viernes
-    const dia_semana = fechaCita.getDay();
-    if (dia_semana == 0 || dia_semana == 6) {
-      return res
-        .status(400)
-        .json({ msg: "Solo se atiende de lunes a viernes" });
-    }
-    //Horario de atención
-    const hora = fechaCita.getHours() + 5;
-    if (hora < 8 || hora > 17) {
-      return res
-        .status(400)
-        .json({ msg: "Solo se atiende de 8 a.m a 5 p.m", hora });
-    }
-
-    //Modificar imagen
     const existingCita = await getCitaById(id);
 
     const updatedCita = {
-      fecha: fecha || existingCita.fecha,
-      objetivo: objetivo || existingCita.objetivo,
-      usuarioId: usuarioId || existingCita.usuarioId,
-      referencia: existingCita.referencia,
+      estadoId: estadoId || existingCita.estadoId,
+      tiempo: tiempo || existingCita.tiempo,
+      precio: precio || existingCita.precio,
     };
 
-    if (req.file) {
-      const processedBuffer = await helperImg(req.file.buffer, 300);
-      const result = await uploadToCloudinary(processedBuffer);
-      updatedCita.referencia = result.url;
-
-      if (existingCita.imagen) {
-        const publicId = getPublicIdFromUrl(existingCita.referencia);
-        await deleteFromCloudinary(publicId);
-      }
-    } else {
-      updatedCita.referencia = null;
-    }
-    await updateCita(id, updatedCita);
+    const citaActualizada = await updateCita(id, updatedCita);
     res.status(201).json({ msg: "Cita actualizada exitosamente" });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: error.message });
   }
 };
+
 
 exports.statusCita = async (req, res) => {
   const { id } = req.params;
