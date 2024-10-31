@@ -1,4 +1,6 @@
 const { Insumo, Categoria, CatalogoInsumos, CitaInsumo } = require("../models");
+const { Sequelize } = require("sequelize");
+
 
 exports.getAllInsumos = async () => {
   return await Insumo.findAll();
@@ -19,6 +21,10 @@ exports.reponerInsumo = async (id) => {
 exports.updateInsumo = async (id, insumo) => {
   return await Insumo.update(insumo, { where: { id } });
 };
+
+exports.cantidadInsumos = async(id, cantidad)=>{
+  return await Insumo.update({cantidad: Sequelize.literal(`cantidad + ${cantidad}`)},{where:{id: id}}
+)}
 
 exports.statusInsumo = async (id) => {
   return await Insumo.update({ estado: false }, { where: { id } });
