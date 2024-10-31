@@ -1,3 +1,4 @@
+const { Insumo } = require("../models");
 const {
   getAllInsumos,
   getInsumoById,
@@ -5,8 +6,11 @@ const {
   updateInsumo,
   deleteInsumo,
   getInsumosByCategoria,
+  cantidadInsumos,
   reponerInsumo,
 } = require("../repositories/insumo.repository");
+const { Sequelize } = require("sequelize");
+
 
 exports.getAllInsumos = async (req, res) => {
   try {
@@ -82,6 +86,22 @@ exports.updateInsumo = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+exports.cantidadInsumos = async (req, res) => {
+  const { insumos } = req.body;
+  try {
+    for (let insumo of insumos) {
+      const {id, cantidad} = insumo;
+      await Insumo.update({cantidad: Sequelize.literal(`cantidad + ${cantidad}`)},{where:{id:id}});
+  }
+  res.status(201).json({ message: 'Cantidad actualizada correctamente.' });
+
+} catch (error) {
+    console.error('Error al actualizar cantidad de insumos:', error);
+    res.status(400).json({ error: error.message });
+  }
+};
+
 
 exports.statusInsumo = async (req, res) => {
   const { id } = req.params;

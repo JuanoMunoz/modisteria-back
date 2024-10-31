@@ -8,6 +8,7 @@ const {
   statusInsumo,
   getInsumosByCategoria,
   reponerInsumo,
+  cantidadInsumos,
 } = require("../controllers/insumo.controller");
 const { verifyToken } = require("../utils/verifyToken");
 const { buscarPermiso } = require("../validators/validations.validator");
@@ -36,6 +37,8 @@ router.put(
   [verifyToken, buscarPermiso("Insumos")],
   reponerInsumo
 );
+
+router.put("/cantidadInsumos", cantidadInsumos)
 
 router.post(
   "/createInsumo",

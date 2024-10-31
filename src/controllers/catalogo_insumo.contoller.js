@@ -8,7 +8,7 @@ exports.createCatalogoInsumos = async(req, res)=>{
             const newCatIns = {
                 catalogo_id:catalogoId,
                 insumo_id: insumo_id,
-                cantidad_utilizada:cantidad_utilizada
+                cantidad_utilizada:cantidad_utilizada 
             }
             
             await createCatIns(newCatIns);
