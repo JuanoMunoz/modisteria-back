@@ -30,7 +30,7 @@ exports.createCatalogo = async (catalogo) => {
 };
 
 exports.updateCatalogo = async (id, catalogo) => {
-  return await Catalogo.update(catalogo, { where: { id } });
+  return await Catalogo.update(catalogo, { where: { id }, returning: true });
 };
 
 exports.statusCatalogo = async (id) => {
