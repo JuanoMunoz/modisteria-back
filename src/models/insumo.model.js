@@ -18,6 +18,10 @@ const Insumo = sequelize.define('Insumo', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
+    tipo: {
+        type: DataTypes.ENUM('controlado', 'no controlado'),
+        allowNull: false,
+      },
 }, {
     timestamps: false,
 });

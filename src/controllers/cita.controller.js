@@ -7,6 +7,7 @@ const {
   getCitaByUAS,
   getCitasByUserId,
   getCitasAceptadas,
+  statusCita
 } = require("../repositories/cita.repository");
 const {
   helperImg,
@@ -118,11 +119,10 @@ exports.createCita = async (req, res) => {
   }
 };
 
-exports.updateSPT = async (req, res) => {
-  //Update Status Price and Time
+exports.updateSPT = async (req, res) => { //Update Status Price and Time
   try {
     const { id } = req.params;
-    const { estadoId, tiempo, precio } = req.body;
+    const { estadoId, tiempo, precio } = req.body; 
 
     const existingCita = await getCitaById(id);
     if (!existingCita) {
@@ -249,6 +249,40 @@ exports.updateSPT = async (req, res) => {
   }
 };
 
+//ACEPTAR Y CANCELAR CITA POR PARTE DEL CLIENTE
+
+exports.aceptarCita = async(req, res)=>{
+  try {
+    const {id} = req.params
+    const cita = await getCitaById(id)
+    if (cita.estadoId !==10) {
+      return res.status(400).json({error:'La cita aún no ha sido aprobada.'})      
+    }
+    await statusCita(id, 11)
+    res.status(201).json({msg: "Cita aceptada."})
+
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({error:error.message})
+  }
+}
+
+exports.cancelarCita = async(req, res)=>{
+  try {
+    const {id} = req.params
+    const cita = await getCitaById(id)
+    if (cita.estadoId !==10) {
+      return res.status(400).json({error:'La cita aún no ha sido aprobada.'})      
+    }
+    await statusCita(id, 12)
+    res.status(201).json({msg: "Cita cancelada."})
+
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({error:error.message})
+  }
+}
+
 exports.updateCita = async (req, res) => {
   console.log(req.body);
   const { id } = req.params;
@@ -280,6 +314,7 @@ exports.statusCita = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
 exports.deleteCita = async (req, res) => {
   const { id } = req.params;
   try {

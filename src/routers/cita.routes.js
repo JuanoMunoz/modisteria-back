@@ -8,6 +8,8 @@ const {
   statusCita,
   updateSPT,
   getCitasByUsuarioId,
+  aceptarCita,
+  cancelarCita
 } = require("../controllers/cita.controller");
 const { verifyToken } = require("../utils/verifyToken");
 const { buscarPermiso } = require("../validators/validations.validator");
@@ -34,7 +36,10 @@ router.post(
   createCita
 );
 
-router.put("/updateSPT/:id", [verifyToken, buscarPermiso("Citas")], updateSPT);
+router.put("/updateSPT/:id", updateSPT);
+
+router.put("/aceptarCita/:id", aceptarCita);
+router.put("/cancelarCita/:id", cancelarCita)
 
 router.put(
   "/updateCita/:id",
