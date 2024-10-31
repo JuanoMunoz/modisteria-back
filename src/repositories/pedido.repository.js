@@ -22,7 +22,7 @@ exports.getPedidoById = async (usuarioId, catalogoId, talla) => {
         model: Catalogo,
         as: "catalogo",
         include: { model: Imagen },
-        attributes: ["producto", "Imagens", "precio"],
+        attributes: ["producto", "precio"],
       },
       { model: Talla },
     ],
