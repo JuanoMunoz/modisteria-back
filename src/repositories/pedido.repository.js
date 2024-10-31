@@ -1,4 +1,4 @@
-const { Pedido, Catalogo, Venta, Talla } = require("../models");
+const { Pedido, Catalogo, Venta, Talla, Imagen } = require("../models");
 const { Op } = require("sequelize");
 
 exports.getAllPedido = async () => {
@@ -21,7 +21,8 @@ exports.getPedidoById = async (usuarioId, catalogoId, talla) => {
       {
         model: Catalogo,
         as: "catalogo",
-        attributes: ["producto", "imagen", "precio"],
+        include: { model: Imagen },
+        attributes: ["producto", "precio"],
       },
       { model: Talla },
     ],
