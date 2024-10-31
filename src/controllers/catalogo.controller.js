@@ -143,6 +143,7 @@ exports.updateCatalogo = async (req, res) => {
     }
 
     const [_, newCatalogo] = await updateCatalogo(id, updatedCatalogo);
+    console.log(newCatalogo);
 
     if (tallas) {
       const tallasInstancias = await Talla.findAll({
