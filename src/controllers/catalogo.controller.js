@@ -17,6 +17,7 @@ const {
   deleteFromCloudinary,
   getPublicIdFromUrl,
 } = require("../utils/image.js");
+const { CatalogoInsumos } = require("../models/catalogo_insumos.model.js");
 
 exports.getAllCatalogo = async (req, res) => {
   try {
@@ -151,10 +152,10 @@ exports.updateCatalogo = async (req, res) => {
       });
       await existingCatalogo.setTallas(tallasInstancias);
     }
-
+    await CatalogoInsumos.destroy({ where: { catalogo_id: id } });
     res
       .status(200)
-      .json({ msg: "Catálogo actualizado exitosamente", data: newCatalogo });
+      .json({ msg: "Catálogo actualizado exitosamente", data: newCatalogo[0] });
   } catch (error) {
     console.error(`Error en updateCatalogo: ${error.message}`);
     res
