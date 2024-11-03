@@ -6,8 +6,18 @@ exports.getAllCitas = async (estadoId) => {
   if (estadoId) {
     whereClause.estadoId = parseInt(estadoId);
   }
-  return await Cita.findAll({ where: whereClause });
+
+  return await Cita.findAll({
+    where: whereClause,
+    include: [
+      {
+        model: Usuario,
+        as: 'usuario', 
+      },
+    ],
+  });
 };
+
 
 exports.getCitaById = async (id) => {
   return await Cita.findByPk(id);
