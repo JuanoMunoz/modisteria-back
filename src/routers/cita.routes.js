@@ -32,6 +32,7 @@ router.get(
 
 router.post(
   "/createCita",
+  [verifyToken, buscarPermiso("Citas"), upload.single("file")],
   createCita
 );
 

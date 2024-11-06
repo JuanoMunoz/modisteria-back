@@ -7,7 +7,7 @@ const Insumo = sequelize.define('Insumo', {
         allowNull: false,
     },
     cantidad: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: false,
     },
     categoriaId: {
