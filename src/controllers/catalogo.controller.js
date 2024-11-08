@@ -68,7 +68,7 @@ exports.createCatalogo = async (req, res) => {
       return res.status(400).json({ error: "No hay archivos subidos" });
     }
 
-    const { producto, precio, descripcion, tallas, categoriaId, estadoId } =
+    const { producto, precio, descripcion, tallas, categoriaId, estadoId, linea } =
       req.body;
     const imageUrls = [];
 
@@ -84,6 +84,7 @@ exports.createCatalogo = async (req, res) => {
       descripcion,
       categoriaId,
       estadoId,
+      linea
     };
 
     const catalogoCreado = await createCatalogo(newCatalogo);
@@ -113,7 +114,7 @@ exports.createCatalogo = async (req, res) => {
 exports.updateCatalogo = async (req, res) => {
   try {
     const { id } = req.params;
-    const { producto, precio, descripcion, categoriaId, estadoId, tallas } =
+    const { producto, precio, descripcion, categoriaId, estadoId, tallas, linea } =
       req.body;
 
     const existingCatalogo = await getCatalogoById(id);
@@ -130,6 +131,7 @@ exports.updateCatalogo = async (req, res) => {
       descripcion: descripcion || existingCatalogo.descripcion,
       categoriaId: categoriaId || existingCatalogo.categoriaId,
       estadoId: estadoId || existingCatalogo.estadoId,
+      linea: linea || existingCatalogo.linea
     };
 
     if (req.files && req.files.length > 0) {

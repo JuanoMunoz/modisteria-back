@@ -20,6 +20,11 @@ const Catalogo = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    linea: {
+      type: DataTypes.ENUM(
+        'formal','casual','deportiva','infantil','accesorios','ecologica','temporada','basica','especial','premium'),
+      allowNull: false,
+    },
     estadoId: {
       type: DataTypes.INTEGER,
       allowNull: false,

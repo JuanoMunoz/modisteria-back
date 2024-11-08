@@ -25,7 +25,7 @@ router.get(
 
 router.post(
   "/createTalla",
-  [verifyToken, buscarPermiso("Tallas")],
+  /* [verifyToken, buscarPermiso("Tallas")], */
   createTalla
 );
 

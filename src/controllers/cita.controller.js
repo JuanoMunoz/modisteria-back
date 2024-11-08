@@ -55,15 +55,10 @@ exports.getCitasByUsuarioId = async (req, res) => {
 };
 
 exports.createCita = async (req, res) => {
+  console.log(req.body);
+  const { fecha, objetivo, usuarioId } = req.body;
   try {
-    console.log(req.body);
-    const { fecha, objetivo, usuarioId } = req.body;
-    const citaActiva = await getCitaByUAS(usuarioId);
-    if (citaActiva) {
-      return res.status(400).json({
-        msg: "No puedes crear una nueva cita hasta que la cita anterior haya sido terminada/cancelada.",
-      });
-    }
+
     const fechaActual = new Date();
     const limite = new Date();
     limite.setMonth(limite.getMonth() + 2);
@@ -115,7 +110,7 @@ exports.createCita = async (req, res) => {
     res.status(201).json({ msg: "Cita creada exitosamente" });
   } catch (error) {
     console.log(error);
-    res.status(400).json({ error: error.message });
+    res.status(500).json(error);
   }
 };
 
