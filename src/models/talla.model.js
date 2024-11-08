@@ -11,8 +11,8 @@ const Talla = sequelize.define(
       allowNull: false,
     },
     tipo: {
-      type: DataTypes.ENUM('numerica','alfanumerica')
-    }
+      type: DataTypes.ENUM("numérica", "alfanumérica"),
+    },
   },
   {
     timestamps: false,
