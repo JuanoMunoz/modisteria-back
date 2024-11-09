@@ -13,7 +13,8 @@ const { Sequelize } = require("sequelize");
 
 exports.getAllInsumos = async (req, res) => {
   try {
-    const insumos = await getAllInsumos();
+    const { tipo } = req.query;
+    const insumos = await getAllInsumos(tipo);
     res.status(200).json(insumos);
   } catch (error) {
     console.log(error);
