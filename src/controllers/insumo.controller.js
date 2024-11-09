@@ -11,7 +11,6 @@ const {
 } = require("../repositories/insumo.repository");
 const { Sequelize } = require("sequelize");
 
-
 exports.getAllInsumos = async (req, res) => {
   try {
     const insumos = await getAllInsumos();
@@ -89,19 +88,21 @@ exports.updateInsumo = async (req, res) => {
 
 exports.cantidadInsumos = async (req, res) => {
   const { insumos } = req.body;
-  const errors = []; 
+  const errors = [];
 
   try {
     for (let ins of insumos) {
       const { id, cantidad } = ins;
-      
+
       if (cantidad < 0) {
         const insumo = await getInsumoById(id);
         const cantidadInsumo = insumo.cantidad;
         const total = cantidadInsumo + cantidad;
-        
+
         if (total < 0) {
-          errors.push(`El insumo con ID ${id} no puede quedar con cantidad menor a 0.`);
+          errors.push(
+            `El insumo  "${insumo.nombre}" no puede quedar con cantidad menor a 0.`
+          );
         }
       }
     }
@@ -116,15 +117,12 @@ exports.cantidadInsumos = async (req, res) => {
       );
     }
 
-    res.status(201).json({ message: 'Cantidad actualizada correctamente.' });
-    
+    res.status(201).json({ message: "Cantidad actualizada correctamente." });
   } catch (error) {
-    console.error('Error al actualizar cantidad de insumos:', error);
+    console.error("Error al actualizar cantidad de insumos:", error);
     res.status(400).json({ error: error.message });
   }
 };
-
-
 
 exports.statusInsumo = async (req, res) => {
   const { id } = req.params;
