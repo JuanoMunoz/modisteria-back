@@ -22,7 +22,17 @@ const Catalogo = sequelize.define(
     },
     linea: {
       type: DataTypes.ENUM(
-        'formal','casual','deportiva','infantil','accesorios','ecologica','temporada','basica','especial','premium'),
+        "formal",
+        "casual",
+        "deportiva",
+        "infantil",
+        "accesorios",
+        "ecológica",
+        "temporada",
+        "básica",
+        "especial",
+        "premium"
+      ),
       allowNull: false,
     },
     estadoId: {
