@@ -1,4 +1,4 @@
-const { Insumo } = require("../models");
+const { Insumo, InsumoHistorial } = require("../models");
 const {
   getAllInsumos,
   getInsumoById,
@@ -93,38 +93,49 @@ exports.cantidadInsumos = async (req, res) => {
 
   try {
     for (let ins of insumos) {
-      const { id, cantidad } = ins;
+      const { id, cantidad, motivo } = ins;
 
       if (cantidad < 0) {
-        const insumo = await getInsumoById(id);
+        const insumo = await Insumo.findByPk(id);
         const cantidadInsumo = insumo.cantidad;
         const total = cantidadInsumo + cantidad;
 
         if (total < 0) {
-          errors.push(
-            `El insumo  "${insumo.nombre}" no puede quedar con cantidad menor a 0.`
-          );
+          errors.push(`El insumo "${insumo.nombre}" no puede quedar con cantidad menor a 0.`);
         }
       }
+      
+      if (!motivo || motivo.trim() === '') {
+        errors.push(`Es obligatorio proporcionar una justificación para el cambio en el insumo con ID ${id}.`);
+      }
     }
+
     if (errors.length > 0) {
       return res.status(400).json({ errors });
     }
+
     for (let ins of insumos) {
-      const { id, cantidad } = ins;
+      const { id, cantidad, motivo } = ins;
+
       await Insumo.update(
         { cantidad: Sequelize.literal(`cantidad + ${cantidad}`) },
         { where: { id: id } }
       );
+
+      await InsumoHistorial.create({
+        insumo_id: id,
+        cantidad_modificada: cantidad,
+        motivo: motivo,
+        fecha: new Date()
+      });
     }
 
-    res.status(201).json({ message: "Cantidad actualizada correctamente." });
+    res.status(201).json({ message: "Cantidad e historial actualizados correctamente." });
   } catch (error) {
     console.error("Error al actualizar cantidad de insumos:", error);
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: "Error al actualizar cantidad de insumos." });
   }
 };
-
 exports.statusInsumo = async (req, res) => {
   const { id } = req.params;
 

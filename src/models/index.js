@@ -15,5 +15,6 @@ const { Venta } = require('./venta.model.js')
 const { CitaInsumo} = require('./cita_insumo.model.js')
 const { Talla } = require("./talla.model.js");
 const { Imagen } = require("./imagen.model.js");
+const { InsumoHistorial } = require("./insumos_historial.model.js");
 
-module.exports = { Usuario, Role, Permiso, Insumo, Categoria, Catalogo, Cita, CatalogoInsumos, Domicilio, PQRS, Verificacion, Pedido, Estado, Venta, CitaInsumo, Talla, Imagen };
+module.exports = { Usuario, Role, Permiso, Insumo, Categoria, Catalogo, Cita, CatalogoInsumos, Domicilio, PQRS, Verificacion, Pedido, Estado, Venta, CitaInsumo, Talla, Imagen, InsumoHistorial };
