@@ -88,7 +88,7 @@ exports.updateInsumo = async (req, res) => {
 };
 
 exports.cantidadInsumos = async (req, res) => {
-  const { insumos } = req.body;
+  const { insumos, usuarioId } = req.body;
   const errors = [];
 
   try {
@@ -101,12 +101,16 @@ exports.cantidadInsumos = async (req, res) => {
         const total = cantidadInsumo + cantidad;
 
         if (total < 0) {
-          errors.push(`El insumo "${insumo.nombre}" no puede quedar con cantidad menor a 0.`);
+          errors.push(
+            `El insumo "${insumo.nombre}" no puede quedar con cantidad menor a 0.`
+          );
         }
       }
-      
-      if (!motivo || motivo.trim() === '') {
-        errors.push(`Es obligatorio proporcionar una justificación para el cambio en el insumo con ID ${id}.`);
+
+      if (!motivo || motivo.trim() === "") {
+        errors.push(
+          `Es obligatorio proporcionar una justificación para el cambio en el insumo con ID ${id}.`
+        );
       }
     }
 
@@ -126,11 +130,14 @@ exports.cantidadInsumos = async (req, res) => {
         insumo_id: id,
         cantidad_modificada: cantidad,
         motivo: motivo,
-        fecha: new Date()
+        usuario_id: usuarioId,
+        fecha: new Date(),
       });
     }
 
-    res.status(201).json({ message: "Cantidad e historial actualizados correctamente." });
+    res
+      .status(201)
+      .json({ message: "Cantidad e historial actualizados correctamente." });
   } catch (error) {
     console.error("Error al actualizar cantidad de insumos:", error);
     res.status(500).json({ error: "Error al actualizar cantidad de insumos." });
