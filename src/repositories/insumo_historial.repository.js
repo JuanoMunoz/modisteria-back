@@ -14,6 +14,7 @@ exports.getInsumoHistorial = async () => {
         attributes: ["nombre", "id"],
       },
     ],
+    order: [["id", "DESC"]],
   });
 };
 
