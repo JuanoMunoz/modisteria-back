@@ -14,27 +14,8 @@ exports.createVenta = async (venta) => {
     return await Venta.create(venta);
 };
 
-exports.createVentaAC = async (citaId) => {
-    try {
-        const cita = await Cita.findByPk(citaId); 
-
-        if (!cita) {
-            throw new Error('Cita no encontrada');
-        }
-        const nuevaVenta = await Venta.create({
-            fecha: new Date(),
-            citaId: cita.id, 
-            valorFinal: cita.precio,
-            estadoId: 14, 
-            metodoPago: 'efectivo'
-        });
-
-        return nuevaVenta;
-        
-    } catch (error) {
-        console.error('Error al crear la venta:', error);
-        throw error; 
-    }
+exports.updateVentaAC = async (citaId, cambio) => {
+    return await Venta.update(cambio, { where: { citaId: citaId } });
 };
 
 

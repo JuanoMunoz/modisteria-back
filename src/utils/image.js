@@ -52,10 +52,23 @@ function getPublicIdFromUrl(url) {
     return publicId;
 }
 
+async function gestionImagen(req) {
+    if (!req.file) {
+      throw new Error("Se requiere una imagen para el método de pago transferencia");
+    }
+  
+    const processedBuffer = await helperImg(req.file.buffer, 300);
+    const result = await uploadToCloudinary(processedBuffer);
+    const imagen = result.url;
+  
+    return imagen;
+  }
+
 module.exports = {
     upload,
     helperImg,
     uploadToCloudinary,
     deleteFromCloudinary,
-    getPublicIdFromUrl
+    getPublicIdFromUrl,
+    gestionImagen
 };

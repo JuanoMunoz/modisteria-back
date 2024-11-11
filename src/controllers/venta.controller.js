@@ -11,7 +11,7 @@ const {
   getVentaByUsuarioId,
   updateVenta,
 } = require("../repositories/venta.repository");
-const { helperImg, uploadToCloudinary } = require("../utils/image");
+const { helperImg, uploadToCloudinary, gestionImagen } = require("../utils/image");
 
 exports.getAllVentas = async (req, res) => {
   try {
@@ -48,28 +48,32 @@ exports.getVentaByUsuarioId = async (req, res) => {
 };
 
 exports.createVenta = async (req, res) => {
-  const { metodoPago, valorDomicilio, nombrePersona } = req.body;
+  const { valorDomicilio, nombrePersona } = req.body;
 
   try {
     console.log("Iniciando proceso de creación de venta...");
 
     let imagen;
     try {
-      imagen = await gestionImagen(req, metodoPago);
+      imagen = await gestionImagen(req);
       console.log("Imagen gestionada:", imagen);
     } catch (error) {
       console.error("Error gestionando imagen:", error);
       return res.status(400).json({ msg: "Error gestionando la imagen" });
     }
 
+    if (!nombrePersona) {
+      return res.status(400).json({ msg: "Se requiere el nombre de la persona que realiza la tranferencia" });
+    }
+
     const newVenta = {
       fecha: new Date(),
-      imagen: imagen,
-      nombrePersona: metodoPago === 'transferencia' ? nombrePersona : null,
+      imagen,
+      nombrePersona,
       valorDomicilio: Number(valorDomicilio) || 0,
       valorPrendas: 0,
       valorFinal: 0,
-      metodoPago,
+      metodoPago: "transferencia",
       estadoId: 3,
     };
 
@@ -133,24 +137,6 @@ exports.createVenta = async (req, res) => {
     res.status(500).json({ error: "Error al crear la venta" });
   }
 };
-
-async function gestionImagen(req, metodoPago) {
-  let imagen = null;
-
-  if (metodoPago === "efectivo") {
-    imagen = null;
-  } else if (metodoPago === "transferencia") {
-    if (!req.file) {
-      throw new Error(
-        "Se requiere una imagen para el método de pago transferencia"
-      );
-    }
-    const processedBuffer = await helperImg(req.file.buffer, 300);
-    const result = await uploadToCloudinary(processedBuffer);
-    imagen = result.url;
-  }
-  return imagen;
-}
 
 exports.confirmarVenta = async (req, res) => {
   const { id } = req.params;

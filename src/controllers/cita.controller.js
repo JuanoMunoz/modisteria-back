@@ -14,6 +14,7 @@ const {
   uploadToCloudinary,
   getPublicIdFromUrl,
   deleteFromCloudinary,
+  gestionImagen,
 } = require("../utils/image");
 const transporter = require("../utils/mailer");
 
@@ -246,21 +247,48 @@ exports.updateSPT = async (req, res) => { //Update Status Price and Time
 
 //ACEPTAR Y CANCELAR CITA POR PARTE DEL CLIENTE
 
-exports.aceptarCita = async(req, res)=>{
+exports.aceptarCita = async (req, res) => {
   try {
-    const {id} = req.params
-    const cita = await getCitaById(id)
-    if (cita.estadoId !==10) {
-      return res.status(400).json({error:'La cita aún no ha sido aprobada.'})      
-    }
-    await statusCita(id, 11)
-    res.status(201).json({msg: "Cita aceptada."})
+    const { id } = req.params; 
+    const cita = await getCitaById(id);
 
+    if (cita.estadoId !== 10) {
+      return res.status(400).json({ error: 'La cita aún no ha sido aprobada.' });
+    }
+
+    let imagen;
+    try {
+      imagen = await gestionImagen(req); 
+    } catch (error) {
+      console.error("Error gestionando imagen:", error);
+      return res.status(400).json({ msg: "Se requiere una imagen válida para aceptar la cita" });
+    }
+
+    const { nombrePersona } = req.body;
+    if (!nombrePersona) {
+      return res.status(400).json({ msg: "Se requiere el nombre de la persona" });
+    }
+
+    const nuevaVenta = await createVenta({
+      fecha: new Date(),
+      citaId: cita.id,
+      imagen,
+      nombrePersona,
+      valorFinal: 0, 
+      valorPrendas: 0, 
+      valorDomicilio: 0,
+      metodoPago: 'transferencia',
+      estadoId: 3 
+    });
+
+    await statusCita(id, 11);
+
+    res.status(201).json({ msg: "Cita aceptada y venta preliminar creada.", venta: nuevaVenta });
   } catch (error) {
     console.log(error);
-    res.status(400).json({error:error.message})
+    res.status(400).json({ error: error.message });
   }
-}
+};
 
 exports.cancelarCita = async(req, res)=>{
   try {
