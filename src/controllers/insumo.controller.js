@@ -95,8 +95,8 @@ exports.cantidadInsumos = async (req, res) => {
     for (let ins of insumos) {
       const { id, cantidad, motivo } = ins;
 
+      const insumo = await Insumo.findByPk(id);
       if (cantidad < 0) {
-        const insumo = await Insumo.findByPk(id);
         const cantidadInsumo = insumo.cantidad;
         const total = cantidadInsumo + cantidad;
 
@@ -109,7 +109,7 @@ exports.cantidadInsumos = async (req, res) => {
 
       if (!motivo || motivo.trim() === "") {
         errors.push(
-          `Es obligatorio proporcionar una justificación para el cambio en el insumo con ID ${id}.`
+          `Es obligatorio proporcionar una justificación para el cambio en el insumo "${insumo.nombre}".`
         );
       }
     }
