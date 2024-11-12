@@ -54,12 +54,35 @@ exports.createAndDiscount = async (req, res) => {
   }
 };
 
+// exports.endCitaCreateVenta = async (req, res) => {
+//   const { citaId } = req.body;
+//   try {
+//     await statusCita(citaId, 13);
+//     await createVentaAC(citaId);
+//     res.status(201).json({ msg: "Cita terminada y venta creada" });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(400).json({ error: error.message });
+//   }
+// };
+
 exports.endCitaCreateVenta = async (req, res) => {
   const { citaId } = req.body;
+
   try {
+    const cita = await getCitaById(citaId);
+    if (cita.estadoId !== 11) {
+      return res.status(400).json({ msg: "La cita no ha sido aceptada." });
+    }
+
     await statusCita(citaId, 13);
-    await createVentaAC(citaId);
-    res.status(201).json({ msg: "Cita terminada y venta creada" });
+
+    const ventaActualizada = await updateVentaAC(citaId, {
+      valorFinal: cita.precio, 
+      estadoId: 14, 
+    });
+
+    res.status(201).json({ msg: "Cita terminada y venta completada" });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: error.message });

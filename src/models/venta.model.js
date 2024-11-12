@@ -8,7 +8,7 @@ const Venta = sequelize.define('Venta', {
     },
     imagen: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
     },
     nombrePersona: {
         type: DataTypes.STRING,
@@ -27,7 +27,7 @@ const Venta = sequelize.define('Venta', {
         allowNull: false,
     },
     metodoPago: {
-        type: DataTypes.ENUM('efectivo', 'transferencia'),
+        type: DataTypes.ENUM('transferencia'),
         allowNull: false,
     },
     estadoId: {
