@@ -21,6 +21,7 @@ const transporter = require("../utils/mailer");
 const { getEmailByUserId } = require("../repositories/usuario.repository");
 const moment = require("moment");
 const { format } = require("morgan");
+const { createVenta } = require("../repositories/venta.repository");
 
 exports.getAllCitas = async (req, res) => {
   try {
@@ -283,7 +284,7 @@ exports.aceptarCita = async (req, res) => {
 
     await statusCita(id, 11);
 
-    res.status(201).json({ msg: "Cita aceptada y venta preliminar creada.", venta: nuevaVenta });
+    res.status(201).json({ msg: "Cita aceptada y venta preliminar creada." });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: error.message });

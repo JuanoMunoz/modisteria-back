@@ -1,35 +1,31 @@
-const { Categoria, Insumo, Catalogo } = require("../models");
+const { Insumo, Catalogo, CategoriaPrendas } = require("../models");
 
-exports.getAllCategorias = async (type) => {
+exports.getAllCategoriaPrendas = async (type) => {
   const whereClause = {};
   if (type) {
     whereClause.tipo = type;
   }
-  return await Categoria.findAll({ where: whereClause });
+  return await CategoriaPrendas.findAll({ where: whereClause });
 };
 
-exports.getCategoriaById = async (id) => {
-  return await Categoria.findByPk(id);
+exports.getCategoriaPrendaById = async (id) => {
+  return await CategoriaPrendas.findByPk(id);
 };
 
-exports.getCategoriaByTipo = async (tipo) => {
-  return await Categoria.findAll({ where: { tipo } });
+exports.createCategoriaPrenda = async (categoria) => {
+  return await CategoriaPrendas.create(categoria);
 };
 
-exports.createCategoria = async (categoria) => {
-  return await Categoria.create(categoria);
+exports.updateCategoriaPrenda = async (id, categoria) => {
+  return await CategoriaPrendas.update(categoria, { where: { id } });
 };
 
-exports.updateCategoria = async (id, categoria) => {
-  return await Categoria.update(categoria, { where: { id } });
+exports.statusCategoriaPrenda = async (id) => {
+  return await CategoriaPrendas.update({ estado: false }, { where: { id } });
 };
 
-exports.statusCategoria = async (id) => {
-  return await Categoria.update({ estado: false }, { where: { id } });
-};
-
-exports.deleteCategoria = async (id) => {
-  const categoria = await Categoria.findByPk(id);
+exports.deleteCategoriaPrenda = async (id) => {
+  const categoria = await CategoriaPrendas.findByPk(id);
 
   if (!categoria) {
     throw new Error("Categoría no encontrada");
@@ -52,7 +48,7 @@ exports.deleteCategoria = async (id) => {
     );
   }
   if (categoria.estadoId === 2) {
-    return await Categoria.destroy({ where: { id } });
+    return await CategoriaPrendas.destroy({ where: { id } });
   } else {
     throw new Error("No se puede eliminar la categoría porque está activa");
   }

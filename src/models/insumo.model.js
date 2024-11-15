@@ -10,18 +10,14 @@ const Insumo = sequelize.define('Insumo', {
         type: DataTypes.FLOAT,
         allowNull: false,
     },
-    categoriaId: {
+    categoriaInsumoId: {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
     estadoId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-    },
-    tipo: {
-        type: DataTypes.ENUM('controlado', 'no controlado'),
-        allowNull: false,
-      },
+    }
 }, {
     timestamps: false,
 });
