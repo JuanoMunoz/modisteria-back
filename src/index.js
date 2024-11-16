@@ -28,6 +28,7 @@ app.use("/api/estados", require("./routers/estado.routes"));
 app.use("/api/ventas", require("./routers/venta.routes"));
 app.use("/api/citainsumos", require("./routers/cita_insumos.routes"));
 app.use("/api/tallas", require("./routers/talla.routes"));
+app.use("/api/unidadesDeMedida", require("./routers/unidades_de_medida.routes"));
 
 app.use("*", (req, res) => {
   res

@@ -14,6 +14,10 @@ const Insumo = sequelize.define('Insumo', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
+    unidadMedidaId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
     estadoId: {
         type: DataTypes.INTEGER,
         allowNull: false,

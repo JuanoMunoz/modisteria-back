@@ -17,5 +17,6 @@ const { Imagen } = require("./imagen.model.js");
 const { InsumoHistorial } = require("./insumos_historial.model.js");
 const { CategoriaInsumos } = require("./categoria_insumos.model.js");
 const { CategoriaPrendas } = require("./categoria_prendas.model.js");
+const { UnidadesDeMedida } = require("./unidades_de_medida.model.js");
 
-module.exports = { Usuario, Role, Permiso, Insumo, Catalogo, Cita, CatalogoInsumos, Domicilio, PQRS, Verificacion, Pedido, Estado, Venta, CitaInsumo, Talla, Imagen, InsumoHistorial, CategoriaInsumos, CategoriaPrendas };
+module.exports = { Usuario, Role, Permiso, Insumo, Catalogo, Cita, CatalogoInsumos, Domicilio, PQRS, Verificacion, Pedido, Estado, Venta, CitaInsumo, Talla, Imagen, InsumoHistorial, CategoriaInsumos, CategoriaPrendas, UnidadesDeMedida };

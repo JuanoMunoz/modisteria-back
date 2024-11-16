@@ -1,11 +1,7 @@
-const { Insumo, Catalogo, CategoriaPrendas } = require("../models");
+const { Catalogo, CategoriaPrendas } = require("../models");
 
-exports.getAllCategoriaPrendas = async (type) => {
-  const whereClause = {};
-  if (type) {
-    whereClause.tipo = type;
-  }
-  return await CategoriaPrendas.findAll({ where: whereClause });
+exports.getAllCategoriaPrendas = async () => {
+  return await CategoriaPrendas.findAll();
 };
 
 exports.getCategoriaPrendaById = async (id) => {
@@ -30,17 +26,9 @@ exports.deleteCategoriaPrenda = async (id) => {
   if (!categoria) {
     throw new Error("Categoría no encontrada");
   }
-  const isCategoriaBeingUsedOnInsumos = await Insumo.findOne({
-    where: { categoriaId: id },
-  });
   const isCategoriaBeingUsedOnCatalogo = await Catalogo.findOne({
     where: { categoriaId: id },
   });
-  if (isCategoriaBeingUsedOnInsumos) {
-    throw new Error(
-      "¡No se puede eliminar la categoría porque está asociada a un insumo!"
-    );
-  }
 
   if (isCategoriaBeingUsedOnCatalogo) {
     throw new Error(
