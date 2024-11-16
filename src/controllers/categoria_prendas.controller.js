@@ -1,17 +1,17 @@
 const {
-  getAllCategorias,
-  getCategoriaById,
-  createCategoria,
-  updateCategoria,
-  deleteCategoria,
-  getCategoriaByTipo,
-} = require("../repositories/categoria.repository");
+  getAllCategoriaPrendas,
+  getCategoriaPrendaById,
+  createCategoriaPrenda,
+  updateCategoriaPrenda,
+  deleteCategoriaPrenda,
+  statusCategoriaPrenda,
+} = require("../repositories/categoria_prendas.repository");
 
-exports.getAllCategorias = async (req, res) => {
+exports.getAllCategoriaPrendas = async (req, res) => {
   try {
     const type = req.query.type || false;
 
-    const categorias = await getAllCategorias(type);
+    const categorias = await getAllCategoriaPrendas(type);
     res.status(200).json(categorias);
   } catch (error) {
     console.log(error);
@@ -19,23 +19,23 @@ exports.getAllCategorias = async (req, res) => {
   }
 };
 
-exports.getCategoriaById = async (req, res) => {
+exports.getCategoriaPrendaById = async (req, res) => {
   const { id } = req.params;
   try {
     console.log(id);
-    const categoria = await getCategoriaById(id);
+    const categoria = await getCategoriaPrendaById(id);
     res.status(200).json(categoria);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
 
-exports.createCategoria = async (req, res) => {
+exports.createCategoriaPrenda = async (req, res) => {
   const categoria = req.body;
 
   try {
     console.log(req.body);
-    await createCategoria(categoria);
+    await createCategoriaPrenda(categoria);
     res.status(201).json({ msg: "categoria creada exitosamente" });
   } catch (error) {
     console.log(error);
@@ -43,43 +43,34 @@ exports.createCategoria = async (req, res) => {
   }
 };
 
-exports.updateCategoria = async (req, res) => {
+exports.updateCategoriaPrenda = async (req, res) => {
   const { id } = req.params;
   const categoria = req.body;
 
   try {
-    await updateCategoria(id, categoria);
+    await updateCategoriaPrenda(id, categoria);
     res.status(201).json({ msg: "categoria actualizada exitosamente" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
 
-exports.statusCategoria = async (req, res) => {
+exports.statusCategoriaPrenda = async (req, res) => {
   const { id } = req.params;
   try {
-    await statusCategoria(id);
+    await statusCategoriaPrenda(id);
     res.status(201).json({ msg: "categoria inactiva" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
-exports.deleteCategoria = async (req, res) => {
+
+exports.deleteCategoriaPrenda = async (req, res) => {
   const { id } = req.params;
   try {
-    await deleteCategoria(id);
+    await deleteCategoriaPrenda(id);
     res.status(201).json({ msg: "categoria eliminada" });
   } catch (error) {
     return res.status(400).json({ message: error.message });
-  }
-};
-
-exports.getCategoriaByTipo = async (req, res) => {
-  const { tipo } = req.params;
-  try {
-    const categorias = await getCategoriaByTipo(tipo);
-    res.status(200).json(categorias);
-  } catch (error) {
-    res.status(500).json(error);
   }
 };

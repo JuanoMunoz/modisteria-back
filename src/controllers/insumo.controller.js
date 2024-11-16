@@ -88,7 +88,7 @@ exports.updateInsumo = async (req, res) => {
 };
 
 exports.cantidadInsumos = async (req, res) => {
-  const { insumos, usuarioId } = req.body;
+  const { insumos } = req.body;
   const errors = [];
 
   try {
@@ -130,7 +130,7 @@ exports.cantidadInsumos = async (req, res) => {
         insumo_id: id,
         cantidad_modificada: cantidad,
         motivo: motivo,
-        usuario_id: usuarioId,
+        usuario_id: req.id,
         fecha: new Date(),
       });
     }

@@ -59,7 +59,7 @@ exports.createVenta = async (req, res) => {
       console.log("Imagen gestionada:", imagen);
     } catch (error) {
       console.error("Error gestionando imagen:", error);
-      return res.status(400).json({ msg: "Error gestionando la imagen" });
+      return res.status(400).json({ msg: "Se requiere una imagen para el método de pago transferencia" });
     }
 
     if (!nombrePersona) {

@@ -38,7 +38,7 @@ router.post(
 
 router.put("/updateSPT/:id", updateSPT);
 
-router.put("/aceptarCita/:id", aceptarCita);
+router.put("/aceptarCita/:id", upload.single("file"), aceptarCita);
 router.put("/cancelarCita/:id", cancelarCita)
 
 router.put(

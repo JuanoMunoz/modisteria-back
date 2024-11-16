@@ -7,9 +7,10 @@ const {Domicilio} = require('../models/domicilio.model.js')
 const {Cita} = require('../models/cita.model.js')
 const {Venta} = require('../models/venta.model.js')
 const {Catalogo} = require('../models/catalogo.model.js')
-const {Categoria} = require('../models/categoria.model.js')
 const {Insumo} = require('../models/insumo.model.js');
 const { Pedido } = require('./pedido.model.js');
+const { CategoriaPrendas } = require('./categoria_prendas.model.js');
+const { CategoriaInsumos } = require('./categoria_insumos.model.js');
 
 
 const Estado = sequelize.define('Estado',
@@ -58,8 +59,11 @@ Catalogo.belongsTo(Estado, {foreignKey: 'estadoId', sourceKey: 'id', as: 'estado
 Estado.hasMany(Catalogo, {foreignKey: 'estadoId', targetKey: 'id', as: 'catalogos'});
 
 //Relación de categoria a estados
-Categoria.belongsTo(Estado, {foreignKey: 'estadoId', sourceKey: 'id', as: 'estadoCategoria'});
-Estado.hasMany(Categoria, {foreignKey: 'estadoId', targetKey: 'id', as: 'categorias'});
+CategoriaPrendas.belongsTo(Estado, {foreignKey: 'estadoId', sourceKey: 'id', as: 'estadoCategoriaPrenda'});
+Estado.hasMany(CategoriaPrendas, {foreignKey: 'estadoId', targetKey: 'id', as: 'categoria_prendas'});
+
+CategoriaInsumos.belongsTo(Estado, {foreignKey: 'estadoId', sourceKey: 'id', as: 'estadoCategoriaInsumo'});
+Estado.hasMany(CategoriaInsumos, {foreignKey: 'estadoId', targetKey: 'id', as: 'categoria_insumos'});
 
 //Relación de Insumos a estados
 Insumo.belongsTo(Estado, {foreignKey: 'estadoId', sourceKey: 'id', as: 'estadoInsumo'});

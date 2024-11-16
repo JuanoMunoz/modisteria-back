@@ -2,9 +2,9 @@ const {
   createCitaInsumo,
   discountInsumo,
 } = require("../repositories/cita_insumo.repository");
-const { statusCita } = require("../repositories/cita.repository");
+const { statusCita, getCitaById } = require("../repositories/cita.repository");
 const { getInsumoById } = require("../repositories/insumo.repository");
-const { createVentaAC } = require("../repositories/venta.repository");
+const { updateVentaAC } = require("../repositories/venta.repository");
 
 /* exports.createAndDiscount = async (req, res) => {
     const { citaId, datosInsumos } = req.body; 
@@ -68,12 +68,9 @@ exports.createAndDiscount = async (req, res) => {
 
 exports.endCitaCreateVenta = async (req, res) => {
   const { citaId } = req.body;
-
+console.log(citaId);
   try {
     const cita = await getCitaById(citaId);
-    if (cita.estadoId !== 11) {
-      return res.status(400).json({ msg: "La cita no ha sido aceptada." });
-    }
 
     await statusCita(citaId, 13);
 
