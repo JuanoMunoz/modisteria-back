@@ -54,18 +54,6 @@ exports.createAndDiscount = async (req, res) => {
   }
 };
 
-// exports.endCitaCreateVenta = async (req, res) => {
-//   const { citaId } = req.body;
-//   try {
-//     await statusCita(citaId, 13);
-//     await createVentaAC(citaId);
-//     res.status(201).json({ msg: "Cita terminada y venta creada" });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(400).json({ error: error.message });
-//   }
-// };
-
 exports.endCitaCreateVenta = async (req, res) => {
   const { citaId } = req.body;
 console.log(citaId);

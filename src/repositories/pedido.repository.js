@@ -32,6 +32,13 @@ exports.getPedidoById = async (usuarioId, catalogoId, talla) => {
 exports.getPedidoByUsuarioyEstado = async (id) => {
   return await Pedido.findAll({ estado: 3 }, { where: { id } });
 };
+exports.getUsuarioIdByPedidoId = async (id) => {
+  return await Pedido.findOne({
+    where: { id },
+    attributes: ["usuarioId"]
+  });
+};
+
 
 exports.getPedidoByVenta = async (idVenta) => {
   return await Pedido.findAll({ estado: 3 }, { where: { ventaId: idVenta } });
