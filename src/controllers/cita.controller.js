@@ -109,7 +109,7 @@ exports.createCita = async (req, res) => {
       referencia,
     };
     await createCita(newCita);
-    res.status(201).json({ msg: "Cita creada exitosamente" });
+    res.status(201).json({ msg: "Cita creada exitosamente", referencia: referencia || '' });
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
