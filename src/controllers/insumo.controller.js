@@ -130,7 +130,7 @@ exports.cantidadInsumos = async (req, res) => {
         insumo_id: id,
         cantidad_modificada: cantidad,
         motivo: motivo,
-        usuario_id: req.id,
+        usuario_id: req.usuario_id,
         fecha: new Date(),
       });
     }
