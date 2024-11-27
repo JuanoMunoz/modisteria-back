@@ -1,20 +1,10 @@
-const { Pedido } = require("../models");
+const { Pedido, CatalogoInsumos } = require("../models");
 const { createDomicilioVenta } = require("../repositories/domicilio.repository");
-const {
-  getPedidoByUsuarioyEstado,
-  getPedidoByVenta,
-} = require("../repositories/pedido.repository");
-const {
-  getAllVentas,
-  getVentaById,
-  createVenta,
-  getVentaByUsuarioId,
-  updateVenta,
-  getUsuarioIdByPedidoId
-} = require("../repositories/venta.repository");
+const {getPedidoByUsuarioyEstado,getPedidoByVenta,} = require("../repositories/pedido.repository");
+const {getAllVentas,getVentaById,createVenta,getVentaByUsuarioId,updateVenta,getUsuarioIdByPedidoId} = require("../repositories/venta.repository");
 const { helperImg, uploadToCloudinary, gestionImagen } = require("../utils/image");
 const transporter = require("../utils/mailer");
-const {getEmailByUserId} = require('../repositories/usuario.repository')
+const { getEmailByUserId } = require('../repositories/usuario.repository')
 
 
 exports.getAllVentas = async (req, res) => {
@@ -86,7 +76,7 @@ exports.createVenta = async (req, res) => {
 
     const usuario = req.id;
     const pedidos = await getPedidoByUsuarioyEstado(usuario);
-    
+
     if (!pedidos || pedidos.length === 0) {
       return res.status(400).json({ msg: "No hay pedidos disponibles para el usuario" });
     }
@@ -158,6 +148,53 @@ exports.confirmarVenta = async (req, res) => {
     const usuarioId = pedidos[0].usuarioId;
     console.log("Usuario asociado a la venta:", usuarioId);
     const email = await getEmailByUserId(usuarioId)
+
+    // Verificar insumos
+    const catalogoId = pedidos[0].catalogoId;
+    const cantidad = pedidos[0].cantidad;
+
+    console.log("Verificando insumos asociados al catálogo:", catalogoId);
+
+    // Obtener los insumos necesarios para el catálogo
+    const insumosCatalogo = await CatalogoInsumos.findAll({
+      where: { catalogo_id: catalogoId },
+    });
+
+    if (!insumosCatalogo || insumosCatalogo.length === 0) {
+      return res
+        .status(404)
+        .json({ msg: "No hay insumos configurados para este catálogo." });
+    }
+
+    // Verificar disponibilidad de insumos
+    const insumosInsuficientes = [];
+
+    for (const insumo of insumosCatalogo) {
+      const insumoId = insumo.insumo_id;
+      const cantidadNecesaria = insumo.cantidad_utilizada * cantidad;
+
+      // Obtener disponibilidad del insumo desde la tabla de inventario
+      const inventarioInsumo = await Insumo.findByPk(insumoId);
+
+      if (!inventarioInsumo || inventarioInsumo.cantidad < cantidadNecesaria) {
+        insumosInsuficientes.push({
+          insumoId,
+          requerido: cantidadNecesaria,
+          disponible: inventarioInsumo ? inventarioInsumo.cantidad : 0,
+        });
+      }
+    }
+
+    // Si hay insumos insuficientes, detener el flujo
+    if (insumosInsuficientes.length > 0) {
+      return res.status(400).json({
+        msg: "No hay suficientes insumos para confirmar la venta.",
+        detalles: insumosInsuficientes,
+      });
+    }
+
+    console.log("Insumos verificados correctamente. Continuando con la venta...");
+
     // Actualizar el estado de cada pedido
     await Promise.all(
       pedidos.map(async (producto) => {
