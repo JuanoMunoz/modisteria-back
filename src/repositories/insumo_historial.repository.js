@@ -1,4 +1,9 @@
-const { InsumoHistorial, Insumo, Usuario } = require("../models");
+const {
+  InsumoHistorial,
+  Insumo,
+  Usuario,
+  UnidadesDeMedida,
+} = require("../models");
 
 exports.getInsumoHistorial = async () => {
   return await InsumoHistorial.findAll({
@@ -12,6 +17,11 @@ exports.getInsumoHistorial = async () => {
         model: Insumo,
         as: "insumos",
         attributes: ["nombre", "id"],
+        include: {
+          model: UnidadesDeMedida,
+          as: "unidades_de_medida",
+          attributes: ["nombre"],
+        },
       },
     ],
     order: [["id", "DESC"]],
