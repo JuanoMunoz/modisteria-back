@@ -17,7 +17,7 @@ const Compras = sequelize.define(
             allowNull: false,
         },
         insumoId: {
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
         proveedorId: {
