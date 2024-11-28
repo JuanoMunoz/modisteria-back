@@ -6,6 +6,7 @@ const {
   deleteCategoriaPrenda,
   statusCategoriaPrenda,
 } = require("../repositories/categoria_prendas.repository");
+const { gestionPDF } = require("../utils/pdf");
 
 exports.getAllCategoriaPrendas = async (req, res) => {
   try {
@@ -31,15 +32,25 @@ exports.getCategoriaPrendaById = async (req, res) => {
 };
 
 exports.createCategoriaPrenda = async (req, res) => {
-  const categoria = req.body;
-
   try {
-    console.log(req.body);
-    await createCategoriaPrenda(categoria);
-    res.status(201).json({ msg: "categoria creada exitosamente" });
+    let moldeUrl = null;
+    if (req.file) {
+      moldeUrl = await gestionPDF(req); // Obtener la URL con el parámetro 'attachment'
+      console.log('Archivo PDF subido a Cloudinary:', moldeUrl);
+    }
+
+    // Crear la categoría con la URL del PDF
+    const nuevaCategoria = await createCategoriaPrenda({
+      nombre: req.body.nombre,
+      descripcion: req.body.descripcion,
+      estadoId: req.body.estadoId,
+      molde: moldeUrl,  // Guarda la URL con el parámetro de descarga
+    });
+
+    res.status(200).json(nuevaCategoria); // Devuelve la nueva categoría creada
   } catch (error) {
-    console.log(error);
-    res.status(400).json({ error: error.message });
+    console.error("Error al crear la categoría:", error);
+    res.status(500).json({ error: error.message });
   }
 };
 

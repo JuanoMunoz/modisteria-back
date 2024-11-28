@@ -6,7 +6,6 @@ const { helperImg, uploadToCloudinary, gestionImagen } = require("../utils/image
 const transporter = require("../utils/mailer");
 const { getEmailByUserId } = require('../repositories/usuario.repository')
 
-
 exports.getAllVentas = async (req, res) => {
   try {
     const ventas = await getAllVentas();
