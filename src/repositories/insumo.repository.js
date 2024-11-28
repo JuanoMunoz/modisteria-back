@@ -1,10 +1,23 @@
-const { Insumo, Categoria, CatalogoInsumos, CitaInsumo } = require("../models");
+const {
+  Insumo,
+  Categoria,
+  CatalogoInsumos,
+  CitaInsumo,
+  UnidadesDeMedida,
+} = require("../models");
 const { Sequelize } = require("sequelize");
 
 exports.getAllInsumos = async (type) => {
   const whereClause = {};
   if (type) whereClause.tipo = type;
-  return await Insumo.findAll({ where: whereClause });
+  return await Insumo.findAll({
+    where: whereClause,
+    include: {
+      model: UnidadesDeMedida,
+      as: "unidades_de_medida",
+      attributes: ["nombre"],
+    },
+  });
 };
 
 exports.getInsumoById = async (id) => {
