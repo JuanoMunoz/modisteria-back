@@ -10,6 +10,7 @@ const {
 const { verifyToken } = require("../utils/verifyToken");
 const { buscarPermiso } = require("../validators/validations.validator");
 const router = Router();
+const { upload } = require('../utils/pdf.js'); 
 
 router.get("/getAllCategoriaPrendas", getAllCategoriaPrendas);
 
@@ -21,7 +22,7 @@ router.get(
 
 router.post(
   "/createCategoriaPrenda",
-  [verifyToken, buscarPermiso("Categoría Prenda")],
+  [verifyToken, buscarPermiso("Categoría Prenda"), upload.single('molde')],
   createCategoriaPrenda
 );
 
