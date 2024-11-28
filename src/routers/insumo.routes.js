@@ -12,7 +12,11 @@ const {
 } = require("../controllers/insumo.controller");
 const { verifyToken } = require("../utils/verifyToken");
 const { buscarPermiso } = require("../validators/validations.validator");
-const { getInsumoHistorialByInsumoId, getInsumoHistorial } = require("../controllers/insumo_historial.controller");
+const {
+  getInsumoHistorialByInsumoId,
+  getInsumoHistorial,
+} = require("../controllers/insumo_historial.controller");
+
 const router = Router();
 
 router.get(
@@ -51,7 +55,7 @@ router.put(
   reponerInsumo
 );
 
-router.put("/cantidadInsumos", cantidadInsumos)
+router.put("/cantidadInsumos", cantidadInsumos);
 
 router.post(
   "/createInsumo",
