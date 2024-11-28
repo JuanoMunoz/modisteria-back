@@ -6,6 +6,7 @@ const {
   updateCategoriaPrenda,
   deleteCategoriaPrenda,
   statusCategoriaPrenda,
+  descargarMolde
 } = require("../controllers/categoria_prendas.controller");
 const { verifyToken } = require("../utils/verifyToken");
 const { buscarPermiso } = require("../validators/validations.validator");
@@ -18,6 +19,12 @@ router.get(
   "/getCategoriaPrendaById/:id",
   [verifyToken, buscarPermiso("Categoría Prenda")],
   getCategoriaPrendaById
+);
+
+router.get(
+  "/descargarMolde/:id",
+  [verifyToken, buscarPermiso("Categoría Prenda")],
+  descargarMolde
 );
 
 router.post(

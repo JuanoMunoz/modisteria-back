@@ -1,20 +1,23 @@
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
+const express = require("express");
+const router = express.Router();
 
 // Configuración de Multer para manejar archivos PDF
 const storage = multer.memoryStorage();
 
 const upload = multer({
     storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
     fileFilter: function (req, file, cb) {
-        // Asegurarse de que solo los archivos PDF sean aceptados
-        if (file.mimetype === 'application/pdf') {
-            cb(null, true);
-        } else {
-            cb(new Error('Solo se permiten archivos PDF'), false);
-        }
+      if (file.mimetype === 'application/pdf') {
+        cb(null, true);
+      } else {
+        cb(new Error('Solo se permiten archivos PDF'), false);
+      }
     }
-});
+  });
+  
 
 // Función para subir archivos a Cloudinary
 async function uploadToCloudinary(buffer) {
@@ -52,30 +55,31 @@ function getPublicIdFromUrl(url) {
     return publicId;
 }
 
+// Función para gestionar la carga y descarga del PDF
 async function gestionPDF(req) {
     if (!req.file) {
       throw new Error("Se requiere un archivo PDF para la carga.");
     }
   
     try {
-      // Subir el archivo PDF a Cloudinary usando el tipo de recurso "raw"
+      // Subir el archivo PDF a Cloudinary
       const result = await new Promise((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
-          { resource_type: "raw" }, // Especificamos que es un archivo "raw" (no imagen)
+          { resource_type: "raw" }, // Indicar que es un archivo "raw"
           (error, uploadResult) => {
             if (error) {
               console.error('Error subiendo el archivo a Cloudinary:', error);
               return reject(error);
             }
-            resolve(uploadResult); // Aquí devolvemos el resultado de la carga
+            resolve(uploadResult); // Devolver el resultado de la carga
           }
         );
         // Enviar el archivo desde la memoria al flujo de carga de Cloudinary
         uploadStream.end(req.file.buffer);
       });
   
-      // Devolver la URL de descarga del archivo PDF con el parámetro attachment
-      const downloadUrl = `${result.secure_url}?attachment=true`;
+      // Devolver la URL de descarga del archivo
+      const downloadUrl = `${result.secure_url}`;
       return downloadUrl;
   
     } catch (error) {
@@ -83,7 +87,8 @@ async function gestionPDF(req) {
       throw new Error(error.message);
     }
   }
-
+  
+  
 module.exports = {
     upload,
     uploadToCloudinary,
