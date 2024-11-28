@@ -19,6 +19,7 @@ exports.getAllCompras = async () => {
         attributes: ["nombre", "telefono"],
       },
     ],
+    order: [["id", "DESC"]],
   });
 };
 
