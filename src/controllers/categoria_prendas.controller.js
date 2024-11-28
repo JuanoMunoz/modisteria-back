@@ -6,7 +6,8 @@ const {
   deleteCategoriaPrenda,
   statusCategoriaPrenda,
 } = require("../repositories/categoria_prendas.repository");
-const { gestionPDF } = require("../utils/pdf");
+const { gestionPDF, getPublicIdFromUrl } = require("../utils/pdf");
+const cloudinary = require('cloudinary').v2;
 
 exports.getAllCategoriaPrendas = async (req, res) => {
   try {
@@ -85,3 +86,25 @@ exports.deleteCategoriaPrenda = async (req, res) => {
     return res.status(400).json({ message: error.message });
   }
 };
+
+exports.descargarMolde = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const categoria = await getCategoriaPrendaById(id);
+    const publicId = await getPublicIdFromUrl(categoria.molde)
+
+    // Obtener el archivo PDF desde Cloudinary usando el public_id
+    const result = await cloudinary.api.resource(publicId, {
+      resource_type: "raw",
+    });
+
+    // Construir la URL para descargar el archivo
+    const fileUrl = `${result.secure_url}?attachment=true`;
+
+    // Redirigir a la URL de descarga
+    res.redirect(fileUrl);
+  } catch (error) {
+    console.error("Error al descargar el PDF:", error);
+    res.status(500).json({ error: "Error al descargar el archivo" });
+  }
+}
