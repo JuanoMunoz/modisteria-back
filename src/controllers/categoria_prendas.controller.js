@@ -91,12 +91,22 @@ exports.descargarMolde = async (req, res) => {
   try {
     const { id } = req.params;
     const categoria = await getCategoriaPrendaById(id);
-    const publicId = await getPublicIdFromUrl(categoria.molde)
+
+    if (!categoria || !categoria.molde) {
+      return res.status(404).json({ error: "Categoria o archivo no encontrado" });
+    }
+
+    const publicId = await getPublicIdFromUrl(categoria.molde);
+    console.log("Public ID:", publicId); // Verifica el publicId
 
     // Obtener el archivo PDF desde Cloudinary usando el public_id
     const result = await cloudinary.api.resource(publicId, {
       resource_type: "raw",
     });
+
+    if (!result || !result.secure_url) {
+      return res.status(404).json({ error: "Archivo no encontrado en Cloudinary" });
+    }
 
     // Construir la URL para descargar el archivo
     const fileUrl = `${result.secure_url}?attachment=true`;
@@ -107,4 +117,4 @@ exports.descargarMolde = async (req, res) => {
     console.error("Error al descargar el PDF:", error);
     res.status(500).json({ error: "Error al descargar el archivo" });
   }
-}
+};
