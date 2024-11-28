@@ -1,4 +1,6 @@
 const { DataTypes } = require("sequelize");
+const { Compras } = require('../models/compras.model.js')
+
 const { sequelize } = require("../database/connection.js");
 
 const Proveedor = sequelize.define(
@@ -27,3 +29,8 @@ const Proveedor = sequelize.define(
 );
 
 module.exports = { Proveedor };
+
+
+// Relación de compras a proveedor
+Compras.belongsTo(Proveedor, { foreignKey: 'proveedorId', as: 'comprasProveedor' });
+Proveedor.hasMany(Compras, { foreignKey: 'proveedorId', as: 'compras' });

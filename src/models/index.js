@@ -19,5 +19,6 @@ const { CategoriaInsumos } = require("./categoria_insumos.model.js");
 const { CategoriaPrendas } = require("./categoria_prendas.model.js");
 const { UnidadesDeMedida } = require("./unidades_de_medida.model.js");
 const { Proveedor } = require("./proveedor.model.js")
+const { Compras } = require("./compras.model.js")
 
-module.exports = { Usuario, Role, Permiso, Insumo, Catalogo, Cita, CatalogoInsumos, Domicilio, PQRS, Verificacion, Pedido, Estado, Venta, CitaInsumo, Talla, Imagen, InsumoHistorial, CategoriaInsumos, CategoriaPrendas, UnidadesDeMedida, Proveedor };
+module.exports = { Usuario, Role, Permiso, Insumo, Catalogo, Cita, CatalogoInsumos, Domicilio, PQRS, Verificacion, Pedido, Estado, Venta, CitaInsumo, Talla, Imagen, InsumoHistorial, CategoriaInsumos, CategoriaPrendas, UnidadesDeMedida, Proveedor, Compras };

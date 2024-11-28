@@ -30,7 +30,7 @@ app.use("/api/citainsumos", require("./routers/cita_insumos.routes"));
 app.use("/api/tallas", require("./routers/talla.routes"));
 app.use("/api/unidadesDeMedida", require("./routers/unidades_de_medida.routes"));
 app.use("/api/proveedores", require("./routers/proveedor.routes.js"))
-//app.use("/api/compras", require("./routers/compras.routes.js"))
+app.use("/api/compras", require("./routers/compras.routes.js"))
 
 app.use("*", (req, res) => {
   res
