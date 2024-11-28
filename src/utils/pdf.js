@@ -1,7 +1,5 @@
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
-const express = require("express");
-const router = express.Router();
 
 // Configuración de Multer para manejar archivos PDF
 const storage = multer.memoryStorage();
@@ -79,15 +77,12 @@ async function gestionPDF(req) {
       });
   
       // Devolver la URL de descarga del archivo
-      const downloadUrl = `${result.secure_url}`;
-      return downloadUrl;
-  
+      return result.secure_url;
     } catch (error) {
       console.error('Error al gestionar el archivo PDF:', error);
-      throw new Error(error.message);
+      throw new Error('Error al gestionar el archivo PDF');
     }
   }
-  
   
 module.exports = {
     upload,
