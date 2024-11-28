@@ -88,33 +88,22 @@ exports.deleteCategoriaPrenda = async (req, res) => {
 };
 
 exports.descargarMolde = async (req, res) => {
+  const { id } = req.params;
+  const categoria = await getCategoriaPrendaById(id);
+  const publicId = await getPublicIdFromUrl(categoria.molde);
+
   try {
-    const { id } = req.params;
-    const categoria = await getCategoriaPrendaById(id);
+    const result = await cloudinary.api.resource(publicId, { resource_type: 'raw' });
 
-    if (!categoria || !categoria.molde) {
-      return res.status(404).json({ error: "Categoria o archivo no encontrado" });
-    }
+    // Obtener el archivo binario
+    const fileBuffer = await fetch(result.secure_url);
+    const buffer = await fileBuffer.buffer();
 
-    const publicId = await getPublicIdFromUrl(categoria.molde);
-    console.log("Public ID:", publicId); // Verifica el publicId
-
-    // Obtener el archivo PDF desde Cloudinary usando el public_id
-    const result = await cloudinary.api.resource(publicId, {
-      resource_type: "raw",
-    });
-
-    if (!result || !result.secure_url) {
-      return res.status(404).json({ error: "Archivo no encontrado en Cloudinary" });
-    }
-
-    // Construir la URL para descargar el archivo
-    const fileUrl = `${result.secure_url}?attachment=true`;
-
-    // Redirigir a la URL de descarga
-    res.redirect(fileUrl);
+    res.setHeader('Content-Disposition', 'attachment; filename=molde.pdf');
+    res.setHeader('Content-Type', 'application/pdf');
+    res.send(buffer);
   } catch (error) {
-    console.error("Error al descargar el PDF:", error);
+    console.error("Error al descargar el archivo:", error);
     res.status(500).json({ error: "Error al descargar el archivo" });
   }
 };
