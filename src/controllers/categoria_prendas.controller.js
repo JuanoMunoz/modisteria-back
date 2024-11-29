@@ -8,7 +8,7 @@ const {
 } = require("../repositories/categoria_prendas.repository");
 const { gestionPDF, getPublicIdFromUrl } = require("../utils/pdf");
 const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+const upload = multer({ dest: "../utils/uploads/" });
 
 exports.getAllCategoriaPrendas = async (req, res) => {
   try {
