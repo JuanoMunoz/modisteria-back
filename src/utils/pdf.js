@@ -92,7 +92,6 @@
 //     gestionPDF,
 // };
 
-
 const express = require("express");
 const multer = require("multer");
 const cors = require("cors");
@@ -101,7 +100,7 @@ const path = require("path");
 const app = express();
 
 // Configurar CORS
-app.use(cors());
+app.use(cors({ origin: "http://localhost:5173" })); // Cambiar según el origen del frontend
 
 // Carpeta donde se guardarán los archivos
 const UPLOADS_DIR = path.join(__dirname, "moldes");
@@ -122,10 +121,10 @@ app.post("/upload", upload.single("file"), (req, res) => {
     return res.status(400).send("No se envió ningún archivo.");
   }
 
-  const fileUrl = `http://localhost:4000/uploads/moldes/${req.file.filename}`;
+  // URL de descarga
+  const fileUrl = `http://localhost:4000/uploads/${req.file.filename}`;
   res.json({ message: "Archivo subido exitosamente.", downloadUrl: fileUrl });
 });
 
 // Servir los archivos de la carpeta uploads
 app.use("/uploads", express.static(UPLOADS_DIR));
-
