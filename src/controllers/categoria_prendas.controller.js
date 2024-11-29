@@ -6,7 +6,8 @@ const {
   deleteCategoriaPrenda,
   statusCategoriaPrenda,
 } = require("../repositories/categoria_prendas.repository");
-const { gestionPDF, getPublicIdFromUrl } = require("../utils/pdf");
+const { getPublicIdFromUrl } = require("../utils/image");
+const {  gestionPDF } = require("../utils/pdf");
 const multer = require("multer");
 const upload = multer({ dest: "../utils/uploads/" });
 

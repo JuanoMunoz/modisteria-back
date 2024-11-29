@@ -1,5 +1,6 @@
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
+const fs = require("fs");
 
 // Configuración de multer para recibir PDFs
 const storage = multer.diskStorage({
@@ -23,7 +24,7 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage, fileFilter });
 
-exports.gestionPDF = async (req) => {
+const gestionPDF = async (req) => {
   const filePath = req.file.path;
 
   try {
@@ -42,4 +43,4 @@ exports.gestionPDF = async (req) => {
   }
 };
 
-module.exports = { upload }
+module.exports = { upload, gestionPDF };
