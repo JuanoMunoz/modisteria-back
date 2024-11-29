@@ -29,14 +29,15 @@ router.get(
 
 router.post(
   "/createCategoriaPrenda",
-  // [verifyToken, buscarPermiso("Categoría Prenda"), upload.single('molde')],
-  [verifyToken, buscarPermiso("Categoría Prenda")],
+  [verifyToken, buscarPermiso("Categoría Prenda"), upload.single('molde')],
+  // [verifyToken, buscarPermiso("Categoría Prenda")],
   createCategoriaPrenda
 );
 
 router.put(
   "/updateCategoriaPrenda/:id",
-  [verifyToken, buscarPermiso("Categoría Prenda")],
+  [verifyToken, buscarPermiso("Categoría Prenda"), upload.single('molde')],
+  // [verifyToken, buscarPermiso("Categoría Prenda")],
   updateCategoriaPrenda
 );
 
