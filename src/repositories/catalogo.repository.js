@@ -37,7 +37,7 @@ exports.statusCatalogo = async (id) => {
   return await Catalogo.update({ estado: false }, { where: { id } });
 };
 exports.deleteCatalogo = async (id) => {
-  const catalogo = await Catalogo.findOne({ where: { idPedido: id } });
+  const catalogo = await Catalogo.findOne({ where: { id } });
 
   if (!catalogo) {
     throw new Error("Catálogo no encontrado");
