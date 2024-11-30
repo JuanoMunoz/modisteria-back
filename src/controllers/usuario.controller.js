@@ -75,100 +75,147 @@ exports.createUser = async (req, res) => {
       from: "modistadonaluz@gmail.com",
       to: email,
       subject: "Código de verificación",
-      html: `
-                <!DOCTYPE html>
-                <html lang="es">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Correo Electrónico</title>
-                    <style>
+      html: `<!DOCTYPE html>
+            <html lang="es">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Código de verificación</title>
+                <style>
+                    body {
+                        background-color: #f4f4f4;
+                        font-family: Arial, sans-serif;
+                        margin: 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+                    }
+
+                    .all, .container {
+                        max-width: 500px;
+                        width: 100%;
+                        margin: 0 auto;
+                        border-radius: 8px;
+                    }
+
+                    .all {
+                        background-color: #f4f4f4;
+                        padding: 10px;
+                    }
+
+                    .container {
+                        background-color: #ffffff;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                        text-align: center;
+                    }
+
+                    .header {
+                        background-color: #873780;
+                        color: white;
+                        padding: 20px;
+                        border-radius: 8px 8px 0 0;
+                    }
+
+                    .header h1 {
+                        margin: 0;
+                        font-size: 30px;
+                    }
+
+                    /* Contenido principal */
+                    .content {
+                        padding: 20px;
+                    }
+
+                    .content p {
+                        font-size: 18px;
+                        color: #333;
+                        line-height: 1.5;
+                        margin: 20px 0;
+                    }
+
+                    .verification-code {
+                        font-size: 32px;
+                        font-weight: bold;
+                        letter-spacing: 2px;
+                        color: #ffffff;
+                        background-color: #873780;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        display: inline-block;
+                        margin: 20px 0;
+                    }
+
+                    .btn {
+                        display: inline-block;
+                        padding: 12px 25px;
+                        font-size: 16px;
+                        color: white;
+                        background-color: #4CAF50;
+                        text-decoration: none;
+                        border-radius: 5px;
+                        margin-top: 20px;
+                    }
+
+                    /* Pie de página */
+                    .footer {
+                        margin-top: 20px;
+                        font-size: 12px;
+                        color: #555;
+                    }
+
+                    /* Modo oscuro */
+                    @media (prefers-color-scheme: dark) {
+                        body {
+                            background-color: #121212;
+                            color: #ddd;
+                        }
+
                         .all {
-                            background-color: #252525;
-                            text-align: center;
-                            justify-content: center;
-                            margin: 0 auto;
-                            min-width: 400px;
-                            max-width: 500px;
-                            min-height: 500px;
-                            padding: 10px;
-                            border-radius: 8px;
+                            background-color: #121212;
                         }
+
                         .container {
-                            background-image: url('https://i.pinimg.com/564x/55/ac/eb/55aceb377ec84ed5487aa685a527d187.jpg');
-                            margin: 0 auto;
-                            min-width: 400px;
-                            max-width: 500px;
-                            min-height: 500px;
-                            border-radius: 8px;
-                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                            text-align: center;
+                            background-color: #1e1e1e;
+                            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
                         }
+
                         .header {
-                            background-color: rgb(39, 38, 38);
-                            color: black;
-                            padding: 20px;
-                            border-radius: 8px 8px 0 0;
-                        }
-                        .header h1 {
-                            margin: 0;
-                            font-size: 30px;
-                        }
-                        .content {
-                            padding: 20px;
-                        }
-                        .content p {
-                            font-size: 18px;
-                            color: black;
-                            line-height: 1.5;
-                            margin: 20px 0;
-                        }
-                        .verification-code {
-                            font-size: 32px;
-                            font-weight: bold;
-                            letter-spacing: 2px;
-                            color: black;
-                            background-color: white;
-                            padding: 10px 20px;
-                            border-bottom: solid 5px black;
-                            display: inline-block;
-                            margin: 20px 0;
-                        }
-                        .btn {
-                            display: inline-block;
-                            padding: 12px 25px;
-                            font-size: 16px;
+                            background-color: #333;
                             color: white;
-                            background-color: #4CAF50;
-                            text-decoration: none;
-                            border-radius: 5px;
-                            margin-top: 20px;
                         }
+
+                        .content p {
+                            color: #ddd;
+                        }
+
                         .footer {
-                            margin-top: 20px;
-                            font-size: 12px;
-                            color: #777;
+                            color: #aaa;
                         }
-                    </style>
-                </head>
-                <body>
-                    <div class="all">
-                        <div class="container">
-                            <div class="content">
-                                <h1>Modisteria D.L</h1>
-                                <hr>
-                                <p>Este es tu código de verificación para seguir en el proceso de registro:</p>
-                                <div class="verification-code">${code}</div>
-                                <p>Ingresa este código para continuar con tu registro.</p>
-                            </div>
-                            <div class="footer">
-                                <p>Si no has sido tú, ignora este correo.</p>
-                                <p>&copy; 2024 Modisteria D.L. Todos los derechos reservados.</p>
-                            </div>
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="all">
+                    <div class="container">
+                        <div class="header">
+                            <h1>Modisteria D.L</h1>
+                        </div>
+                        <div class="content">
+                            <h2>¡Hola!</h2>
+                            <p>Este es tu código de verificación para seguir en el proceso de registro:</p>
+                            <div class="verification-code">${code}</div>
+                            <p>Ingresa este código para continuar con tu registro.</p>
+                        </div>
+                        <div class="footer">
+                            <p>Si no solicitaste este correo, por favor ignóralo.</p>
+                            <p>&copy; 2024 Modisteria D.L. Todos los derechos reservados.</p>
                         </div>
                     </div>
-                </body>
-                </html>`,
+                </div>
+            </body>
+            </html>
+            `,
     };
 
     // Enviar correo
@@ -315,6 +362,165 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.sendEmail = async (req, res) => {
+  const { asunto, cuerpo, email } = req.body;
+  console.log("Email recibido: ", email)
+  try {
+    const emailOpts = {
+      from: "modistadonaluz@gmail.com",
+      to: email,
+      subject: `${asunto}`,
+      html: `<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${asunto}</title>
+    <style>
+        /* Estilos generales */
+        body {
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .all, .container {
+            max-width: 500px;
+            width: 100%;
+            margin: 0 auto;
+            border-radius: 8px;
+        }
+
+        .all {
+            background-color: #f4f4f4;
+            padding: 10px;
+        }
+
+        .container {
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        /* Cabecera */
+        .header {
+            background-color: #873780;
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        /* Contenido principal */
+        .content {
+            padding: 20px;
+        }
+
+        .content p {
+            font-size: 18px;
+            color: #333;
+            line-height: 1.5;
+            margin: 20px 0;
+        }
+
+        .verification-code {
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #ffffff;
+            background-color: #4CAF50;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 20px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            font-size: 16px;
+            color: white;
+            background-color: #4CAF50;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        /* Pie de página */
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #555;
+        }
+
+        /* Modo oscuro */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #121212;
+                color: #ddd;
+            }
+
+            .all {
+                background-color: #121212;
+            }
+
+            .container {
+                background-color: #1e1e1e;
+                box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+            }
+
+            .header {
+                background-color: #333;
+                color: white;
+            }
+
+            .content p {
+                color: #ddd;
+            }
+
+            .footer {
+                color: #aaa;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="all">
+        <div class="container">
+            <div class="header">
+                <h1>Modisteria D.L</h1>
+            </div>
+            <div class="content">
+                <p>${cuerpo}</p>
+            </div>
+            <div class="footer">
+                <p>Si no solicitaste este correo, por favor ignóralo.</p>
+                <p>&copy; 2024 Modisteria D.L. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+`,
+    };
+    await transporter.sendMail(emailOpts);
+    res.status(200).send("Correo enviado")
+  } catch (error) {
+    console.error(error)
+    res.status(500).send("Error de servidor")
+  }
+}
+
 exports.forgotPassword = async (req, res) => {
   const { email } = req.body;
   console.log("Email recibido:", email);
@@ -338,112 +544,145 @@ exports.forgotPassword = async (req, res) => {
       to: email,
       subject: "Código de recuperación",
       html: `<!DOCTYPE html>
-                <html lang="es">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Correo Electrónico</title>
-                    <style>
-                        .all {
-                            background-color: #252525;
-                            text-align: center;
-                            justify-content: center;
-                            margin: 0 auto;
-                            min-width: 400px;
-                            max-width: 500px;
-                            min-height: 500px;
-                            padding: 10px;
-                            border-radius: 8px;
-                        }
-                        .container {
-                            background-image: url('https://i.pinimg.com/564x/55/ac/eb/55aceb377ec84ed5487aa685a527d187.jpg');
-                            margin: 0 auto;
-                            min-width: 400px;
-                            max-width: 500px;
-                            min-height: 500px;
-                            border-radius: 8px;
-                            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                            text-align: center;
+            <html lang="es">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Código de recuperación</title>
+                <style>
+                    body {
+                        background-color: #f4f4f4;
+                        font-family: Arial, sans-serif;
+                        margin: 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+                    }
 
+                    .all, .container {
+                        max-width: 500px;
+                        width: 100%;
+                        margin: 0 auto;
+                        border-radius: 8px;
+                    }
+
+                    .all {
+                        background-color: #f4f4f4;
+                        padding: 10px;
+                    }
+
+                    .container {
+                        background-color: #ffffff;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                        text-align: center;
+                    }
+
+                    .header {
+                        background-color: #873780;
+                        color: white;
+                        padding: 20px;
+                        border-radius: 8px 8px 0 0;
+                    }
+
+                    .header h1 {
+                        margin: 0;
+                        font-size: 30px;
+                    }
+
+                    /* Contenido principal */
+                    .content {
+                        padding: 20px;
+                    }
+
+                    .content p {
+                        font-size: 18px;
+                        color: #333;
+                        line-height: 1.5;
+                        margin: 20px 0;
+                    }
+
+                    .verification-code {
+                        font-size: 32px;
+                        font-weight: bold;
+                        letter-spacing: 2px;
+                        color: #ffffff;
+                        background-color: #873780;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        display: inline-block;
+                        margin: 20px 0;
+                    }
+
+                    .btn {
+                        display: inline-block;
+                        padding: 12px 25px;
+                        font-size: 16px;
+                        color: white;
+                        background-color: #4CAF50;
+                        text-decoration: none;
+                        border-radius: 5px;
+                        margin-top: 20px;
+                    }
+
+                    /* Pie de página */
+                    .footer {
+                        margin-top: 20px;
+                        font-size: 12px;
+                        color: #555;
+                    }
+
+                    /* Modo oscuro */
+                    @media (prefers-color-scheme: dark) {
+                        body {
+                            background-color: #121212;
+                            color: #ddd;
                         }
+
+                        .all {
+                            background-color: #121212;
+                        }
+
+                        .container {
+                            background-color: #1e1e1e;
+                            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+                        }
+
                         .header {
-                            background-color: rgb(39, 38, 38);
-                            color: black;
-                            padding: 20px;
-                            border-radius: 8px 8px 0 0;
-                        }
-                        .header h1 {
-                            margin: 0;
-                            font-size: 30px;
-                        }
-                        .content {
-                            padding: 20px;
-                        }
-                        .content p {
-                            font-size: 18px;
-                            color: black;
-                            line-height: 1.5;
-                            margin: 20px 0;
-                        }
-                        .verification-code {
-                            font-size: 32px;
-                            font-weight: bold;
-                            letter-spacing: 2px;
-                            color: black;
-                            background-color: white;
-                            padding: 10px 20px;
-                            border-bottom: solid 5px black;
-                            display: inline-block;
-                            margin: 20px 0;
-                        }
-                        .verification-code-ag {
-                            font-size: 32px;
-                            font-weight: bold;
-                            letter-spacing: 2px;
-                            color: #ffffff;
-                            padding: 10px 6px;
-                            border-radius: 5px;
-                            display: inline-block;
-                            margin: 20px 0;
-                            justify-self: end;
-                        }
-                        .btn {
-                            display: inline-block;
-                            padding: 12px 25px;
-                            font-size: 16px;
+                            background-color: #333;
                             color: white;
-                            background-color: #4CAF50;
-                            text-decoration: none;
-                            border-radius: 5px;
-                            margin-top: 20px;
                         }
+
+                        .content p {
+                            color: #ddd;
+                        }
+
                         .footer {
-                            margin-top: 20px;
-                            font-size: 12px;
-                            color: #777;
+                            color: #aaa;
                         }
-                    </style>
-                </head>
-                <body>
-                    <div class="all">
-                        <div class="container">
-                        
-                        <div class="content">
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="all">
+                    <div class="container">
+                        <div class="header">
                             <h1>Modisteria D.L</h1>
-                            <hr>
-                            <p>Fue solicitado un código de verificación para recuperar tu contraseña</p>
-                            <p>Tu código de verificación es:</p>
+                        </div>
+                        <div class="content">
+                            <h2>¡Hola!</h2>
+                            <p>Este es tu código de verificación para seguir en el proceso de recuperación de contraseña:</p>
                             <div class="verification-code">${code}</div>
-                            <p>Ingresa este código para recuperar tu contraseña</p>
+                            <p>Ingresa este código para recuperar tu contraseña.</p>
                         </div>
                         <div class="footer">
                             <p>Si no solicitaste este correo, por favor ignóralo.</p>
                             <p>&copy; 2024 Modisteria D.L. Todos los derechos reservados.</p>
                         </div>
                     </div>
-                    </div>
-                </body>
-                </html>`,
+                </div>
+            </body>
+            </html>`,
     };
 
     await transporter.sendMail(emailOpts);
