@@ -7,6 +7,7 @@ const {
   deleteCatalogo,
   statusCatalogo,
   getCatalogoByCategoria,
+  getAllCatalogoDashboard,
 } = require("../controllers/catalogo.controller");
 const { upload } = require("../utils/image.js");
 const { verifyToken } = require("../utils/verifyToken.js");
@@ -15,6 +16,7 @@ const { buscarPermiso } = require("../validators/validations.validator.js");
 const router = Router();
 
 router.get("/getAllCatalogo", getAllCatalogo);
+router.get("/getAllCatalogoDash", getAllCatalogoDashboard);
 
 router.get(
   "/getCatalogoById/:id",

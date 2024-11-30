@@ -20,6 +20,15 @@ exports.getAllCatalogo = async (offset, limit, priceLimit, category) => {
     ],
   });
 };
+exports.getAllCatalogoDash = async () => {
+  return await Catalogo.findAll({
+    include: [
+      { model: Talla },
+      { model: Insumo, as: "insumos" },
+      { model: Imagen },
+    ],
+  });
+};
 
 exports.getCatalogoById = async (id) => {
   return await Catalogo.findByPk(id);

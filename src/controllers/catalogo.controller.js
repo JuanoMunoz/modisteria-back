@@ -7,6 +7,7 @@ const {
   updateCatalogo,
   deleteCatalogo,
   getCatalogoByCategoria,
+  getAllCatalogoDash,
 } = require("../repositories/catalogo.repository");
 const {
   createCatIns,
@@ -33,7 +34,15 @@ exports.getAllCatalogo = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-
+exports.getAllCatalogoDashboard = async (req, res) => {
+  try {
+    const catalogo = await getAllCatalogoDash();
+    res.status(200).json(catalogo);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error: error.message });
+  }
+};
 exports.getCatalogoById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -68,8 +77,15 @@ exports.createCatalogo = async (req, res) => {
       return res.status(400).json({ error: "No hay archivos subidos" });
     }
 
-    const { producto, precio, descripcion, tallas, categoriaId, estadoId, linea } =
-      req.body;
+    const {
+      producto,
+      precio,
+      descripcion,
+      tallas,
+      categoriaId,
+      estadoId,
+      linea,
+    } = req.body;
     const imageUrls = [];
 
     for (const file of req.files) {
@@ -84,7 +100,7 @@ exports.createCatalogo = async (req, res) => {
       descripcion,
       categoriaId,
       estadoId,
-      linea
+      linea,
     };
 
     const catalogoCreado = await createCatalogo(newCatalogo);
@@ -114,8 +130,15 @@ exports.createCatalogo = async (req, res) => {
 exports.updateCatalogo = async (req, res) => {
   try {
     const { id } = req.params;
-    const { producto, precio, descripcion, categoriaId, estadoId, tallas, linea } =
-      req.body;
+    const {
+      producto,
+      precio,
+      descripcion,
+      categoriaId,
+      estadoId,
+      tallas,
+      linea,
+    } = req.body;
 
     const existingCatalogo = await getCatalogoById(id);
 
@@ -131,7 +154,7 @@ exports.updateCatalogo = async (req, res) => {
       descripcion: descripcion || existingCatalogo.descripcion,
       categoriaId: categoriaId || existingCatalogo.categoriaId,
       estadoId: estadoId || existingCatalogo.estadoId,
-      linea: linea || existingCatalogo.linea
+      linea: linea || existingCatalogo.linea,
     };
 
     if (req.files && req.files.length > 0) {
