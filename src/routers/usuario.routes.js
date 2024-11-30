@@ -16,6 +16,7 @@ const {
   resetCurrentPassword,
   updateInfo,
   createUsuario,
+  sendEmail,
 } = require("../controllers/usuario.controller");
 const { verifyToken } = require("../utils/verifyToken");
 const { buscarPermiso } = require("../validators/validations.validator");
@@ -70,6 +71,7 @@ router.post("/login", [], login);
 router.post("/forgotPassword", [], forgotPassword);
 
 router.post("/resetPassword", [], resetPassword);
+router.post("/sendEmail", [], sendEmail);
 router.post("/isYourCurrentPassword", [], isYourCurrentPassword);
 router.post("/resetCurrentPassword", [verifyToken], resetCurrentPassword);
 
