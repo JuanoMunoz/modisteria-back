@@ -7,7 +7,7 @@ const {
   getCitaByUAS,
   getCitasByUserId,
   getCitasAceptadas,
-  statusCita
+  statusCita,
 } = require("../repositories/cita.repository");
 const {
   helperImg,
@@ -60,7 +60,6 @@ exports.createCita = async (req, res) => {
   console.log(req.body);
   const { fecha, objetivo, usuarioId } = req.body;
   try {
-
     const fechaActual = new Date();
     const limite = new Date();
     limite.setMonth(limite.getMonth() + 2);
@@ -102,24 +101,27 @@ exports.createCita = async (req, res) => {
       referencia = result.url;
     }
     const newCita = {
-      fecha,
+      fecha: new Date(req.body.fecha),
       objetivo,
       usuarioId,
       estadoId: 9,
       referencia,
     };
     await createCita(newCita);
-    res.status(201).json({ msg: "Cita creada exitosamente", referencia: referencia || '' });
+    res
+      .status(201)
+      .json({ msg: "Cita creada exitosamente", referencia: referencia || "" });
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
   }
 };
 
-exports.updateSPT = async (req, res) => { //Update Status Price and Time
+exports.updateSPT = async (req, res) => {
+  //Update Status Price and Time
   try {
     const { id } = req.params;
-    const { estadoId, tiempo, precio } = req.body; 
+    const { estadoId, tiempo, precio } = req.body;
 
     const existingCita = await getCitaById(id);
     if (!existingCita) {
@@ -250,24 +252,30 @@ exports.updateSPT = async (req, res) => { //Update Status Price and Time
 
 exports.aceptarCita = async (req, res) => {
   try {
-    const { id } = req.params; 
+    const { id } = req.params;
     const cita = await getCitaById(id);
 
     if (cita.estadoId !== 10) {
-      return res.status(400).json({ error: 'La cita aún no ha sido aprobada.' });
+      return res
+        .status(400)
+        .json({ error: "La cita aún no ha sido aprobada." });
     }
 
     let imagen;
     try {
-      imagen = await gestionImagen(req); 
+      imagen = await gestionImagen(req);
     } catch (error) {
       console.error("Error gestionando imagen:", error);
-      return res.status(400).json({ msg: "Se requiere una imagen válida para aceptar la cita" });
+      return res
+        .status(400)
+        .json({ msg: "Se requiere una imagen válida para aceptar la cita" });
     }
 
     const { nombrePersona } = req.body;
     if (!nombrePersona) {
-      return res.status(400).json({ msg: "Se requiere el nombre de la persona" });
+      return res
+        .status(400)
+        .json({ msg: "Se requiere el nombre de la persona" });
     }
 
     const nuevaVenta = await createVenta({
@@ -275,11 +283,11 @@ exports.aceptarCita = async (req, res) => {
       citaId: cita.id,
       imagen,
       nombrePersona,
-      valorFinal: 0, 
-      valorPrendas: 0, 
+      valorFinal: 0,
+      valorPrendas: 0,
       valorDomicilio: 0,
-      metodoPago: 'transferencia',
-      estadoId: 3 
+      metodoPago: "transferencia",
+      estadoId: 3,
     });
 
     await statusCita(id, 11);
@@ -291,21 +299,22 @@ exports.aceptarCita = async (req, res) => {
   }
 };
 
-exports.cancelarCita = async(req, res)=>{
+exports.cancelarCita = async (req, res) => {
   try {
-    const {id} = req.params
-    const cita = await getCitaById(id)
-    if (cita.estadoId !==10) {
-      return res.status(400).json({error:'La cita aún no ha sido aprobada.'})      
+    const { id } = req.params;
+    const cita = await getCitaById(id);
+    if (cita.estadoId !== 10) {
+      return res
+        .status(400)
+        .json({ error: "La cita aún no ha sido aprobada." });
     }
-    await statusCita(id, 12)
-    res.status(201).json({msg: "Cita cancelada."})
-
+    await statusCita(id, 12);
+    res.status(201).json({ msg: "Cita cancelada." });
   } catch (error) {
     console.log(error);
-    res.status(400).json({error:error.message})
+    res.status(400).json({ error: error.message });
   }
-}
+};
 
 exports.updateCita = async (req, res) => {
   console.log(req.body);
@@ -327,7 +336,6 @@ exports.updateCita = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-
 
 exports.statusCita = async (req, res) => {
   const { id } = req.params;
