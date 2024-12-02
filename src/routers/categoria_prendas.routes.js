@@ -11,7 +11,7 @@ const {
 const { verifyToken } = require("../utils/verifyToken");
 const { buscarPermiso } = require("../validators/validations.validator");
 const router = Router();
-const { upload } = require('../utils/pdf.js'); 
+const { upload, gestionPDF } = require('../utils/pdf.js'); 
 
 router.get("/getAllCategoriaPrendas", getAllCategoriaPrendas);
 
@@ -21,23 +21,15 @@ router.get(
   getCategoriaPrendaById
 );
 
-// router.get(
-//   "/descargarMolde/:id",
-//   [verifyToken, buscarPermiso("Categoría Prenda")],
-//   descargarMolde
-// );
-
 router.post(
   "/createCategoriaPrenda",
-  [verifyToken, buscarPermiso("Categoría Prenda"), upload.single('molde')],
-  // [verifyToken, buscarPermiso("Categoría Prenda")],
+  [verifyToken, buscarPermiso("Categoría Prenda"), upload.single('molde'), gestionPDF],
   createCategoriaPrenda
 );
 
 router.put(
   "/updateCategoriaPrenda/:id",
   [verifyToken, buscarPermiso("Categoría Prenda"), upload.single('molde')],
-  // [verifyToken, buscarPermiso("Categoría Prenda")],
   updateCategoriaPrenda
 );
 

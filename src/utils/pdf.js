@@ -1,46 +1,51 @@
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
-const fs = require("fs");
 
-// Configuración de multer para recibir PDFs
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/"); // Directorio donde se guardarán temporalmente los archivos
+const storage = multer.memoryStorage({
+  destination: function (req, file, callback) {
+    callback(null, file);
   },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, `${uniqueSuffix}-${file.originalname}`); // Nombre único para cada archivo
-  },
-});
 
-// Filtro para permitir solo PDFs
+  filename: function (req, file, callback) {
+    callback(null, file.originalname);
+  },
+
+  limits: {
+    fileSize: 1024 * 1024 * 10, // 10 MB
+  },
+
+  onError: function (err, next) {
+    console.log("error", err);
+  }
+})
+
 const fileFilter = (req, file, cb) => {
   if (file.mimetype === "application/pdf") {
     cb(null, true);
   } else {
-    cb(new Error("Solo se permiten archivos PDF"), false);
+    cb("Solo se permiten archivos PDF", false);
   }
 };
 
 const upload = multer({ storage, fileFilter });
 
-const gestionPDF = async (req) => {
-  const filePath = req.file.path;
-
+const gestionPDF = async (req, res, next) => {
   try {
-    const result = await cloudinary.uploader.upload(filePath, {
-      resource_type: "raw", // Para subir archivos no multimedia
-      public_id: `categorias/${req.file.filename}`,
+    const dataURL = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+    const result = await cloudinary.uploader.upload(dataURL, {
+      resource_type: "raw",
+      public_id: `${req.file.originalname}`,
+      folder: "modisteria"
     });
+    console.log(result);
 
-    // Elimina el archivo temporal de la carpeta local
-    fs.unlinkSync(filePath);
-
-    return result.secure_url; // Devuelve la URL pública
+    req.fileUrl = result.secure_url;
+    next();
   } catch (error) {
     console.error("Error al subir archivo a Cloudinary:", error);
-    throw new Error("Error al procesar el archivo PDF");
+    res.status(500).send({ data: "Error al subir archivo a Cloudinary" });
   }
 };
+
 
 module.exports = { upload, gestionPDF };

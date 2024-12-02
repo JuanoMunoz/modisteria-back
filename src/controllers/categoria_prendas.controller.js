@@ -1,3 +1,4 @@
+const { STATE_PRENDAS_ACTIVO } = require("../constants/constants");
 const {
   getAllCategoriaPrendas,
   getCategoriaPrendaById,
@@ -9,7 +10,6 @@ const {
 const { getPublicIdFromUrl } = require("../utils/image");
 const {  gestionPDF } = require("../utils/pdf");
 const multer = require("multer");
-const upload = multer({ dest: "../utils/uploads/" });
 
 exports.getAllCategoriaPrendas = async (req, res) => {
   try {
@@ -34,35 +34,15 @@ exports.getCategoriaPrendaById = async (req, res) => {
   }
 };
 
-// exports.createCategoriaPrenda = async (req, res) => {
-//   const categoria = req.body;
-
-//   try {
-//     console.log(req.body);
-//     await createCategoriaPrenda(categoria);
-//     res.status(201).json({ msg: "categoria creada exitosamente" });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(400).json({ error: error.message });
-//   }
-// };
-
 exports.createCategoriaPrenda = async (req, res) => {
-  const { nombre, descripcion, estadoId } = req.body;
-  let moldeUrl = null;
+  const { nombre, descripcion } = req.body;
 
   try {
-    // Si hay un archivo, procesarlo y subirlo (local o Cloudinary)
-    if (req.file) {
-      moldeUrl = await gestionPDF(req); // Sube el archivo a Cloudinary y obtiene la URL
-    }
-
-    // Crear la nueva categoría con la URL del PDF
     const nuevaCategoria = await createCategoriaPrenda({
       nombre,
       descripcion,
-      estadoId,
-      molde: moldeUrl, // Guarda la URL del archivo en la base de datos
+      estadoId: STATE_PRENDAS_ACTIVO,
+      molde: req.fileUrl || null,
     });
 
     res.status(201).json({ msg: "Categoría creada exitosamente", nuevaCategoria });
@@ -71,19 +51,6 @@ exports.createCategoriaPrenda = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
-
-// exports.updateCategoriaPrenda = async (req, res) => {
-//   const { id } = req.params;
-//   const categoria = req.body;
-
-//   try {
-//     await updateCategoriaPrenda(id, categoria);
-//     res.status(201).json({ msg: "categoria actualizada exitosamente" });
-//   } catch (error) {
-//     res.status(400).json({ error: error.message });
-//   }
-// };
 
 exports.updateCategoriaPrenda = async (req, res) => {
   const { id } = req.params;
