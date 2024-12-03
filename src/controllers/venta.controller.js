@@ -1,4 +1,4 @@
-const { Pedido, CatalogoInsumos } = require("../models");
+const { Pedido, CatalogoInsumos, Insumo } = require("../models");
 const { createDomicilioVenta } = require("../repositories/domicilio.repository");
 const { getPedidoByUsuarioyEstado, getPedidoByVenta, } = require("../repositories/pedido.repository");
 const { getAllVentas, getVentaById, createVenta, getVentaByUsuarioId, updateVenta, getUsuarioIdByPedidoId } = require("../repositories/venta.repository");
