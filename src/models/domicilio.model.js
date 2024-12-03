@@ -1,6 +1,5 @@
 const { DataTypes, Sequelize } = require('sequelize');
 const { sequelize } = require('../database/connection.js');
-const { PQRS } = require('./pqrs.model.js');
 const { Venta } = require('./venta.model.js');
 
 const Domicilio = sequelize.define('Domicilio',
@@ -20,16 +19,13 @@ const Domicilio = sequelize.define('Domicilio',
     estadoId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-  },
+    },
   },
   {
     timestamps: false,
   },
 );
 
-//Relacion domicilio y pqrs
-Domicilio.hasMany(PQRS, {foreignKey:'domicilioId', sourceKey:'id', as:"pqrs"})
-PQRS.belongsTo(Domicilio, {foreignKey:'domicilioId', sourceKey:'id', as:'domicilio'})
 
 //Relacion domicilio y venta
 Venta.hasMany(Domicilio, { foreignKey: 'ventaId', as: 'domicilio' });

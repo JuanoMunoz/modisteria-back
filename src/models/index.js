@@ -7,7 +7,6 @@ const { Cita } = require('./cita.model.js');
 const { Verificacion } = require('./verificacion.model.js');
 const { CatalogoInsumos } = require('./catalogo_insumos.model.js')
 const { Domicilio } = require('./domicilio.model.js')
-const { PQRS } = require('./pqrs.model.js')
 const { Pedido } = require('./pedido.model.js')
 const { Estado } = require('./estado.model.js')
 const { Venta } = require('./venta.model.js')
@@ -21,4 +20,4 @@ const { UnidadesDeMedida } = require("./unidades_de_medida.model.js");
 const { Proveedor } = require("./proveedor.model.js")
 const { Compras } = require("./compras.model.js")
 
-module.exports = { Usuario, Role, Permiso, Insumo, Catalogo, Cita, CatalogoInsumos, Domicilio, PQRS, Verificacion, Pedido, Estado, Venta, CitaInsumo, Talla, Imagen, InsumoHistorial, CategoriaInsumos, CategoriaPrendas, UnidadesDeMedida, Proveedor, Compras };
+module.exports = { Usuario, Role, Permiso, Insumo, Catalogo, Cita, CatalogoInsumos, Domicilio, Verificacion, Pedido, Estado, Venta, CitaInsumo, Talla, Imagen, InsumoHistorial, CategoriaInsumos, CategoriaPrendas, UnidadesDeMedida, Proveedor, Compras };
