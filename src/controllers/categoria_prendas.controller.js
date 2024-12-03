@@ -1,4 +1,5 @@
 const { STATE_PRENDAS_ACTIVO } = require("../constants/constants");
+const cloudinary = require("cloudinary").v2;
 const {
   getAllCategoriaPrendas,
   getCategoriaPrendaById,
@@ -66,34 +67,35 @@ exports.updateCategoriaPrenda = async (req, res) => {
     }
 
     // Si se sube un nuevo archivo, reemplazarlo
-    if (req.file) {
+    if (req.fileUrl) {
       // Eliminar el archivo anterior de Cloudinary si existe
       if (categoriaExistente.molde) {
         const publicId = getPublicIdFromUrl(categoriaExistente.molde);
         await cloudinary.uploader.destroy(publicId, { resource_type: "raw" });
       }
 
-      // Subir el nuevo archivo
-      moldeUrl = await gestionPDF(req);
+      // La URL del archivo PDF está en req.fileUrl gracias a gestionPDF
+      moldeUrl = req.fileUrl; // Aquí asignamos la URL del archivo subido
     } else {
       // Mantener el archivo existente si no se sube uno nuevo
       moldeUrl = categoriaExistente.molde;
     }
 
     // Actualizar la categoría
-    await updateCategoriaPrenda(id, {
-      nombre,
-      descripcion,
-      estadoId,
+    const updatedCategoria = await updateCategoriaPrenda(id, {
+      nombre: nombre || categoriaExistente.nombre,
+      descripcion: descripcion || categoriaExistente.descripcion,
+      estadoId: estadoId || categoriaExistente.estadoId,
       molde: moldeUrl,
     });
 
-    res.status(200).json({ msg: "Categoría actualizada exitosamente" });
+    res.status(200).json({ msg: "Categoría actualizada exitosamente", updatedCategoria });
   } catch (error) {
     console.error("Error al actualizar categoría:", error);
     res.status(500).json({ error: error.message });
   }
 };
+
 
 exports.statusCategoriaPrenda = async (req, res) => {
   const { id } = req.params;
