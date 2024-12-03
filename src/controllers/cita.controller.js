@@ -100,22 +100,24 @@ exports.createCita = async (req, res) => {
       const result = await uploadToCloudinary(processedBuffer);
       referencia = result.url;
     }
-    const newCita = {
+    const newCitaData = {
       fecha: new Date(req.body.fecha),
       objetivo,
       usuarioId,
       estadoId: 9,
       referencia,
     };
-    await createCita(newCita);
-    res
-      .status(201)
-      .json({ msg: "Cita creada exitosamente", referencia: referencia || "" });
+    const newCita = await createCita(newCitaData);
+    res.status(201).json({
+      msg: "Cita creada exitosamente",
+      cita: newCita,
+    });
   } catch (error) {
     console.log(error);
-    res.status(500).json(error);
+    res.status(500).json({ error: error.message });
   }
 };
+
 
 exports.updateSPT = async (req, res) => {
   //Update Status Price and Time
