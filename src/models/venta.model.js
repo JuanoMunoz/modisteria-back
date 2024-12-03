@@ -8,7 +8,7 @@ const Venta = sequelize.define('Venta', {
     },
     imagen: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     nombrePersona: {
         type: DataTypes.STRING,
@@ -41,9 +41,6 @@ const Venta = sequelize.define('Venta', {
 }, {
     timestamps: false,
 });
-
-// Cotizacion.hasMany(Venta, { foreignKey: 'cotizacionId', as: 'ventas' });
-// Venta.belongsTo(Cotizacion, { foreignKey: 'cotizacionId', as: 'cotizacion' });
 
 
 module.exports = { Venta };
