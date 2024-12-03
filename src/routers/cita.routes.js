@@ -2,6 +2,7 @@ const { Router } = require("express");
 const {
   getAllCitas,
   getCitaById,
+  crearCita,
   createCita,
   updateCita,
   deleteCita,
@@ -35,6 +36,11 @@ router.post(
   "/createCita",
   [verifyToken, buscarPermiso("Citas"), upload.single("file")],
   createCita
+);
+router.post(
+  "/crearCita",
+  [verifyToken, buscarPermiso("Citas"), upload.single("file")],
+  crearCita
 );
 
 router.put("/updateSPT/:id", updateSPT);

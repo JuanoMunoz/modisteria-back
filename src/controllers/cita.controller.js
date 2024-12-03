@@ -122,6 +122,71 @@ exports.createCita = async (req, res) => {
   }
 };
 
+exports.crearCita = async (req, res) => {
+  console.log(req.body);
+  const { fecha, objetivo, usuarioId, precio, tiempo, datosInsumos, estadoId } = req.body;
+  try {
+    const fechaActual = new Date();
+    const limite = new Date();
+    limite.setMonth(limite.getMonth() + 2);
+    const fechaCita = new Date(fecha);
+    if (fechaCita > limite) {
+      return res
+        .status(400)
+        .json({ msg: "La fecha de la cita no puede ser superior a 2 meses" });
+    }
+    if (fechaCita < fechaActual) {
+      return res
+        .status(400)
+        .json({ msg: "La fecha de la cita ya pasó, intenta de nuevo" });
+    }
+    let referencia = null;
+    if (req.file) {
+      const processedBuffer = await helperImg(req.file.buffer, 300);
+      const result = await uploadToCloudinary(processedBuffer);
+      referencia = result.url;
+    }
+    let userId = 12
+    if (usuarioId) {
+      userId = usuarioId
+    }
+    const newCitaData = {
+      fecha: new Date(req.body.fecha),
+      objetivo,
+      usuarioId: userId,
+      estadoId,
+      referencia,
+      precio,
+      tiempo
+    };
+    const newCita = await createCita(newCitaData);
+    const citaId = newCita.id
+    for (const dataInsumos of datosInsumos) {
+      const { insumo_id, cantidad_utilizada } = dataInsumos;
+      const insumoStock = await getInsumoStock(insumo_id);
+      if (insumoStock < cantidad_utilizada) {
+        return res.status(400).json({
+          msg: `No hay suficiente stock para el insumo con ID ${insumo_id}. Disponible: ${insumoStock}, Requerido: ${cantidad_utilizada}.`,
+        });
+      }
+      const newCitaInsumos = {
+        cita_id: citaId,
+        insumo_id: insumo_id,
+        cantidad_utilizada: cantidad_utilizada,
+      };
+      await createCitaInsumo(newCitaInsumos);
+      await discountInsumo(insumo_id, cantidad_utilizada);
+    }
+    res.status(201).json({
+      msg: "Cita creada exitosamente",
+      cita: newCita,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 
 exports.updateSPT = async (req, res) => {
   //Update Status Price and Time
