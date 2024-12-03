@@ -30,22 +30,27 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ storage, fileFilter });
 
 const gestionPDF = async (req, res, next) => {
-  try {
-    const dataURL = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
-    const result = await cloudinary.uploader.upload(dataURL, {
-      resource_type: "raw",
-      public_id: `${req.file.originalname}`,
-      folder: "modisteria"
-    });
-    console.log(result);
+  if (req.file) {
+    try {
+      const dataURL = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+      const result = await cloudinary.uploader.upload(dataURL, {
+        resource_type: "raw",
+        public_id: `${req.file.originalname}`,
+        folder: "modisteria"
+      });
+      console.log(result);
 
-    req.fileUrl = result.secure_url;
+      req.fileUrl = result.secure_url;
+      next();
+    } catch (error) {
+      console.error("Error al subir archivo a Cloudinary:", error);
+      res.status(500).send({ data: "Error al subir archivo a Cloudinary" });
+    }
+  } else {
     next();
-  } catch (error) {
-    console.error("Error al subir archivo a Cloudinary:", error);
-    res.status(500).send({ data: "Error al subir archivo a Cloudinary" });
   }
 };
+
 
 
 module.exports = { upload, gestionPDF };

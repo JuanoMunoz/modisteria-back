@@ -29,9 +29,10 @@ router.post(
 
 router.put(
   "/updateCategoriaPrenda/:id",
-  [verifyToken, buscarPermiso("Categoría Prenda"), upload.single('molde')],
+  [verifyToken, buscarPermiso("Categoría Prenda"), upload.single('molde'), gestionPDF],
   updateCategoriaPrenda
 );
+
 
 router.put(
   "/statusCategoriaPrenda/:id",
