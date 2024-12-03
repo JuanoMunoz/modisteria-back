@@ -187,13 +187,10 @@ exports.crearCita = async (req, res) => {
   }
 };
 
-
-exports.updateSPT = async (req, res) => {
-  //Update Status Price and Time
+exports.updateCitaInsumos = async (req, res) => {
+  const { id } = req.params;
+  const { datosInsumos } = req.body;
   try {
-    const { id } = req.params;
-    const { estadoId, tiempo, precio, datosInsumos } = req.body;
-
     const existingCita = await getCitaById(id);
     if (!existingCita) {
       return res
@@ -217,6 +214,28 @@ exports.updateSPT = async (req, res) => {
       await createCitaInsumo(newCitaInsumos);
       await discountInsumo(insumo_id, cantidad_utilizada);
     }
+    res.status(200).json({ msg: "Insumos actualizados correctamente." });
+
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error: error.message });
+  }
+
+}
+
+exports.updateSPT = async (req, res) => {
+  //Update Status Price and Time
+  try {
+    const { id } = req.params;
+    const { estadoId, tiempo, precio } = req.body;
+
+    const existingCita = await getCitaById(id);
+    if (!existingCita) {
+      return res
+        .status(500)
+        .json({ msg: "Cita no encontrada, intente de nuevo." });
+    }
+
     const usuarioId = existingCita.usuarioId;
     const email = await getEmailByUserId(usuarioId);
     const mailOptions = {

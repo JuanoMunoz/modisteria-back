@@ -11,7 +11,8 @@ const {
   getCitasByUsuarioId,
   aceptarCita,
   cancelarCita,
-  cancelCita
+  cancelCita,
+  updateCitaInsumos
 } = require("../controllers/cita.controller");
 const { verifyToken } = require("../utils/verifyToken");
 const { buscarPermiso } = require("../validators/validations.validator");
@@ -44,6 +45,7 @@ router.post(
 );
 
 router.put("/updateSPT/:id", updateSPT);
+router.put("/updateCitaInsumos/:id", updateCitaInsumos);
 
 router.put("/aceptarCita/:id", upload.single("file"), aceptarCita);
 router.put("/cancelarCita/:id", cancelarCita)
