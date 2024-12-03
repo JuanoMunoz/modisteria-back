@@ -371,146 +371,144 @@ exports.sendEmail = async (req, res) => {
       to: email,
       subject: `${asunto}`,
       html: `<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${asunto}</title>
-    <style>
-        /* Estilos generales */
-        body {
-            background-color: #f4f4f4;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
+            <html lang="es">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>${asunto}</title>
+                <style>
+                    /* Estilos generales */
+                    body {
+                        background-color: #f4f4f4;
+                        font-family: Arial, sans-serif;
+                        margin: 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+                    }
 
-        .all, .container {
-            max-width: 500px;
-            width: 100%;
-            margin: 0 auto;
-            border-radius: 8px;
-        }
+                    .all, .container {
+                        max-width: 500px;
+                        width: 100%;
+                        margin: 0 auto;
+                        border-radius: 8px;
+                    }
 
-        .all {
-            background-color: #f4f4f4;
-            padding: 10px;
-        }
+                    .all {
+                        background-color: #f4f4f4;
+                        padding: 10px;
+                    }
 
-        .container {
-            background-color: #ffffff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
+                    .container {
+                        background-color: #ffffff;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                        text-align: center;
+                    }
 
-        /* Cabecera */
-        .header {
-            background-color: #873780;
-            color: white;
-            padding: 20px;
-            border-radius: 8px 8px 0 0;
-        }
+                    /* Cabecera */
+                    .header {
+                        background-color: #873780;
+                        color: white;
+                        padding: 20px;
+                        border-radius: 8px 8px 0 0;
+                    }
 
-        .header h1 {
-            margin: 0;
-            font-size: 30px;
-        }
+                    .header h1 {
+                        margin: 0;
+                        font-size: 30px;
+                    }
 
-        /* Contenido principal */
-        .content {
-            padding: 20px;
-        }
+                    /* Contenido principal */
+                    .content {
+                        padding: 20px;
+                    }
 
-        .content p {
-            font-size: 18px;
-            color: #333;
-            line-height: 1.5;
-            margin: 20px 0;
-        }
+                    .content p {
+                        font-size: 18px;
+                        color: #333;
+                        line-height: 1.5;
+                        margin: 20px 0;
+                    }
 
-        .verification-code {
-            font-size: 32px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            color: #ffffff;
-            background-color: #4CAF50;
-            padding: 10px 20px;
-            border-radius: 5px;
-            display: inline-block;
-            margin: 20px 0;
-        }
+                    .verification-code {
+                        font-size: 32px;
+                        font-weight: bold;
+                        letter-spacing: 2px;
+                        color: #ffffff;
+                        background-color: #4CAF50;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        display: inline-block;
+                        margin: 20px 0;
+                    }
 
-        .btn {
-            display: inline-block;
-            padding: 12px 25px;
-            font-size: 16px;
-            color: white;
-            background-color: #4CAF50;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
+                    .btn {
+                        display: inline-block;
+                        padding: 12px 25px;
+                        font-size: 16px;
+                        color: white;
+                        background-color: #4CAF50;
+                        text-decoration: none;
+                        border-radius: 5px;
+                        margin-top: 20px;
+                    }
 
-        /* Pie de página */
-        .footer {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #555;
-        }
+                    /* Pie de página */
+                    .footer {
+                        margin-top: 20px;
+                        font-size: 12px;
+                        color: #555;
+                    }
 
-        /* Modo oscuro */
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: #121212;
-                color: #ddd;
-            }
+                    /* Modo oscuro */
+                    @media (prefers-color-scheme: dark) {
+                        body {
+                            background-color: #121212;
+                            color: #ddd;
+                        }
 
-            .all {
-                background-color: #121212;
-            }
+                        .all {
+                            background-color: #121212;
+                        }
 
-            .container {
-                background-color: #1e1e1e;
-                box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
-            }
+                        .container {
+                            background-color: #1e1e1e;
+                            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+                        }
 
-            .header {
-                background-color: #333;
-                color: white;
-            }
+                        .header {
+                            background-color: #333;
+                            color: white;
+                        }
 
-            .content p {
-                color: #ddd;
-            }
+                        .content p {
+                            color: #ddd;
+                        }
 
-            .footer {
-                color: #aaa;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="all">
-        <div class="container">
-            <div class="header">
-                <h1>Modisteria D.L</h1>
-            </div>
-            <div class="content">
-                <p>${cuerpo}</p>
-            </div>
-            <div class="footer">
-                <p>Si no solicitaste este correo, por favor ignóralo.</p>
-                <p>&copy; 2024 Modisteria D.L. Todos los derechos reservados.</p>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
-
-
+                        .footer {
+                            color: #aaa;
+                        }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="all">
+                    <div class="container">
+                        <div class="header">
+                            <h1>Modisteria D.L</h1>
+                        </div>
+                        <div class="content">
+                            <p>${cuerpo}</p>
+                        </div>
+                        <div class="footer">
+                            <p>Si no solicitaste este correo, por favor ignóralo.</p>
+                            <p>&copy; 2024 Modisteria D.L. Todos los derechos reservados.</p>
+                        </div>
+                    </div>
+                </div>
+            </body>
+            </html>
 `,
     };
     await transporter.sendMail(emailOpts);
