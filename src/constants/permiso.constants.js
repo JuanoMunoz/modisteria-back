@@ -9,7 +9,6 @@ const PERMISO_ESTADO = 8;
 const PERMISO_INSUMO = 9;
 const PERMISO_PEDIDO = 10;
 const PERMISO_PERMISO = 11;
-const PERMISO_PQRS = 12;
 const PERMISO_ROLES = 13;
 const PERMISO_TALLA = 14;
 
@@ -25,7 +24,6 @@ module.exports = {
     PERMISO_INSUMO,
     PERMISO_PEDIDO,
     PERMISO_PERMISO,
-    PERMISO_PQRS,
     PERMISO_ROLES,
     PERMISO_TALLA
 };

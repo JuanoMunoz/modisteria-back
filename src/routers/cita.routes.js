@@ -9,7 +9,8 @@ const {
   updateSPT,
   getCitasByUsuarioId,
   aceptarCita,
-  cancelarCita
+  cancelarCita,
+  cancelCita
 } = require("../controllers/cita.controller");
 const { verifyToken } = require("../utils/verifyToken");
 const { buscarPermiso } = require("../validators/validations.validator");
@@ -40,6 +41,7 @@ router.put("/updateSPT/:id", updateSPT);
 
 router.put("/aceptarCita/:id", upload.single("file"), aceptarCita);
 router.put("/cancelarCita/:id", cancelarCita)
+router.put("/cancelCita/:id", cancelCita)
 
 router.put(
   "/updateCita/:id",

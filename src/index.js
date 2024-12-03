@@ -23,7 +23,6 @@ app.use("/api/pedidos", require("./routers/pedido.routes"));
 app.use("/api/citas", require("./routers/cita.routes"));
 app.use("/api/catalogoinsumos", require("./routers/catalogoinsumos.routes"));
 app.use("/api/domicilios", require("./routers/domicilio.routes"));
-app.use("/api/pqrs", require("./routers/pqrs.routes"));
 app.use("/api/estados", require("./routers/estado.routes"));
 app.use("/api/ventas", require("./routers/venta.routes"));
 app.use("/api/citainsumos", require("./routers/cita_insumos.routes"));

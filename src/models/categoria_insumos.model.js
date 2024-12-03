@@ -20,7 +20,7 @@ const CategoriaInsumos = sequelize.define('Categoria_Insumos',
     estadoId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-  },
+    },
   },
   {
     tableName: 'categoria_insumos',
@@ -29,12 +29,9 @@ const CategoriaInsumos = sequelize.define('Categoria_Insumos',
 );
 
 //Relacion categoria e insumo
-CategoriaInsumos.hasMany(Insumo, {foreignKey: 'categoriaInsumoId', sourceKey: 'id', as: 'insumos'});
-Insumo.belongsTo(CategoriaInsumos, {foreignKey: 'categoriaInsumoId', targetKey: 'id', as: 'categoria_insumos'});
+CategoriaInsumos.hasMany(Insumo, { foreignKey: 'categoriaInsumoId', sourceKey: 'id', as: 'insumos' });
+Insumo.belongsTo(CategoriaInsumos, { foreignKey: 'categoriaInsumoId', targetKey: 'id', as: 'categoria_insumos' });
 
-//Relacion categoria y catalogo
-CategoriaInsumos.hasMany(Catalogo, {foreignKey: 'categoriaId', sourceKey: 'id', as: 'catalogo'});
-Catalogo.belongsTo(CategoriaInsumos, {foreignKey: 'categoriaId', targetKey: 'id', as: 'categoria_insumos'});
 
 
 module.exports = { CategoriaInsumos };

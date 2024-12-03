@@ -30,9 +30,6 @@ const Insumo = sequelize.define(
     timestamps: false,
   }
 );
-Compras.belongsTo(Insumo, {
-  foreignKey: "insumoId",
-  as: "insumo",
-});
+Compras.belongsTo(Insumo, {foreignKey: "insumoId",as: "insumo",});
 Insumo.hasMany(Compras, { foreignKey: "insumoId", as: "compras" });
 module.exports = { Insumo };
