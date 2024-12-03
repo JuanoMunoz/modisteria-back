@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/connection.js');
-const {Venta} = require('../models/venta.model.js')
+const { Venta } = require('../models/venta.model.js')
 
 const Cita = sequelize.define('Cita',
   {
@@ -24,9 +24,9 @@ const Cita = sequelize.define('Cita',
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    tiempo:{
-      type:DataTypes.TIME,
-      allowNull:true
+    tiempo: {
+      type: DataTypes.TIME,
+      allowNull: true
     },
     estadoId: {
       type: DataTypes.INTEGER,
