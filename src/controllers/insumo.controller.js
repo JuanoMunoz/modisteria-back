@@ -55,7 +55,6 @@ exports.getInsumoById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    console.log(id);
     const insumo = await getInsumoById(id);
     res.status(200).json(insumo);
   } catch (error) {
@@ -67,9 +66,8 @@ exports.createInsumo = async (req, res) => {
   const insumo = req.body;
 
   try {
-    console.log(req.body);
     await createInsumo(insumo);
-    res.status(201).json({ msg: "insumo creado exitosamente" });
+    res.status(201).json({ msg: "Insumo creado exitosamente" });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: error.message });
@@ -81,7 +79,7 @@ exports.updateInsumo = async (req, res) => {
   const insumo = req.body;
   try {
     await updateInsumo(id, insumo);
-    res.status(201).json({ msg: "insumo actualizado exitosamente" });
+    res.status(201).json({ msg: "Insumo actualizado exitosamente" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -148,7 +146,7 @@ exports.statusInsumo = async (req, res) => {
 
   try {
     await statusInsumo(id);
-    res.status(201).json({ msg: "insumo inactivo" });
+    res.status(201).json({ msg: "Insumo inactivo" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -157,7 +155,7 @@ exports.deleteInsumo = async (req, res) => {
   const { id } = req.params;
   try {
     await deleteInsumo(id);
-    res.status(201).json({ msg: "insumo eliminado" });
+    res.status(201).json({ msg: "Insumo eliminado" });
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }

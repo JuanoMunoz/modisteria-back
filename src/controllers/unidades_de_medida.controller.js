@@ -21,7 +21,6 @@ exports.getAllUnidadDeMedidas = async (req, res) => {
 exports.getUnidadDeMedidaById = async (req, res) => {
   const { id } = req.params;
   try {
-    console.log(id);
     const unidadDeMedida = await getUnidadDeMedidaById(id);
     res.status(200).json(unidadDeMedida);
   } catch (error) {
@@ -33,9 +32,8 @@ exports.createUnidadDeMedida = async (req, res) => {
   const unidadDeMedida = req.body;
 
   try {
-    console.log(req.body);
     await createUnidadDeMedida(unidadDeMedida);
-    res.status(201).json({ msg: "unidad de medida creada exitosamente" });
+    res.status(201).json({ msg: "Unidad de medida creada exitosamente" });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: error.message });
@@ -48,7 +46,7 @@ exports.updateUnidadDeMedida = async (req, res) => {
 
   try {
     await updateUnidadDeMedida(id, unidadDeMedida);
-    res.status(201).json({ msg: "unidad de medida actualizada exitosamente" });
+    res.status(201).json({ msg: "Unidad de medida actualizada exitosamente" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -58,7 +56,7 @@ exports.deleteUnidadDeMedida = async (req, res) => {
   const { id } = req.params;
   try {
     await deleteUnidadDeMedida(id);
-    res.status(201).json({ msg: "unidad de medida eliminada" });
+    res.status(201).json({ msg: "Unidad de medida eliminada" });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }

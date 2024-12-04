@@ -23,7 +23,6 @@ exports.getDomicilioById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    console.log(id);
     const domicilio = await getDomicilioById(id);
     res.status(200).json(domicilio);
   } catch (error) {
@@ -79,9 +78,7 @@ exports.createDomicilio = async (req, res) => {
       metodoPago,
       estadoId: 3,
     };
-    const venta = await createVenta(newVenta);
-    console.log("Venta creada:", venta);
-    console.log(req.body);
+    const venta = await createVenta(newVenta);+
     await createDomicilio(domicilio);
     res.status(201).json({ msg: "Domicilio creado exitosamente" });
   } catch (error) {
@@ -107,7 +104,7 @@ exports.statusDomicilio = async (req, res) => {
 
   try {
     await statusDomicilio(id);
-    res.status(201).json({ msg: "domicilio inactivo" });
+    res.status(201).json({ msg: "Domicilio inactivo" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -117,7 +114,7 @@ exports.deleteDomicilio = async (req, res) => {
 
   try {
     await deleteDomicilio(id);
-    res.status(201).json({ msg: "domicilio eliminado" });
+    res.status(201).json({ msg: "Domicilio eliminado" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

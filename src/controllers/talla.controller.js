@@ -20,7 +20,6 @@ exports.getTallaById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    console.log(id);
     const talla = await getTallaById(id);
     res.status(200).json(talla);
   } catch (error) {
@@ -32,7 +31,6 @@ exports.createTalla = async (req, res) => {
   const talla = req.body;
 
   try {
-    console.log(req.body);
     await createTalla(talla);
     res.status(201).json({ msg: "Talla creada exitosamente" });
   } catch (error) {
