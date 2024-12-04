@@ -25,20 +25,23 @@ exports.getCompraById = async (req, res) => {
   }
 };
 
+
 exports.createCompra = async (req, res) => {
   const { compras } = req.body;
+
   try {
     if (!Array.isArray(compras) || compras.length === 0) {
-      res.status(400).json({ msg: `"Se debe proporcionar al menos una compra."` });
-
+      throw new Error("Se debe proporcionar al menos una compra.");
     }
+    let valorTotalCompra = 0;
     const comprasRegistradas = [];
+
     for (const compraData of compras) {
       const { cantidad, valorTotal, insumoId, proveedorId } = compraData;
 
       const insumo = await Insumo.findByPk(insumoId);
       if (!insumo) {
-        res.status(400).json({ msg: `El insumo con el ID ${insumoId} no existe.` });
+        throw new Error(`El insumo con el ID ${insumoId} no existe.`);
       }
 
       insumo.cantidad += cantidad;
@@ -52,16 +55,18 @@ exports.createCompra = async (req, res) => {
         fecha: new Date(),
       });
 
+      valorTotalCompra += valorTotal;
+
       comprasRegistradas.push(compra);
     }
 
     res.status(201).json({
       msg: "Compras registradas exitosamente",
       compras: comprasRegistradas,
+      valorTotalCompra,
     });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: error.message });
   }
 };
-
