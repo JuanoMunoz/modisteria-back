@@ -46,7 +46,7 @@ router.put(
 
 router.delete(
   "/deleteCategoriaInsumo/:id",
-  [verifyToken, buscarPermiso("Categoría Insumo")],
+
   deleteCategoriaInsumo
 );
 

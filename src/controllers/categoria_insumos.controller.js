@@ -64,7 +64,7 @@ exports.statusCategoriaInsumo = async (req, res) => {
   }
 };
 exports.deleteCategoriaInsumo = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params; 
   try {
     await deleteCategoriaInsumo(id);
     res.status(201).json({ msg: "Categoría eliminada" });

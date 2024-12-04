@@ -35,10 +35,7 @@ exports.deleteCategoriaInsumo = async (id) => {
     throw new Error("Categoría no encontrada");
   }
   const isCategoriaBeingUsedOnInsumos = await Insumo.findOne({
-    where: { categoriaId: id },
-  });
-  const isCategoriaBeingUsedOnCatalogo = await Catalogo.findOne({
-    where: { categoriaId: id },
+    where: { categoriaInsumoId: id }, 
   });
   if (isCategoriaBeingUsedOnInsumos) {
     throw new Error(
@@ -46,14 +43,9 @@ exports.deleteCategoriaInsumo = async (id) => {
     );
   }
 
-  if (isCategoriaBeingUsedOnCatalogo) {
-    throw new Error(
-      "¡No se puede eliminar la categoría porque está asociada a una prenda del catálogo!"
-    );
-  }
   if (categoria.estadoId === 2) {
     return await CategoriaInsumos.destroy({ where: { id } });
   } else {
-    throw new Error("No se puede eliminar la categoría porque está activa");
+    throw new Error("Para eliminar la categoría debes inactivarla primero.");
   }
 };
