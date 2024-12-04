@@ -28,25 +28,25 @@ const datosProcesados = async (ventas) => {
     }
 
     const pedidos = await Promise.all(ventas.map(async (item) => {
-        const catalogoId = item['cotizacion.cotizacion_pedidos.pedido.catalogo.id'];
+        const catalogoId = item['pedido.catalogo.id'];
 
         const insumos = await getAllCatInsByCatalogoID(catalogoId);
 
         return {
-            pedidoId: item['cotizacion.cotizacion_pedidos.pedidoId'],
+            pedidoId: item['pedidoId'],
             catalogoId: catalogoId,
-            producto: item['cotizacion.cotizacion_pedidos.pedido.catalogo.producto'],
-            talla: item['cotizacion.cotizacion_pedidos.pedido.talla'],
-            cantidad: item['cotizacion.cotizacion_pedidos.pedido.cantidad'],
-            precio: item['cotizacion.cotizacion_pedidos.pedido.catalogo.precio'],
+            producto: item['pedido.catalogo.producto'],
+            talla: item['pedido.talla'],
+            cantidad: item['pedido.cantidad'],
+            precio: item['pedido.catalogo.precio'],
             insumos: insumos
         };
     }));
 
     const fichaTecnica = {
-        metodoPago: ventas[0]['cotizacion.metodoPago'],
-        nombrePersona: ventas[0]['cotizacion.nombrePersona'],
-        valorFinal: ventas[0]['cotizacion.valorFinal'],
+        metodoPago: ventas[0]['metodoPago'],
+        nombrePersona: ventas[0]['nombrePersona'],
+        valorFinal: ventas[0]['valorFinal'],
         pedidos: pedidos
     };
 
