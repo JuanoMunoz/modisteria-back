@@ -8,18 +8,6 @@ const Compras = sequelize.define(
             type: DataTypes.DATE,
             allowNull: false,
         },
-        cantidad: {
-            type: DataTypes.FLOAT,
-            allowNull: false,
-        },
-        valorTotal: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-        insumoId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
         proveedorId: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -30,4 +18,4 @@ const Compras = sequelize.define(
     }
 );
 
-module.exports = { Compras };
+module.exports = { Compras }; 

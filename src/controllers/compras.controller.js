@@ -3,7 +3,8 @@ const {
   getCompraById,
   createCompra,
 } = require("../repositories/compras.repository");
-const { Insumo, Compra } = require("../models");
+const { createCompraInsumo } = require("../repositories/compra_insumo.repository")
+const { Insumo, Compras, CompraInsumos } = require("../models");
 exports.getAllCompras = async (req, res) => {
   try {
     const compras = await getAllCompras();
@@ -37,29 +38,28 @@ exports.createCompra = async (req, res) => {
     const comprasRegistradas = [];
 
     for (const compraData of compras) {
-      const { cantidad, valorTotal, insumoId, proveedorId } = compraData;
+      const { cantidad, valor, insumoId, proveedorId } = compraData;
 
       const insumo = await Insumo.findByPk(insumoId);
       if (!insumo) {
         throw new Error(`El insumo con el ID ${insumoId} no existe.`);
       }
-
       insumo.cantidad += cantidad;
       await insumo.save();
-
       const compra = await createCompra({
-        cantidad,
-        valorTotal,
-        insumoId,
-        proveedorId,
         fecha: new Date(),
+        proveedorId,
       });
-
-      valorTotalCompra += valorTotal;
-
+      const compraId = compra.id
+      const compraInsumo = await createCompraInsumo({
+        compra_id: compraId,
+        insumo_id: insumoId,
+        cantidad,
+        precio: valor
+      })
+      valorTotalCompra += valor;
       comprasRegistradas.push(compra);
     }
-
     res.status(201).json({
       msg: "Compras registradas exitosamente",
       compras: comprasRegistradas,

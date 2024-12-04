@@ -13,7 +13,7 @@ const Insumo = sequelize.define(
       type: DataTypes.FLOAT,
       allowNull: false,
     },
-    categoriaInsumoId: { 
+    categoriaInsumoId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -30,6 +30,5 @@ const Insumo = sequelize.define(
     timestamps: false,
   }
 );
-Compras.belongsTo(Insumo, {foreignKey: "insumoId",as: "insumo",});
-Insumo.hasMany(Compras, { foreignKey: "insumoId", as: "compras" });
+
 module.exports = { Insumo };
