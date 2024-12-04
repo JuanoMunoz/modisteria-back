@@ -64,9 +64,15 @@ exports.getInsumoById = async (req, res) => {
 };
 
 exports.createInsumo = async (req, res) => {
-  const insumo = req.body;
-
+  const { nombre, categoriaInsumoId, unidadMedidaId, estadoId } = req.body;
   try {
+    const insumo = {
+      nombre,
+      cantidad: 0,
+      categoriaInsumoId,
+      unidadMedidaId,
+      estadoId
+    }
     console.log(req.body);
     await createInsumo(insumo);
     res.status(201).json({ msg: "insumo creado exitosamente" });

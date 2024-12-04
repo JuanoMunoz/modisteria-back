@@ -59,7 +59,7 @@ router.put("/cantidadInsumos", cantidadInsumos);
 
 router.post(
   "/createInsumo",
-  [verifyToken, buscarPermiso("Insumos")],
+ [verifyToken, buscarPermiso("Insumos")],
   createInsumo
 );
 
