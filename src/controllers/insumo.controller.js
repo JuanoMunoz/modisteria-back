@@ -63,11 +63,11 @@ exports.getInsumoById = async (req, res) => {
 };
 
 exports.createInsumo = async (req, res) => {
-  const { nombre, categoriaInsumoId, unidadMedidaId, estadoId } = req.body;
+  const { nombre, categoriaInsumoId, unidadMedidaId, estadoId, cantidad } = req.body;
   try {
     const insumo = {
       nombre,
-      cantidad: 0,
+      cantidad,
       categoriaInsumoId,
       unidadMedidaId,
       estadoId
