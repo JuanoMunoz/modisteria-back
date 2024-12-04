@@ -1,4 +1,12 @@
-const { Catalogo, Categoria, Talla, Insumo, Imagen } = require("../models");
+const {
+  Catalogo,
+  Categoria,
+  Talla,
+  Insumo,
+  Imagen,
+  UnidadesDeMedida,
+  CategoriaPrendas,
+} = require("../models");
 const { Op } = require("sequelize");
 
 exports.getAllCatalogo = async (offset, limit, priceLimit, category) => {
@@ -24,8 +32,21 @@ exports.getAllCatalogoDash = async () => {
   return await Catalogo.findAll({
     include: [
       { model: Talla },
-      { model: Insumo, as: "insumos" },
+      {
+        model: Insumo,
+        as: "insumos",
+        include: {
+          model: UnidadesDeMedida,
+          as: "unidades_de_medida",
+          attributes: ["nombre"],
+        },
+      },
       { model: Imagen },
+      {
+        model: CategoriaPrendas,
+        as: "categoria_prendas",
+        attributes: ["molde"],
+      },
     ],
   });
 };
