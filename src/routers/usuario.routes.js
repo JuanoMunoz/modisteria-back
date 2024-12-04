@@ -22,11 +22,7 @@ const { verifyToken } = require("../utils/verifyToken");
 const { buscarPermiso } = require("../validators/validations.validator");
 const router = Router();
 
-router.get(
-  "/getAllUsers",
-  [verifyToken, buscarPermiso("Usuarios")],
-  getAllUsers
-);
+router.get("/getAllUsers", [verifyToken], getAllUsers);
 
 router.get(
   "/getUserById/:id",

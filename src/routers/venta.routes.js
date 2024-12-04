@@ -11,11 +11,7 @@ const { upload } = require("../utils/image");
 const { buscarPermiso } = require("../validators/validations.validator");
 const router = Router();
 
-router.get(
-  "/getAllVentas",
-  [verifyToken, buscarPermiso("Ventas")],
-  getAllVentas
-);
+router.get("/getAllVentas", [verifyToken], getAllVentas);
 
 router.get(
   "/getVentaById/:id",

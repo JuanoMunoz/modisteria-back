@@ -10,6 +10,7 @@ exports.generateToken = (user) => {
     direccion: user.direccion,
     roleId: user.roleId,
     role: user.role,
+    permisos: user.role.Permisos.map((permiso) => permiso.id),
   };
   const token = jwt.sign({ payload }, process.env.KEY_JWT, {
     expiresIn: "20h",

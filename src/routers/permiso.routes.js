@@ -11,11 +11,7 @@ const { verifyToken } = require("../utils/verifyToken");
 const { buscarPermiso } = require("../validators/validations.validator");
 const router = Router();
 
-router.get(
-  "/getAllPermisos",
-  [verifyToken, buscarPermiso("Permisos")],
-  getAllPermisos
-);
+router.get("/getAllPermisos", [verifyToken], getAllPermisos);
 
 router.get(
   "/getPermisoById/:id",

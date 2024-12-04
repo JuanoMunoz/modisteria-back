@@ -13,11 +13,7 @@ const { verifyToken } = require("../utils/verifyToken");
 const { buscarPermiso } = require("../validators/validations.validator");
 const router = Router();
 
-router.get(
-  "/getAllDomicilios",
-  [verifyToken, buscarPermiso("Domicilios")],
-  getAllDomicilios
-);
+router.get("/getAllDomicilios", getAllDomicilios);
 
 router.get(
   "/getDomicilioById/:id",

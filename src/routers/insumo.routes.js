@@ -19,11 +19,7 @@ const {
 
 const router = Router();
 
-router.get(
-  "/getAllInsumos",
-  [verifyToken, buscarPermiso("Insumos")],
-  getAllInsumos
-);
+router.get("/getAllInsumos", [verifyToken], getAllInsumos);
 
 router.get(
   "/getInsumoById/:id",
@@ -59,7 +55,7 @@ router.put("/cantidadInsumos", cantidadInsumos);
 
 router.post(
   "/createInsumo",
- [verifyToken, buscarPermiso("Insumos")],
+  [verifyToken, buscarPermiso("Insumos")],
   createInsumo
 );
 

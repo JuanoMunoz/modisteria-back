@@ -12,7 +12,7 @@ const {
   aceptarCita,
   cancelarCita,
   cancelCita,
-  updateCitaInsumos
+  updateCitaInsumos,
 } = require("../controllers/cita.controller");
 const { verifyToken } = require("../utils/verifyToken");
 const { buscarPermiso } = require("../validators/validations.validator");
@@ -20,7 +20,7 @@ const { upload } = require("../utils/image.js");
 
 const router = Router();
 
-router.get("/getAllCitas", [verifyToken, buscarPermiso("Citas")], getAllCitas);
+router.get("/getAllCitas", getAllCitas);
 
 router.get(
   "/getCitaById/:id",
@@ -48,8 +48,8 @@ router.put("/updateSPT/:id", updateSPT);
 router.put("/updateCitaInsumos/:id", updateCitaInsumos);
 
 router.put("/aceptarCita/:id", upload.single("file"), aceptarCita);
-router.put("/cancelarCita/:id", cancelarCita)
-router.put("/cancelCita/:id", cancelCita)
+router.put("/cancelarCita/:id", cancelarCita);
+router.put("/cancelCita/:id", cancelCita);
 
 router.put(
   "/updateCita/:id",

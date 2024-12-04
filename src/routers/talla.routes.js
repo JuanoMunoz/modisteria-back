@@ -11,11 +11,7 @@ const { verifyToken } = require("../utils/verifyToken");
 const { buscarPermiso } = require("../validators/validations.validator");
 const router = Router();
 
-router.get(
-  "/getAllTallas",
-  [verifyToken, buscarPermiso("Tallas")],
-  getAllTallas
-);
+router.get("/getAllTallas", [verifyToken], getAllTallas);
 
 router.get(
   "/getTallaById/:id",
@@ -25,7 +21,7 @@ router.get(
 
 router.post(
   "/createTalla",
-   [verifyToken, buscarPermiso("Tallas")], 
+  [verifyToken, buscarPermiso("Tallas")],
   createTalla
 );
 
