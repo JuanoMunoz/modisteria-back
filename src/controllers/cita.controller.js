@@ -40,7 +40,6 @@ exports.getAllCitas = async (req, res) => {
 exports.getCitaById = async (req, res) => {
   const { id } = req.params;
   try {
-    console.log(id);
     const cita = await getCitaById(id);
     res.status(200).json(cita);
   } catch (error) {
@@ -61,7 +60,6 @@ exports.getCitasByUsuarioId = async (req, res) => {
 };
 
 exports.createCita = async (req, res) => {
-  console.log(req.body);
   const { fecha, objetivo, usuarioId, estadoId } = req.body;
   
   try {
@@ -119,24 +117,24 @@ exports.createCita = async (req, res) => {
 
     const newCita = await createCita(newCitaData);
 
-    if (citaEstadoId === 11) {
-      const nuevaVenta = await createVenta({
-        fecha: new Date(),
-        citaId: newCita.id, 
-        nombrePersona: req.body.nombrePersona,
-        valorFinal: 0,
-        valorPrendas: 0,
-        valorDomicilio: 0,
-        metodoPago: "transferencia",
-        estadoId: 3, 
-      });
+    // if (citaEstadoId === 11) {
+    //   const nuevaVenta = await createVenta({
+    //     fecha: new Date(),
+    //     citaId: newCita.id, 
+    //     nombrePersona: req.body.nombrePersona,
+    //     valorFinal: 0,
+    //     valorPrendas: 0,
+    //     valorDomicilio: 0,
+    //     metodoPago: "transferencia",
+    //     estadoId: 3, 
+    //   });
 
-      return res.status(201).json({
-        msg: "Cita creada y venta generada debido al estadoId 11.",
-        cita: newCita,
-        venta: nuevaVenta,
-      });
-    }
+    //   return res.status(201).json({
+    //     msg: "Cita creada y venta generada debido al estadoId 11.",
+    //     cita: newCita,
+    //     venta: nuevaVenta,
+    //   });
+    // }
 
     res.status(201).json({
       msg: "Cita creada exitosamente.",
@@ -149,7 +147,6 @@ exports.createCita = async (req, res) => {
 };
 
 exports.crearCita = async (req, res) => {
-  console.log(req.body);
   const { fecha, objetivo, usuarioId, precio, tiempo, datosInsumos, estadoId } = req.body;
   try {
     const fechaActual = new Date();
@@ -409,7 +406,6 @@ exports.updateSPT = async (req, res) => {
             </html>
             `,
     };
-    console.log(email);
     await transporter.sendMail(mailOptions);
 
     const updatedCita = {
@@ -510,7 +506,7 @@ exports.cancelCita = async (req, res) => {
 
     if ( cita.estadoId === 9 || cita.estadoId === 10 || cita.estadoId === 11) {
       await statusCita(id, 12);
-      return res.status(200).json({ msg: "Cita cancelada." });
+      return res.status(200).json({ msg: "Cita cancelada" });
     }
     return res.status(400).json({
       msg: "No se puede cancelar una cita que no está aprobada o aceptada.",
@@ -523,7 +519,6 @@ exports.cancelCita = async (req, res) => {
 
 
 exports.updateCita = async (req, res) => {
-  console.log(req.body);
   const { id } = req.params;
   const { estadoId, tiempo, precio } = req.body;
   try {

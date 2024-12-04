@@ -27,7 +27,6 @@ exports.getAllCategoriaPrendas = async (req, res) => {
 exports.getCategoriaPrendaById = async (req, res) => {
   const { id } = req.params;
   try {
-    console.log(id);
     const categoria = await getCategoriaPrendaById(id);
     res.status(200).json(categoria);
   } catch (error) {
@@ -59,29 +58,23 @@ exports.updateCategoriaPrenda = async (req, res) => {
   let moldeUrl = null;
 
   try {
-    // Obtener la categoría existente
     const categoriaExistente = await getCategoriaPrendaById(id);
 
     if (!categoriaExistente) {
       return res.status(404).json({ msg: "Categoría no encontrada" });
     }
 
-    // Si se sube un nuevo archivo, reemplazarlo
     if (req.fileUrl) {
-      // Eliminar el archivo anterior de Cloudinary si existe
       if (categoriaExistente.molde) {
         const publicId = getPublicIdFromUrl(categoriaExistente.molde);
         await cloudinary.uploader.destroy(publicId, { resource_type: "raw" });
       }
 
-      // La URL del archivo PDF está en req.fileUrl gracias a gestionPDF
-      moldeUrl = req.fileUrl; // Aquí asignamos la URL del archivo subido
+      moldeUrl = req.fileUrl; 
     } else {
-      // Mantener el archivo existente si no se sube uno nuevo
       moldeUrl = categoriaExistente.molde;
     }
 
-    // Actualizar la categoría
     const updatedCategoria = await updateCategoriaPrenda(id, {
       nombre: nombre || categoriaExistente.nombre,
       descripcion: descripcion || categoriaExistente.descripcion,
@@ -101,7 +94,7 @@ exports.statusCategoriaPrenda = async (req, res) => {
   const { id } = req.params;
   try {
     await statusCategoriaPrenda(id);
-    res.status(201).json({ msg: "categoria inactiva" });
+    res.status(201).json({ msg: "Categoría inactiva" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -111,29 +104,8 @@ exports.deleteCategoriaPrenda = async (req, res) => {
   const { id } = req.params;
   try {
     await deleteCategoriaPrenda(id);
-    res.status(201).json({ msg: "categoria eliminada" });
+    res.status(201).json({ msg: "Categoría eliminada" });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
 };
-
-// exports.descargarMolde = async (req, res) => {
-//   const { id } = req.params;
-//   const categoria = await getCategoriaPrendaById(id);
-//   const publicId = await getPublicIdFromUrl(categoria.molde);
-
-//   try {
-//     const result = await cloudinary.api.resource(publicId, { resource_type: 'raw' });
-
-//     // Obtener el archivo binario
-//     const fileBuffer = await fetch(result.secure_url);
-//     const buffer = await fileBuffer.buffer();
-
-//     res.setHeader('Content-Disposition', 'attachment; filename=molde.pdf');
-//     res.setHeader('Content-Type', 'application/pdf');
-//     res.send(buffer);
-//   } catch (error) {
-//     console.error("Error al descargar el archivo:", error);
-//     res.status(500).json({ error: "Error al descargar el archivo" });
-//   }
-// };

@@ -20,7 +20,6 @@ exports.getVentaById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    console.log(id);
     const venta = await getVentaById(id);
     res.status(200).json(venta);
   } catch (error) {
@@ -32,7 +31,6 @@ exports.getVentaByUsuarioId = async (req, res) => {
   const { id } = req.params;
 
   try {
-    console.log(id);
     const venta = await getVentaByUsuarioId(id);
     res.status(200).json(venta);
   } catch (error) {
@@ -44,12 +42,9 @@ exports.createVenta = async (req, res) => {
   const { valorDomicilio, nombrePersona } = req.body;
 
   try {
-    console.log("Iniciando proceso de creación de venta...");
-
     let imagen;
     try {
       imagen = await gestionImagen(req);
-      console.log("Imagen gestionada:", imagen);
     } catch (error) {
       console.error("Error gestionando imagen:", error);
       return res.status(400).json({ msg: "Se requiere una imagen para el método de pago transferencia" });
@@ -71,7 +66,6 @@ exports.createVenta = async (req, res) => {
     };
 
     const venta = await createVenta(newVenta);
-    console.log("Venta creada:", venta);
 
     const usuario = req.id;
     const pedidos = await getPedidoByUsuarioyEstado(usuario);
@@ -79,8 +73,6 @@ exports.createVenta = async (req, res) => {
     if (!pedidos || pedidos.length === 0) {
       return res.status(400).json({ msg: "No hay pedidos disponibles para el usuario" });
     }
-
-    console.log("Pedidos obtenidos:", pedidos);
 
     let total = 0;
 
@@ -99,7 +91,6 @@ exports.createVenta = async (req, res) => {
           }
         })
       );
-      console.log("Pedidos actualizados:", proceso);
     } catch (error) {
       console.error("Error en el proceso de actualización de pedidos:", error);
       return res.status(500).json({ msg: "Error actualizando los pedidos" });
@@ -112,12 +103,10 @@ exports.createVenta = async (req, res) => {
     };
 
     const ventaActualizada = await updateVenta(venta.id, cambio);
-    console.log("Venta actualizada:", ventaActualizada);
 
     if (valorDomicilio > 0) {
       try {
         const crearDomicilio = await createDomicilioVenta(venta.id);
-        console.log("Domicilio creado:", crearDomicilio);
       } catch (error) {
         console.error("Error creando domicilio:", error);
         return res.status(500).json({ msg: "Error al crear el domicilio" });
@@ -145,14 +134,11 @@ exports.confirmarVenta = async (req, res) => {
         .json({ msg: "No hay pedidos asociados a esta venta" });
     }
     const usuarioId = pedidos[0].usuarioId;
-    console.log("Usuario asociado a la venta:", usuarioId);
-    const email = await getEmailByUserId(usuarioId)
+   const email = await getEmailByUserId(usuarioId)
 
     // Verificar insumos
     const catalogoId = pedidos[0].catalogoId;
     const cantidad = pedidos[0].cantidad;
-
-    console.log("Verificando insumos asociados al catálogo:", catalogoId);
 
     // Obtener los insumos necesarios para el catálogo
     const insumosCatalogo = await CatalogoInsumos.findAll({
@@ -191,8 +177,6 @@ exports.confirmarVenta = async (req, res) => {
         detalles: insumosInsuficientes,
       });
     }
-
-    console.log("Insumos verificados correctamente. Continuando con la venta...");
 
     // Actualizar el estado de cada pedido
     await Promise.all(

@@ -35,7 +35,6 @@ exports.getAllUsers = async (req, res) => {
 exports.getUserById = async (req, res) => {
   const { id } = req.params;
   try {
-    console.log(id);
     const user = await getUserById(id);
     res.status(200).json(user);
   } catch (error) {
@@ -45,7 +44,6 @@ exports.getUserById = async (req, res) => {
 
 exports.createUser = async (req, res) => {
   const { email } = req.body;
-  console.log(email);
   const user = await getUserByEmail(email);
   if (user) {
     return res.status(400).json({
@@ -242,7 +240,6 @@ exports.createUsuario = async (req, res) => {
       direccion: direccion,
       estadoId: estadoId,
     };
-    console.log();
     await createUser(newUser);
     res.status(201).json({ msg: "Usuario creado exitosamente" });
   } catch (error) {
@@ -314,7 +311,7 @@ exports.updateInfo = async (req, res) => {
     await updateUser(id, newInfo);
     const user = await getUserById(id);
     const token = generateToken(user);
-    res.status(201).json({ msg: "usuario actualizado exitosamente", token });
+    res.status(201).json({ msg: "Usuario actualizado exitosamente", token });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -324,7 +321,7 @@ exports.updateUser = async (req, res) => {
   try {
     const user = req.body;
     await updateUser(id, user);
-    res.status(201).json({ msg: "usuario actualizado exitosamente" });
+    res.status(201).json({ msg: "Usuario actualizado exitosamente" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -334,7 +331,7 @@ exports.statusUser = async (req, res) => {
   const { id } = req.params;
   try {
     await statusUser(id);
-    res.status(201).json({ msg: "usuario inactivo" });
+    res.status(201).json({ msg: "Usuario inactivo" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -521,13 +518,11 @@ exports.sendEmail = async (req, res) => {
 
 exports.forgotPassword = async (req, res) => {
   const { email } = req.body;
-  console.log("Email recibido:", email);
   function codigoRandom() {
     return Math.floor(100000 + Math.random() * 900000).toString();
   }
   try {
     const user = await getUserByEmail(email);
-    console.log("Usuario encontrado:", user);
 
     if (!user) {
       return res.status(400).send("Correo no encontrado");

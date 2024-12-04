@@ -25,7 +25,6 @@ exports.getRoleById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    console.log(id);
     const role = await getRoleById(id);
     res.status(200).json(role);
   } catch (error) {
@@ -35,8 +34,6 @@ exports.getRoleById = async (req, res) => {
 
 exports.createRole = async (req, res) => {
   const { nombre, permisosId, estadoId } = req.body;
-  console.log("nombre", nombre);
-  console.log("permisos", permisosId);
 
   try {
     const newRole = {
@@ -48,7 +45,7 @@ exports.createRole = async (req, res) => {
       where: { id: permisosId },
     });
     await rolCreado.addPermisos(permisosInstancias);
-    res.status(201).json({ msg: "rol creado exitosamente" });
+    res.status(201).json({ msg: "Rol creado exitosamente" });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: error.message });

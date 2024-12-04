@@ -21,7 +21,6 @@ exports.getPedidoById = async (req, res) => {
   const catalogoId = req.query.catalogoId;
   const tallaId = req.query.tallaId;
   try {
-    console.log(id);
     const Pedido = await getPedidoById(id, catalogoId, tallaId);
     res.status(200).json(Pedido);
   } catch (error) {
@@ -46,7 +45,6 @@ exports.createPedido = async (req, res) => {
     };
 
     const pedido = await createPedido(newPedido);
-    console.log(pedido);
     res.status(201).json({ msg: "Pedido creado exitosamente" });
   } catch (error) {
     console.log(error);

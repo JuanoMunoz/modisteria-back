@@ -36,7 +36,6 @@ exports.createAndDiscount = async (req, res) => {
 
 exports.endCitaCreateVenta = async (req, res) => {
   const { citaId } = req.body;
-  console.log(citaId);
   try {
     const cita = await getCitaById(citaId);
 
