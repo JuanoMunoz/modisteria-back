@@ -20,7 +20,6 @@ exports.getEstadoById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    console.log(id);
     const estado = await getEstadoById(id);
     res.status(200).json(estado);
   } catch (error) {
@@ -32,9 +31,8 @@ exports.createEstado = async (req, res) => {
   const estado = req.body;
 
   try {
-    console.log(req.body);
     await createEstado(estado);
-    res.status(201).json({ msg: "estado creado exitosamente" });
+    res.status(201).json({ msg: "Estado creado exitosamente" });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: error.message });
@@ -46,7 +44,7 @@ exports.updateEstado = async (req, res) => {
   const estado = req.body;
   try {
     await updateEstado(id, estado);
-    res.status(201).json({ msg: "estado actualizado exitosamente" });
+    res.status(201).json({ msg: "Estado actualizado exitosamente" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -57,7 +55,7 @@ exports.statusEstado = async (req, res) => {
 
   try {
     await statusEstado(id);
-    res.status(201).json({ msg: "estado inactivo" });
+    res.status(201).json({ msg: "Estado inactivo" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -67,7 +65,7 @@ exports.deleteEstado = async (req, res) => {
 
   try {
     await deleteEstado(id);
-    res.status(201).json({ msg: "estado eliminado" });
+    res.status(201).json({ msg: "Estado eliminado" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

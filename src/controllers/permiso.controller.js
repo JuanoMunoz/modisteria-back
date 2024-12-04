@@ -20,7 +20,6 @@ exports.getPermisoById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    console.log(id);
     const permiso = await getPermisoById(id);
     res.status(200).json(permiso);
   } catch (error) {
@@ -32,9 +31,8 @@ exports.createPermiso = async (req, res) => {
   const permiso = req.body;
 
   try {
-    console.log(req.body);
     await createPermiso(permiso);
-    res.status(201).json({ msg: "permiso creado exitosamente" });
+    res.status(201).json({ msg: "Permiso creado exitosamente" });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: error.message });
@@ -47,7 +45,7 @@ exports.updatePermiso = async (req, res) => {
 
   try {
     await updatePermiso(id, permiso);
-    res.status(201).json({ msg: "permiso actualizado exitosamente" });
+    res.status(201).json({ msg: "Permiso actualizado exitosamente" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -58,7 +56,7 @@ exports.statusPermiso = async (req, res) => {
 
   try {
     await statusPermiso(id);
-    res.status(201).json({ msg: "permiso inactivo" });
+    res.status(201).json({ msg: "Permiso inactivo" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

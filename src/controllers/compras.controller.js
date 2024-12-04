@@ -18,7 +18,6 @@ exports.getCompraById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    console.log(id);
     const compra = await getCompraById(id);
     res.status(200).json(compra);
   } catch (error) {

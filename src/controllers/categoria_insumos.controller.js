@@ -23,7 +23,6 @@ exports.getAllCategoriaInsumos = async (req, res) => {
 exports.getCategoriaInsumoById = async (req, res) => {
   const { id } = req.params;
   try {
-    console.log(id);
     const categoria = await getCategoriaInsumoById(id);
     res.status(200).json(categoria);
   } catch (error) {
@@ -35,9 +34,8 @@ exports.createCategoriaInsumo = async (req, res) => {
   const categoria = req.body;
 
   try {
-    console.log(req.body);
     await createCategoriaInsumo(categoria);
-    res.status(201).json({ msg: "categoria creada exitosamente" });
+    res.status(201).json({ msg: "Categoría creada exitosamente" });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: error.message });
@@ -50,7 +48,7 @@ exports.updateCategoriaInsumo = async (req, res) => {
 
   try {
     await updateCategoriaInsumo(id, categoria);
-    res.status(201).json({ msg: "categoria actualizada exitosamente" });
+    res.status(201).json({ msg: "Categoría actualizada exitosamente" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -60,7 +58,7 @@ exports.statusCategoriaInsumo = async (req, res) => {
   const { id } = req.params;
   try {
     await statusCategoriaInsumo(id);
-    res.status(201).json({ msg: "categoria inactiva" });
+    res.status(201).json({ msg: "Categoría inactiva" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -69,7 +67,7 @@ exports.deleteCategoriaInsumo = async (req, res) => {
   const { id } = req.params;
   try {
     await deleteCategoriaInsumo(id);
-    res.status(201).json({ msg: "categoria eliminada" });
+    res.status(201).json({ msg: "Categoría eliminada" });
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }

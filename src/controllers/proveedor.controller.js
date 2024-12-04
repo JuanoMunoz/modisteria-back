@@ -14,7 +14,6 @@ exports.getProveedorById = async (req, res) => {
     const { id } = req.params;
 
     try {
-        console.log(id);
         const proveedor = await getProveedorById(id);
         res.status(200).json(proveedor);
     } catch (error) {
@@ -26,7 +25,6 @@ exports.createProveedor = async (req, res) => {
     const proveedor = req.body;
 
     try {
-        console.log(req.body);
         await createProveedor(proveedor);
         res.status(201).json({ msg: "Proveedor creado exitosamente" });
     } catch (error) {
@@ -40,7 +38,7 @@ exports.updateProveedor = async (req, res) => {
     const estado = req.body;
     try {
         await updateProveedor(id, estado);
-        res.status(201).json({ msg: "proveedor actualizado exitosamente" });
+        res.status(201).json({ msg: "Proveedor actualizado exitosamente" });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
@@ -51,7 +49,7 @@ exports.deleteProveedor = async (req, res) => {
 
     try {
         await deleteProveedor(id);
-        res.status(201).json({ msg: "proveedor eliminado" });
+        res.status(201).json({ msg: "Proveedor eliminado" });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }

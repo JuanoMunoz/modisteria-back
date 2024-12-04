@@ -46,7 +46,6 @@ exports.getAllCatalogoDashboard = async (req, res) => {
 exports.getCatalogoById = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(id);
     const catalogo = await getCatalogoById(id);
     res.status(200).json(catalogo);
   } catch (error) {
@@ -169,7 +168,6 @@ exports.updateCatalogo = async (req, res) => {
     }
 
     const [_, newCatalogo] = await updateCatalogo(id, updatedCatalogo);
-    console.log(newCatalogo);
 
     if (tallas) {
       const tallasInstancias = await Talla.findAll({
@@ -193,7 +191,7 @@ exports.statusCatalogo = async (req, res) => {
   try {
     const { id } = req.params;
     await statusCatalogo(id);
-    res.status(201).json({ msg: "catalogo inactivo" });
+    res.status(201).json({ msg: "Catálogo inactivo" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -202,7 +200,7 @@ exports.deleteCatalogo = async (req, res) => {
   try {
     const { id } = req.params;
     await deleteCatalogo(id);
-    res.status(201).json({ msg: "catalogo eliminado" });
+    res.status(201).json({ msg: "Catálogo eliminado" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
