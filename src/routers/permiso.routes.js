@@ -21,7 +21,7 @@ router.get(
 
 router.post(
   "/createPermiso",
-  [verifyToken, buscarPermiso("Permisos")],
+  // [verifyToken, buscarPermiso("Permisos")],
   createPermiso
 );
 

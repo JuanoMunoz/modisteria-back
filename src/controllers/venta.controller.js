@@ -193,7 +193,7 @@ exports.confirmarVenta = async (req, res) => {
     const mailOptions = {
       from: "modistadonaluz@gmail.com",
       to: email,
-      subject: "Ventada confirmada",
+      subject: "Venta confirmada",
       html: `<!DOCTYPE html>
             <html lang="es">
             <head>
