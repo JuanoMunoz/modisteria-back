@@ -168,6 +168,19 @@ exports.crearCita = async (req, res) => {
     };
     const newCita = await createCita(newCitaData);
     const citaId = newCita.id;
+
+    const nuevaVenta = await createVenta({
+      fecha: new Date(),
+      citaId: citaId,
+      imagen: null,
+      nombrePersona: userId,
+      valorFinal: 0,
+      valorPrendas: 0,
+      valorDomicilio: 0,
+      metodoPago: "transferencia",
+      estadoId: 3,
+    });
+
     for (const dataInsumos of datosInsumos) {
       const { insumo_id, cantidad_utilizada } = dataInsumos;
       const insumoStock = await getInsumoStock(insumo_id);
@@ -184,6 +197,7 @@ exports.crearCita = async (req, res) => {
       await createCitaInsumo(newCitaInsumos);
       await discountInsumo(insumo_id, cantidad_utilizada);
     }
+
     res.status(201).json({
       msg: "Cita creada exitosamente",
       cita: newCita,
