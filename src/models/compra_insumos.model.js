@@ -6,7 +6,7 @@ const { Compras } = require("../models/compras.model.js")
 
 const CompraInsumos = sequelize.define('CompraInsumos', {
     cantidad: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: false
     },
     precio: {
