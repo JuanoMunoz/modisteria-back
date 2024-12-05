@@ -436,7 +436,7 @@ exports.aceptarCita = async (req, res) => {
         .json({ error: "La cita aún no ha sido aprobada." });
     }
     console.log("Body recibido:", req.body);
-console.log("Archivo recibido:", req.file);
+    console.log("Archivo recibido:", req.file);
 
     let imagen = null;
     try {
@@ -719,6 +719,7 @@ exports.cancelCita = async (req, res) => {
                           color: #333;
                           line-height: 1.5;
                           margin: 20px 0;
+                          text-align: start;
                       }
   
                       .verification-code {
@@ -774,6 +775,7 @@ exports.cancelCita = async (req, res) => {
   
                           .content p {
                               color: #ddd;
+                              text-align: start;
                           }
   
                           .footer {
@@ -804,24 +806,24 @@ exports.cancelCita = async (req, res) => {
       };
       await transporter.sendMail(mailOptions);
     }
-    else if(cita.estadoId ===11){
+    else if (cita.estadoId === 11) {
       return res.status(400).json({
         msg: "No puedes cancelar una cita que ya esta aceptada.",
       });
     }
-    else if(cita.estadoId ===12){
+    else if (cita.estadoId === 12) {
       return res.status(400).json({
         msg: "Esta cita ya fue cancelada",
       });
     }
-    else if(cita.estadoId===13){
+    else if (cita.estadoId === 13) {
       return res.status(400).json({
         msg: "No puedes cancelar una cita que ya ha terminado",
       });
     }
     return res.status(200).json({ msg: "Cita cancelada" });
 
-    
+
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: error.message });
