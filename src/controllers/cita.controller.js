@@ -461,16 +461,14 @@ exports.cancelarCita = async (req, res) => {
   try {
     const { id } = req.params;
     const cita = await getCitaById(id);
-    if (cita.estadoId !== 10) {
-      return res
-        .status(400)
-        .json({ error: "La cita aún no ha sido aprobada." });
+    if (cita.estadoId == 10) {
+      const citaInsumos = await getCitaInsumosByCitaId(id);
+      for (const citaInsumo of citaInsumos) {
+        const { insumo_id, cantidad_utilizada } = citaInsumo;
+        await returnInsumoStock(insumo_id, cantidad_utilizada);
+      }
     }
-    const citaInsumos = await getCitaInsumosByCitaId(id);
-    for (const citaInsumo of citaInsumos) {
-      const { insumo_id, cantidad_utilizada } = citaInsumo;
-      await returnInsumoStock(insumo_id, cantidad_utilizada);
-    }
+    
     await statusCita(id, 12);
     res.status(201).json({ msg: "Cita cancelada" });
   } catch (error) {
