@@ -5,8 +5,8 @@ exports.getAllCompras = async () => {
     include: [
       {
         model: Insumo,
-        as: "insumo",
-        attributes: ["nombre"],
+        as: "insumos",
+        attributes: ["nombre", "cantidad"],
         include: {
           model: UnidadesDeMedida,
           as: "unidades_de_medida",
