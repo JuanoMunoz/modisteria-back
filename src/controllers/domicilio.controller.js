@@ -279,7 +279,16 @@ exports.clienteDomicilio = async (req, res) => {
   }
 };
 
-
+exports.statusDomicilio = async (req, res) => {
+  const { id } = req.params;
+  const { estadoId } = req.body
+  try {
+    await statusDomicilio(id, estadoId);
+    res.status(201).json({ msg: "Estado actualizado." });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
 exports.updateDomicilio = async (req, res) => {
   const { id } = req.params;

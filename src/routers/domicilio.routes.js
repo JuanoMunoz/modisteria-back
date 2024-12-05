@@ -8,6 +8,7 @@ const {
   updateDomicilio,
   updateSG,
   clienteDomicilio,
+  statusDomicilio
 } = require("../controllers/domicilio.controller");
 const { verifyToken } = require("../utils/verifyToken");
 const { buscarPermiso } = require("../validators/validations.validator");
@@ -41,6 +42,7 @@ router.put(
 
 router.put("/updateSG/:id", updateSG)
 router.put("/clienteDomicilio/:id", clienteDomicilio)
+router.put("/statusDomicilio/:id", statusDomicilio)
 
 
 module.exports = router;
