@@ -482,7 +482,7 @@ exports.cancelarCita = async (req, res) => {
         await returnInsumoStock(insumo_id, cantidad_utilizada);
       }
     }
-    
+
     await statusCita(id, 12);
     res.status(201).json({ msg: "Cita cancelada" });
   } catch (error) {
@@ -820,8 +820,20 @@ exports.cancelCita = async (req, res) => {
 
 exports.updateCita = async (req, res) => {
   const { id } = req.params;
+  const { estadoId, tiempo, precio, usuarioId, fecha, objetivo } = req.body;
   try {
-    const citaActualizada = await updateCita(id, req.body);
+    const existingCita = await getCitaById(id);
+
+    const updatedCita = {
+      estadoId: estadoId || existingCita.estadoId,
+      tiempo: tiempo || existingCita.tiempo,
+      precio: precio || existingCita.precio,
+      usuarioId: usuarioId || existingCita.usuarioId,
+      fecha: fecha || existingCita.fecha,
+      objetivo: objetivo || existingCita.objetivo,
+    };
+
+    const citaActualizada = await updateCita(id, updatedCita);
     res.status(201).json({ msg: "Cita actualizada exitosamente" });
   } catch (error) {
     console.log(error);

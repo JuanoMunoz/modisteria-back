@@ -33,7 +33,7 @@ exports.getDomicilioById = async (id) => {
                 include: [
                     {
                         model: Pedido,
-                        as: 'pedidos', 
+                        as: 'pedidos',
                         include: [
                             {
                                 model: Usuario,
@@ -69,7 +69,7 @@ exports.getDomiciliosByClienteId = async (clienteId) => {
                 }
             ],
             where: {
-                '$ventas.pedidos.usuarioId$': clienteId 
+                '$ventas.pedidos.usuarioId$': clienteId
             }
         });
 
@@ -94,7 +94,7 @@ exports.createDomicilio = async (domicilio) => {
 
 exports.createDomicilioVenta = async (ventaId) => {
     try {
-        const venta = await Venta.findByPk(ventaId); 
+        const venta = await Venta.findByPk(ventaId);
 
         if (!venta) {
             throw new Error('Venta no encontrada');
@@ -109,10 +109,10 @@ exports.createDomicilioVenta = async (ventaId) => {
         //PONER CORREO
 
         return nuevoDomicilio;
-        
+
     } catch (error) {
         console.error('Error al crear el domicilio para la venta:', error);
-        throw error; 
+        throw error;
     }
 };
 
@@ -120,12 +120,12 @@ exports.updateDomicilio = async (id, domicilio) => {
     return await Domicilio.update(domicilio, { where: { id } });
 }
 
-exports.statusDomicilio = async (id) => {
-    return await Domicilio.update({ estado: false }, { where: { id } });
-}
+exports.statusDomicilio = async (id, estadoId) => {
+    return await Domicilio.update({ estadoId }, { where: { id } });
+};
 exports.deleteDomicilio = async (id) => {
     const domicilio = await Domicilio.findByPk(id);
-    
+
     if (!domicilio) {
         throw new Error("Domicilio no encontrado");
     }
@@ -133,7 +133,7 @@ exports.deleteDomicilio = async (id) => {
     const existeUsuario = await Usuario.findOne({ where: { id: domicilio.usuarioId } });
     const existeEstado = await Estado.findOne({ where: { id: domicilio.estadoId } });
     const existeVenta = await Venta.findOne({ where: { id: domicilio.ventaId } });
-    
+
     if (existeUsuario || existeEstado || existeVenta) {
         throw new Error("No se puede eliminar el domicilio porque está asociado a registros en otras tablas");
     }

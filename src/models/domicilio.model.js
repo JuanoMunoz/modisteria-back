@@ -8,6 +8,14 @@ const Domicilio = sequelize.define('Domicilio',
       type: DataTypes.STRING,
       allowNull: true,
     },
+    direccion: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    tarifa: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
     ventaId: {
       type: DataTypes.INTEGER,
       allowNull: false,

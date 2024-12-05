@@ -79,6 +79,7 @@ exports.createCatalogo = async (req, res) => {
     const {
       producto,
       precio,
+      peso,
       descripcion,
       tallas,
       categoriaId,
@@ -96,6 +97,7 @@ exports.createCatalogo = async (req, res) => {
     const newCatalogo = {
       producto,
       precio,
+      peso,
       descripcion,
       categoriaId,
       estadoId,
@@ -135,6 +137,7 @@ exports.updateCatalogo = async (req, res) => {
       descripcion,
       categoriaId,
       estadoId,
+      peso,
       tallas,
       linea,
     } = req.body;
@@ -154,6 +157,7 @@ exports.updateCatalogo = async (req, res) => {
       categoriaId: categoriaId || existingCatalogo.categoriaId,
       estadoId: estadoId || existingCatalogo.estadoId,
       linea: linea || existingCatalogo.linea,
+      peso: peso || existingCatalogo.peso,
     };
 
     if (req.files && req.files.length > 0) {

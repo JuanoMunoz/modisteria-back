@@ -1,8 +1,9 @@
-require('dotenv').config(); 
+require('dotenv').config();
 const { Sequelize } = require("sequelize");
 
 const sequelize = new Sequelize(process.env.CONNECT_DB, {
   dialect: process.env.DIALECT_DB || 'postgres',
+  logging: false,
 });
 
 const connection = async () => {
@@ -15,4 +16,4 @@ const connection = async () => {
   }
 };
 
-module.exports = {connection, sequelize};
+module.exports = { connection, sequelize };
