@@ -48,7 +48,7 @@ exports.buscarPermiso = (permiso) => {
       const permisos = Array.isArray(results)
         ? results.map((result) => result.nombre)
         : [results.nombre];
-      // console.log("Permisos:", permisos);
+      console.log("Permisos:", permisos);
 
       if (!permisos.includes(permiso)) {
         return res
