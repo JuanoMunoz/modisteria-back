@@ -6,8 +6,8 @@ const {
   getDomiciliosByClienteId,
   createDomicilio,
   updateDomicilio,
-  deleteDomicilio,
-  statusDomicilio,
+  updateSG,
+  clienteDomicilio,
 } = require("../controllers/domicilio.controller");
 const { verifyToken } = require("../utils/verifyToken");
 const { buscarPermiso } = require("../validators/validations.validator");
@@ -29,7 +29,7 @@ router.get(
 
 router.post(
   "/createDomicilio",
-  [verifyToken, buscarPermiso("Domicilios")],
+
   createDomicilio
 );
 
@@ -39,16 +39,8 @@ router.put(
   updateDomicilio
 );
 
-router.put(
-  "/statusDomicilio/:id",
-  [verifyToken, buscarPermiso("Domicilios")],
-  statusDomicilio
-);
+router.put("/updateSG/:id", updateSG)
+router.put("/clienteDomicilio/:id", clienteDomicilio)
 
-router.delete(
-  "/deleteDomicilio/:id",
-  [verifyToken, buscarPermiso("Domicilios")],
-  deleteDomicilio
-);
 
 module.exports = router;

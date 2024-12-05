@@ -39,6 +39,10 @@ const Catalogo = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    peso: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    }
   },
   {
     timestamps: false,

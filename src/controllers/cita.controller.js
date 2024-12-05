@@ -4,9 +4,7 @@ const {
   createCita,
   updateCita,
   deleteCita,
-  getCitaByUAS,
   getCitasByUserId,
-  getCitasAceptadas,
   statusCita,
   getCitaInsumosByCitaId,
   returnInsumoStock
@@ -116,25 +114,6 @@ exports.createCita = async (req, res) => {
     };
 
     const newCita = await createCita(newCitaData);
-
-    // if (citaEstadoId === 11) {
-    //   const nuevaVenta = await createVenta({
-    //     fecha: new Date(),
-    //     citaId: newCita.id, 
-    //     nombrePersona: req.body.nombrePersona,
-    //     valorFinal: 0,
-    //     valorPrendas: 0,
-    //     valorDomicilio: 0,
-    //     metodoPago: "transferencia",
-    //     estadoId: 3, 
-    //   });
-
-    //   return res.status(201).json({
-    //     msg: "Cita creada y venta generada debido al estadoId 11.",
-    //     cita: newCita,
-    //     venta: nuevaVenta,
-    //   });
-    // }
 
     res.status(201).json({
       msg: "Cita creada exitosamente.",
@@ -833,7 +812,7 @@ exports.cancelCita = async (req, res) => {
 
 exports.updateCita = async (req, res) => {
   const { id } = req.params;
-  const { estadoId, tiempo, precio } = req.body;
+  const { estadoId, tiempo, precio, usuarioId, fecha, objetivo } = req.body;
   try {
     const existingCita = await getCitaById(id);
 
@@ -841,6 +820,9 @@ exports.updateCita = async (req, res) => {
       estadoId: estadoId || existingCita.estadoId,
       tiempo: tiempo || existingCita.tiempo,
       precio: precio || existingCita.precio,
+      usuarioId: usuarioId || existingCita.usuarioId,
+      fecha: fecha || existingCita.fecha,
+      objetivo: objetivo || existingCita.objetivo,
     };
 
     const citaActualizada = await updateCita(id, updatedCita);
