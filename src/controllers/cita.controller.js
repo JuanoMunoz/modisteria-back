@@ -435,6 +435,8 @@ exports.aceptarCita = async (req, res) => {
         .status(400)
         .json({ error: "La cita aún no ha sido aprobada." });
     }
+    console.log("Body recibido:", req.body);
+console.log("Archivo recibido:", req.file);
 
     let imagen = null; 
     try {
@@ -466,7 +468,7 @@ exports.aceptarCita = async (req, res) => {
 
     await statusCita(id, 11);
 
-    res.status(201).json({ msg: "Cita aceptada y venta preliminar creada." });
+    res.status(201).json({ msg: "Cita aceptada" });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: error.message });

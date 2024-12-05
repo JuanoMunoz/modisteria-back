@@ -54,10 +54,6 @@ const Usuario = sequelize.define('Usuario',
 Usuario.hasMany(Cita, {foreignKey: 'usuarioId', sourceKey: 'id', as: 'cita'});
 Cita.belongsTo(Usuario, {foreignKey: 'usuarioId', targetKey: 'id', as: 'usuario'});
 
-//Relacion usuario y domicilio
-Usuario.hasMany(Domicilio, {foreignKey: 'usuarioId', sourceKey: 'id', as: 'domicilio'});
-Domicilio.belongsTo(Usuario, {foreignKey: 'usuarioId', targetKey: 'id', as: 'usuario'});
-
 //Relación usuario y carrito (pedido)
 Usuario.hasMany(Pedido, {foreignKey:'usuarioId', sourceKey:'id', as:"pedido"})
 Pedido.belongsTo(Usuario, {foreignKey:'usuarioId', sourceKey:'id', as:'usuario'})

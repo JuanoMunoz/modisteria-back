@@ -1,7 +1,6 @@
 const {
   getAllDomicilios,
   getDomicilioById,
-  getDomiciliosByDomiciliario,
   getDomiciliosByCliente,
   createDomicilio,
   updateDomicilio,
@@ -30,23 +29,6 @@ exports.getDomicilioById = async (req, res) => {
   }
 };
 
-exports.getDomiciliosByDomiciliario = async (req, res) => {
-  const { usuarioId } = req.params;
-  try {
-    const domicilios = await getDomiciliosByDomiciliario(usuarioId);
-
-    if (domicilios.length === 0) {
-      return res
-        .status(404)
-        .json({ msg: "No se encontraron domicilios de este domiciliario." });
-    }
-    res.status(200).json(domicilios);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ msg: "Error al obtener los domicilios." });
-  }
-};
-
 exports.getDomiciliosByClienteId = async (req, res) => {
   const { id } = req.params;
 
@@ -71,14 +53,10 @@ exports.createDomicilio = async (req, res) => {
 
   try {
     const newDomicilio = {
-      novedades: null,
+      numeroGuia: null,
       ventaId: 0,
-      valorPrendas: 0,
-      valorFinal: 0,
-      metodoPago,
       estadoId: 3,
     };
-    const venta = await createVenta(newVenta);+
     await createDomicilio(domicilio);
     res.status(201).json({ msg: "Domicilio creado exitosamente" });
   } catch (error) {
