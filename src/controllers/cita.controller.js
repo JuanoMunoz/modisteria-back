@@ -4,14 +4,16 @@ const {
   createCita,
   updateCita,
   deleteCita,
-  getCitaByUAS,
   getCitasByUserId,
-  getCitasAceptadas,
   statusCita,
   getCitaInsumosByCitaId,
-  returnInsumoStock
+  returnInsumoStock,
 } = require("../repositories/cita.repository");
-const { createCitaInsumo, getInsumoStock, discountInsumo } = require('../repositories/cita_insumo.repository');
+const {
+  createCitaInsumo,
+  getInsumoStock,
+  discountInsumo,
+} = require("../repositories/cita_insumo.repository");
 
 const {
   helperImg,
@@ -117,25 +119,6 @@ exports.createCita = async (req, res) => {
 
     const newCita = await createCita(newCitaData);
 
-    // if (citaEstadoId === 11) {
-    //   const nuevaVenta = await createVenta({
-    //     fecha: new Date(),
-    //     citaId: newCita.id, 
-    //     nombrePersona: req.body.nombrePersona,
-    //     valorFinal: 0,
-    //     valorPrendas: 0,
-    //     valorDomicilio: 0,
-    //     metodoPago: "transferencia",
-    //     estadoId: 3, 
-    //   });
-
-    //   return res.status(201).json({
-    //     msg: "Cita creada y venta generada debido al estadoId 11.",
-    //     cita: newCita,
-    //     venta: nuevaVenta,
-    //   });
-    // }
-
     res.status(201).json({
       msg: "Cita creada exitosamente.",
       cita: newCita,
@@ -147,7 +130,8 @@ exports.createCita = async (req, res) => {
 };
 
 exports.crearCita = async (req, res) => {
-  const { fecha, objetivo, usuarioId, precio, tiempo, datosInsumos, estadoId } = req.body;
+  const { fecha, objetivo, usuarioId, precio, tiempo, datosInsumos, estadoId } =
+    req.body;
   try {
     const fechaActual = new Date();
     const limite = new Date();
@@ -169,9 +153,9 @@ exports.crearCita = async (req, res) => {
       const result = await uploadToCloudinary(processedBuffer);
       referencia = result.url;
     }
-    let userId = 12
+    let userId = 12;
     if (usuarioId) {
-      userId = usuarioId
+      userId = usuarioId;
     }
     const newCitaData = {
       fecha: new Date(req.body.fecha),
@@ -180,10 +164,10 @@ exports.crearCita = async (req, res) => {
       estadoId,
       referencia,
       precio,
-      tiempo
+      tiempo,
     };
     const newCita = await createCita(newCitaData);
-    const citaId = newCita.id
+    const citaId = newCita.id;
     for (const dataInsumos of datosInsumos) {
       const { insumo_id, cantidad_utilizada } = dataInsumos;
       const insumoStock = await getInsumoStock(insumo_id);
@@ -238,13 +222,11 @@ exports.updateCitaInsumos = async (req, res) => {
       await discountInsumo(insumo_id, cantidad_utilizada);
     }
     res.status(200).json({ msg: "Insumos actualizados correctamente." });
-
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: error.message });
   }
-
-}
+};
 
 exports.updateSPT = async (req, res) => {
   //Update Status Price and Time
@@ -655,8 +637,7 @@ exports.cancelCita = async (req, res) => {
       };
       await transporter.sendMail(mailOptions);
       return res.status(200).json({ msg: "Cita cancelada" });
-    }
-    else if (cita.estadoId === 10) {
+    } else if (cita.estadoId === 10) {
       await statusCita(id, 12);
       const mailOptions = {
         from: "modistadonaluz@gmail.com",
@@ -805,45 +786,30 @@ exports.cancelCita = async (req, res) => {
               `,
       };
       await transporter.sendMail(mailOptions);
-    }
-    else if (cita.estadoId === 11) {
+    } else if (cita.estadoId === 11) {
       return res.status(400).json({
         msg: "No puedes cancelar una cita que ya está aceptada.",
       });
-    }
-    else if (cita.estadoId === 12) {
+    } else if (cita.estadoId === 12) {
       return res.status(400).json({
         msg: "Esta cita ya fue cancelada.",
       });
-    }
-    else if (cita.estadoId === 13) {
+    } else if (cita.estadoId === 13) {
       return res.status(400).json({
         msg: "No puedes cancelar una cita que ya ha terminado.",
       });
     }
     return res.status(200).json({ msg: "Cita cancelada" });
-
-
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: error.message });
   }
 };
 
-
 exports.updateCita = async (req, res) => {
   const { id } = req.params;
-  const { estadoId, tiempo, precio } = req.body;
   try {
-    const existingCita = await getCitaById(id);
-
-    const updatedCita = {
-      estadoId: estadoId || existingCita.estadoId,
-      tiempo: tiempo || existingCita.tiempo,
-      precio: precio || existingCita.precio,
-    };
-
-    const citaActualizada = await updateCita(id, updatedCita);
+    const citaActualizada = await updateCita(id, req.body);
     res.status(201).json({ msg: "Cita actualizada exitosamente" });
   } catch (error) {
     console.log(error);
