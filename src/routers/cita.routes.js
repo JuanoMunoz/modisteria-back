@@ -13,6 +13,7 @@ const {
   cancelarCita,
   cancelCita,
   updateCitaInsumos,
+  crearCitaAdmin,
 } = require("../controllers/cita.controller");
 const { verifyToken } = require("../utils/verifyToken");
 const { buscarPermiso } = require("../validators/validations.validator");
@@ -42,6 +43,11 @@ router.post(
   "/crearCita",
   [verifyToken, buscarPermiso("Citas"), upload.single("file")],
   crearCita
+);
+router.post(
+  "/crearCitaAdmin",
+  [verifyToken, buscarPermiso("Citas"), upload.single("file")],
+  crearCitaAdmin
 );
 
 router.put("/updateSPT/:id", updateSPT);

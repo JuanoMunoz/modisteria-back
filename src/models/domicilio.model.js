@@ -1,8 +1,9 @@
-const { DataTypes, Sequelize } = require('sequelize');
-const { sequelize } = require('../database/connection.js');
-const { Venta } = require('./venta.model.js');
+const { DataTypes, Sequelize } = require("sequelize");
+const { sequelize } = require("../database/connection.js");
+const { Venta } = require("./venta.model.js");
 
-const Domicilio = sequelize.define('Domicilio',
+const Domicilio = sequelize.define(
+  "Domicilio",
   {
     numeroGuia: {
       type: DataTypes.STRING,
@@ -10,11 +11,11 @@ const Domicilio = sequelize.define('Domicilio',
     },
     direccion: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     tarifa: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
     },
     ventaId: {
       type: DataTypes.INTEGER,
@@ -27,12 +28,11 @@ const Domicilio = sequelize.define('Domicilio',
   },
   {
     timestamps: false,
-  },
+  }
 );
 
-
 //Relacion domicilio y venta
-Venta.hasMany(Domicilio, { foreignKey: 'ventaId', as: 'domicilio' });
-Domicilio.belongsTo(Venta, { foreignKey: 'ventaId', as: 'ventas' });
+Venta.hasMany(Domicilio, { foreignKey: "ventaId", as: "domicilio" });
+Domicilio.belongsTo(Venta, { foreignKey: "ventaId", as: "ventas" });
 
 module.exports = { Domicilio };

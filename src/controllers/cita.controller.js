@@ -207,6 +207,65 @@ exports.crearCita = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+exports.crearCitaAdmin = async (req, res) => {
+  const { fecha, objetivo, usuarioId, precio, tiempo, estadoId } = req.body;
+  try {
+    const fechaActual = new Date();
+    const limite = new Date();
+    limite.setMonth(limite.getMonth() + 2);
+    const fechaCita = new Date(fecha);
+    if (fechaCita > limite) {
+      return res
+        .status(400)
+        .json({ msg: "La fecha de la cita no puede ser superior a 2 meses" });
+    }
+    if (fechaCita < fechaActual) {
+      return res
+        .status(400)
+        .json({ msg: "La fecha de la cita ya pasó, intenta de nuevo" });
+    }
+    let referencia = null;
+    if (req.file) {
+      const processedBuffer = await helperImg(req.file.buffer, 300);
+      const result = await uploadToCloudinary(processedBuffer);
+      referencia = result.url;
+    }
+    let userId = 12;
+    if (usuarioId) {
+      userId = usuarioId;
+    }
+    const newCitaData = {
+      fecha: new Date(req.body.fecha),
+      objetivo,
+      usuarioId: userId,
+      estadoId,
+      referencia,
+      precio,
+      tiempo,
+    };
+    const newCita = await createCita(newCitaData);
+    const citaId = newCita.id;
+
+    const nuevaVenta = await createVenta({
+      fecha: new Date(),
+      citaId: citaId,
+      imagen: null,
+      nombrePersona: userId,
+      valorFinal: 0,
+      valorPrendas: 0,
+      valorDomicilio: 0,
+      metodoPago: "transferencia",
+      estadoId: 3,
+    });
+    res.status(201).json({
+      msg: "Cita creada exitosamente",
+      cita: newCita,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+};
 
 exports.updateCitaInsumos = async (req, res) => {
   const { id } = req.params;
