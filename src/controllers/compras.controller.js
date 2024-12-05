@@ -40,7 +40,7 @@ exports.createCompra = async (req, res) => {
     const compra = await createCompra({
       fecha: new Date(),
       proveedorId,
-      valorTotal: 0, 
+      valorTotal: 0,
     });
     const compraId = compra.id;
 
@@ -67,8 +67,7 @@ exports.createCompra = async (req, res) => {
 
     res.status(201).json({
       msg: "Compra registrada exitosamente",
-      compra,
-      valorTotalCompra,
+      compra
     });
   } catch (error) {
     console.error(error);
