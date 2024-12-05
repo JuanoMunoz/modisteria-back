@@ -9,9 +9,13 @@ const {
   getCitasAceptadas,
   statusCita,
   getCitaInsumosByCitaId,
-  returnInsumoStock
+  returnInsumoStock,
 } = require("../repositories/cita.repository");
-const { createCitaInsumo, getInsumoStock, discountInsumo } = require('../repositories/cita_insumo.repository');
+const {
+  createCitaInsumo,
+  getInsumoStock,
+  discountInsumo,
+} = require("../repositories/cita_insumo.repository");
 
 const {
   helperImg,
@@ -61,7 +65,7 @@ exports.getCitasByUsuarioId = async (req, res) => {
 
 exports.createCita = async (req, res) => {
   const { fecha, objetivo, usuarioId, estadoId } = req.body;
-  
+
   try {
     const fechaActual = new Date();
     const limite = new Date();
@@ -104,14 +108,14 @@ exports.createCita = async (req, res) => {
       const result = await uploadToCloudinary(processedBuffer);
       referencia = result.url;
     }
-    
+
     const citaEstadoId = estadoId === 11 ? 11 : 9;
 
     const newCitaData = {
       fecha: new Date(req.body.fecha),
       objetivo,
       usuarioId,
-      estadoId: citaEstadoId, 
+      estadoId: citaEstadoId,
       referencia,
     };
 
@@ -120,13 +124,13 @@ exports.createCita = async (req, res) => {
     // if (citaEstadoId === 11) {
     //   const nuevaVenta = await createVenta({
     //     fecha: new Date(),
-    //     citaId: newCita.id, 
+    //     citaId: newCita.id,
     //     nombrePersona: req.body.nombrePersona,
     //     valorFinal: 0,
     //     valorPrendas: 0,
     //     valorDomicilio: 0,
     //     metodoPago: "transferencia",
-    //     estadoId: 3, 
+    //     estadoId: 3,
     //   });
 
     //   return res.status(201).json({
@@ -147,7 +151,8 @@ exports.createCita = async (req, res) => {
 };
 
 exports.crearCita = async (req, res) => {
-  const { fecha, objetivo, usuarioId, precio, tiempo, datosInsumos, estadoId } = req.body;
+  const { fecha, objetivo, usuarioId, precio, tiempo, datosInsumos, estadoId } =
+    req.body;
   try {
     const fechaActual = new Date();
     const limite = new Date();
@@ -169,9 +174,9 @@ exports.crearCita = async (req, res) => {
       const result = await uploadToCloudinary(processedBuffer);
       referencia = result.url;
     }
-    let userId = 12
+    let userId = 12;
     if (usuarioId) {
-      userId = usuarioId
+      userId = usuarioId;
     }
     const newCitaData = {
       fecha: new Date(req.body.fecha),
@@ -180,10 +185,10 @@ exports.crearCita = async (req, res) => {
       estadoId,
       referencia,
       precio,
-      tiempo
+      tiempo,
     };
     const newCita = await createCita(newCitaData);
-    const citaId = newCita.id
+    const citaId = newCita.id;
     for (const dataInsumos of datosInsumos) {
       const { insumo_id, cantidad_utilizada } = dataInsumos;
       const insumoStock = await getInsumoStock(insumo_id);
@@ -238,13 +243,11 @@ exports.updateCitaInsumos = async (req, res) => {
       await discountInsumo(insumo_id, cantidad_utilizada);
     }
     res.status(200).json({ msg: "Insumos actualizados correctamente." });
-
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: error.message });
   }
-
-}
+};
 
 exports.updateSPT = async (req, res) => {
   //Update Status Price and Time
@@ -436,12 +439,12 @@ exports.aceptarCita = async (req, res) => {
         .json({ error: "La cita aún no ha sido aprobada." });
     }
     console.log("Body recibido:", req.body);
-console.log("Archivo recibido:", req.file);
+    console.log("Archivo recibido:", req.file);
 
-    let imagen = null; 
+    let imagen = null;
     try {
       if (req.file) {
-        imagen = await gestionImagen(req); 
+        imagen = await gestionImagen(req);
       }
     } catch (error) {
       console.error("Error gestionando imagen:", error);
@@ -457,7 +460,7 @@ console.log("Archivo recibido:", req.file);
     const nuevaVenta = await createVenta({
       fecha: new Date(),
       citaId: cita.id,
-      imagen, 
+      imagen,
       nombrePersona,
       valorFinal: 0,
       valorPrendas: 0,
@@ -506,7 +509,7 @@ exports.cancelCita = async (req, res) => {
       return res.status(404).json({ msg: "Cita no encontrada" });
     }
 
-    if ( cita.estadoId === 9 || cita.estadoId === 10 || cita.estadoId === 11) {
+    if (cita.estadoId === 9 || cita.estadoId === 10 || cita.estadoId === 11) {
       await statusCita(id, 12);
       return res.status(200).json({ msg: "Cita cancelada" });
     }
@@ -519,20 +522,10 @@ exports.cancelCita = async (req, res) => {
   }
 };
 
-
 exports.updateCita = async (req, res) => {
   const { id } = req.params;
-  const { estadoId, tiempo, precio } = req.body;
   try {
-    const existingCita = await getCitaById(id);
-
-    const updatedCita = {
-      estadoId: estadoId || existingCita.estadoId,
-      tiempo: tiempo || existingCita.tiempo,
-      precio: precio || existingCita.precio,
-    };
-
-    const citaActualizada = await updateCita(id, updatedCita);
+    const citaActualizada = await updateCita(id, req.body);
     res.status(201).json({ msg: "Cita actualizada exitosamente" });
   } catch (error) {
     console.log(error);
