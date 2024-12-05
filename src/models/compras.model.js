@@ -8,6 +8,10 @@ const Compras = sequelize.define(
             type: DataTypes.DATE,
             allowNull: false,
         },
+        valorTotal: {
+            type: DataTypes.INTEGER,
+            allowNull: true
+        },
         proveedorId: {
             type: DataTypes.INTEGER,
             allowNull: false,
