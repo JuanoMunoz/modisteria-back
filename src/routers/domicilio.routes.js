@@ -22,12 +22,6 @@ router.get(
 );
 
 router.get(
-  "/getDomiciliosByDomiciliario/:usuarioId",
-  [verifyToken, buscarPermiso("Domicilios")],
-  getDomiciliosByDomiciliario
-);
-
-router.get(
   "/getDomiciliosByClienteId/:id",
   [verifyToken, buscarPermiso("Domicilios")],
   getDomiciliosByClienteId

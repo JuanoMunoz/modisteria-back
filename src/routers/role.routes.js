@@ -21,7 +21,7 @@ router.get(
 
 router.post("/createRol", [verifyToken, buscarPermiso("Roles")], createRole);
 
-router.put("/updateRol/:id", [verifyToken, buscarPermiso("Roles")], updateRole);
+router.put("/updateRol/:id",  updateRole);
 
 router.put("/statusRol/:id", [verifyToken, buscarPermiso("Roles")], statusRole);
 

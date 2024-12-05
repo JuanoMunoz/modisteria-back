@@ -4,15 +4,11 @@ const { Venta } = require('./venta.model.js');
 
 const Domicilio = sequelize.define('Domicilio',
   {
-    novedades: {
+    numeroGuia: {
       type: DataTypes.STRING,
       allowNull: true,
     },
     ventaId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    usuarioId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
