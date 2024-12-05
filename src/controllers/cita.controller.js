@@ -168,6 +168,19 @@ exports.crearCita = async (req, res) => {
     };
     const newCita = await createCita(newCitaData);
     const citaId = newCita.id;
+
+    const nuevaVenta = await createVenta({
+      fecha: new Date(),
+      citaId: citaId,
+      imagen: null,
+      nombrePersona: userId,
+      valorFinal: 0,
+      valorPrendas: 0,
+      valorDomicilio: 0,
+      metodoPago: "transferencia",
+      estadoId: 3,
+    });
+
     for (const dataInsumos of datosInsumos) {
       const { insumo_id, cantidad_utilizada } = dataInsumos;
       const insumoStock = await getInsumoStock(insumo_id);
@@ -184,6 +197,7 @@ exports.crearCita = async (req, res) => {
       await createCitaInsumo(newCitaInsumos);
       await discountInsumo(insumo_id, cantidad_utilizada);
     }
+
     res.status(201).json({
       msg: "Cita creada exitosamente",
       cita: newCita,
@@ -461,18 +475,16 @@ exports.cancelarCita = async (req, res) => {
   try {
     const { id } = req.params;
     const cita = await getCitaById(id);
-    if (cita.estadoId !== 10) {
-      return res
-        .status(400)
-        .json({ error: "La cita aún no ha sido aprobada." });
+    if (cita.estadoId == 10) {
+      const citaInsumos = await getCitaInsumosByCitaId(id);
+      for (const citaInsumo of citaInsumos) {
+        const { insumo_id, cantidad_utilizada } = citaInsumo;
+        await returnInsumoStock(insumo_id, cantidad_utilizada);
+      }
     }
-    const citaInsumos = await getCitaInsumosByCitaId(id);
-    for (const citaInsumo of citaInsumos) {
-      const { insumo_id, cantidad_utilizada } = citaInsumo;
-      await returnInsumoStock(insumo_id, cantidad_utilizada);
-    }
+    
     await statusCita(id, 12);
-    res.status(201).json({ msg: "Cita cancelada." });
+    res.status(201).json({ msg: "Cita cancelada" });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: error.message });
@@ -788,15 +800,15 @@ exports.cancelCita = async (req, res) => {
       await transporter.sendMail(mailOptions);
     } else if (cita.estadoId === 11) {
       return res.status(400).json({
-        msg: "No puedes cancelar una cita que ya esta aceptada.",
+        msg: "No puedes cancelar una cita que ya está aceptada.",
       });
     } else if (cita.estadoId === 12) {
       return res.status(400).json({
-        msg: "Esta cita ya fue cancelada",
+        msg: "Esta cita ya fue cancelada.",
       });
     } else if (cita.estadoId === 13) {
       return res.status(400).json({
-        msg: "No puedes cancelar una cita que ya ha terminado",
+        msg: "No puedes cancelar una cita que ya ha terminado.",
       });
     }
     return res.status(200).json({ msg: "Cita cancelada" });
