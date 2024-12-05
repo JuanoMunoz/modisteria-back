@@ -7,9 +7,13 @@ const {
   getCitasByUserId,
   statusCita,
   getCitaInsumosByCitaId,
-  returnInsumoStock
+  returnInsumoStock,
 } = require("../repositories/cita.repository");
-const { createCitaInsumo, getInsumoStock, discountInsumo } = require('../repositories/cita_insumo.repository');
+const {
+  createCitaInsumo,
+  getInsumoStock,
+  discountInsumo,
+} = require("../repositories/cita_insumo.repository");
 
 const {
   helperImg,
@@ -126,7 +130,8 @@ exports.createCita = async (req, res) => {
 };
 
 exports.crearCita = async (req, res) => {
-  const { fecha, objetivo, usuarioId, precio, tiempo, datosInsumos, estadoId } = req.body;
+  const { fecha, objetivo, usuarioId, precio, tiempo, datosInsumos, estadoId } =
+    req.body;
   try {
     const fechaActual = new Date();
     const limite = new Date();
@@ -148,9 +153,9 @@ exports.crearCita = async (req, res) => {
       const result = await uploadToCloudinary(processedBuffer);
       referencia = result.url;
     }
-    let userId = 12
+    let userId = 12;
     if (usuarioId) {
-      userId = usuarioId
+      userId = usuarioId;
     }
     const newCitaData = {
       fecha: new Date(req.body.fecha),
@@ -159,10 +164,23 @@ exports.crearCita = async (req, res) => {
       estadoId,
       referencia,
       precio,
-      tiempo
+      tiempo,
     };
     const newCita = await createCita(newCitaData);
-    const citaId = newCita.id
+    const citaId = newCita.id;
+
+    const nuevaVenta = await createVenta({
+      fecha: new Date(),
+      citaId: citaId,
+      imagen: null,
+      nombrePersona: userId,
+      valorFinal: 0,
+      valorPrendas: 0,
+      valorDomicilio: 0,
+      metodoPago: "transferencia",
+      estadoId: 3,
+    });
+
     for (const dataInsumos of datosInsumos) {
       const { insumo_id, cantidad_utilizada } = dataInsumos;
       const insumoStock = await getInsumoStock(insumo_id);
@@ -179,6 +197,7 @@ exports.crearCita = async (req, res) => {
       await createCitaInsumo(newCitaInsumos);
       await discountInsumo(insumo_id, cantidad_utilizada);
     }
+
     res.status(201).json({
       msg: "Cita creada exitosamente",
       cita: newCita,
@@ -217,13 +236,11 @@ exports.updateCitaInsumos = async (req, res) => {
       await discountInsumo(insumo_id, cantidad_utilizada);
     }
     res.status(200).json({ msg: "Insumos actualizados correctamente." });
-
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: error.message });
   }
-
-}
+};
 
 exports.updateSPT = async (req, res) => {
   //Update Status Price and Time
@@ -458,18 +475,16 @@ exports.cancelarCita = async (req, res) => {
   try {
     const { id } = req.params;
     const cita = await getCitaById(id);
-    if (cita.estadoId !== 10) {
-      return res
-        .status(400)
-        .json({ error: "La cita aún no ha sido aprobada." });
+    if (cita.estadoId == 10) {
+      const citaInsumos = await getCitaInsumosByCitaId(id);
+      for (const citaInsumo of citaInsumos) {
+        const { insumo_id, cantidad_utilizada } = citaInsumo;
+        await returnInsumoStock(insumo_id, cantidad_utilizada);
+      }
     }
-    const citaInsumos = await getCitaInsumosByCitaId(id);
-    for (const citaInsumo of citaInsumos) {
-      const { insumo_id, cantidad_utilizada } = citaInsumo;
-      await returnInsumoStock(insumo_id, cantidad_utilizada);
-    }
+
     await statusCita(id, 12);
-    res.status(201).json({ msg: "Cita cancelada." });
+    res.status(201).json({ msg: "Cita cancelada" });
   } catch (error) {
     console.log(error);
     res.status(400).json({ error: error.message });
@@ -634,8 +649,7 @@ exports.cancelCita = async (req, res) => {
       };
       await transporter.sendMail(mailOptions);
       return res.status(200).json({ msg: "Cita cancelada" });
-    }
-    else if (cita.estadoId === 10) {
+    } else if (cita.estadoId === 10) {
       await statusCita(id, 12);
       const mailOptions = {
         from: "modistadonaluz@gmail.com",
@@ -784,31 +798,25 @@ exports.cancelCita = async (req, res) => {
               `,
       };
       await transporter.sendMail(mailOptions);
-    }
-    else if (cita.estadoId === 11) {
+    } else if (cita.estadoId === 11) {
       return res.status(400).json({
-        msg: "No puedes cancelar una cita que ya esta aceptada.",
+        msg: "No puedes cancelar una cita que ya está aceptada.",
       });
-    }
-    else if (cita.estadoId === 12) {
+    } else if (cita.estadoId === 12) {
       return res.status(400).json({
-        msg: "Esta cita ya fue cancelada",
+        msg: "Esta cita ya fue cancelada.",
       });
-    }
-    else if (cita.estadoId === 13) {
+    } else if (cita.estadoId === 13) {
       return res.status(400).json({
-        msg: "No puedes cancelar una cita que ya ha terminado",
+        msg: "No puedes cancelar una cita que ya ha terminado.",
       });
     }
     return res.status(200).json({ msg: "Cita cancelada" });
-
-
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: error.message });
   }
 };
-
 
 exports.updateCita = async (req, res) => {
   const { id } = req.params;
