@@ -30,6 +30,10 @@ const Venta = sequelize.define('Venta', {
         type: DataTypes.ENUM('transferencia'),
         allowNull: false,
     },
+    motivo: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     estadoId: {
         type: DataTypes.INTEGER,
         allowNull: false,

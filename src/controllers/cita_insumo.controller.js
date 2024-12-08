@@ -46,6 +46,8 @@ exports.endCitaCreateVenta = async (req, res) => {
       estadoId: 14,
     });
 
+    //AGREGAR AL HISTORIAL INSUMO
+
     res.status(201).json({ msg: "Cita terminada y venta completada" });
   } catch (error) {
     console.log(error);
