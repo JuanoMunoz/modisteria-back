@@ -148,6 +148,7 @@ exports.cantidadInsumos = async (req, res) => {
     res.status(500).json({ error: "Error al actualizar cantidad de insumos." });
   }
 };
+
 exports.statusInsumo = async (req, res) => {
   const { id } = req.params;
 

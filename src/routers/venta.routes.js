@@ -5,6 +5,7 @@ const {
   createVenta,
   getVentaByUsuarioId,
   confirmarVenta,
+  cancelarVenta,
 } = require("../controllers/venta.controller");
 const { verifyToken } = require("../utils/verifyToken");
 const { upload } = require("../utils/image");
@@ -35,6 +36,12 @@ router.post(
   "/confirmarVenta/:id",
   [verifyToken, buscarPermiso("Ventas")],
   confirmarVenta
+);
+
+router.post(
+  "/cancelarVenta/:id",
+  [verifyToken, buscarPermiso("Ventas")],
+  cancelarVenta
 );
 
 module.exports = router;
