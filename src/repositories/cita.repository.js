@@ -1,4 +1,4 @@
-const { Cita, Usuario, CitaInsumo, Insumo } = require("../models");
+const { Cita, Usuario, CitaInsumo, Insumo, Venta } = require("../models");
 const { Op } = require("sequelize");
 const { Sequelize } = require("sequelize");
 
@@ -16,6 +16,7 @@ exports.getAllCitas = async (estadoId) => {
         as: "usuario",
       },
       { model: Insumo, attributes: ["nombre", "id"] },
+      { model: Venta, as: "venta" attributes: ["imagen"] },
     ],
   });
 };
