@@ -70,10 +70,15 @@ exports.updateVenta = async (req, res) => {
       const result = await uploadToCloudinary(processedBuffer);
       imagen = result.url;
     }
-    await updateVenta(id, imagen);
-    res.status(201).json({ msg: "Categoría actualizada exitosamente" });
+    
+    const cambio = { imagen }
+
+    await updateVenta(id, cambio);
+
+    return res.status(200).json({ msg: "Venta actualizada exitosamente" });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error('Error al actualizar la venta:', error.message);
+    return res.status(400).json({ error: "No se pudo actualizar la venta. Por favor, inténtalo nuevamente." });
   }
 };
 

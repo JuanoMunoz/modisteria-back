@@ -36,7 +36,7 @@ router.get(
 );
 router.put(
   "/updateVenta/:id",
-  [verifyToken, buscarPermiso("Ventas")],
+  [verifyToken, buscarPermiso("Ventas"), upload.single("file")],
   updateVenta
 );
 
