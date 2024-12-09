@@ -1,6 +1,7 @@
 const { statusCita, getCitaById } = require("../repositories/cita.repository");
 const { updateVentaAC } = require("../repositories/venta.repository");
 const { createCitaInsumo, getInsumoStock, discountInsumo } = require('../repositories/cita_insumo.repository');
+const { CitaInsumo, InsumoHistorial } = require("../models");
 
 
 exports.createAndDiscount = async (req, res) => {
@@ -38,19 +39,37 @@ exports.endCitaCreateVenta = async (req, res) => {
   const { citaId } = req.body;
   try {
     const cita = await getCitaById(citaId);
+    if (!cita) {
+      return res.status(404).json({ msg: "Cita no encontrada" });
+    }
 
-    await statusCita(citaId, 13);
+    await statusCita(citaId, 13); // Actualizar estado de la cita
 
     const ventaActualizada = await updateVentaAC(citaId, {
       valorFinal: cita.precio,
-      estadoId: 14,
+      estadoId: 14, // Estado Pagado
     });
 
-    //AGREGAR AL HISTORIAL INSUMO
+    // Obtener los insumos utilizados para la cita
+    const insumosCita = await CitaInsumo.findAll({ where: { cita_id: citaId } });
 
-    res.status(201).json({ msg: "Cita terminada y venta completada" });
+    for (const insumo of insumosCita) {
+      const { insumo_id, cantidad_utilizada } = insumo;
+
+      // Registrar en historial de insumos
+      await InsumoHistorial.create({
+        insumo_id,
+        cantidad_modificada: -cantidad_utilizada,
+        motivo: `Cierre de cita`,
+        usuario_id: cita.usuarioId,
+        fecha: new Date(),
+      });
+    }
+
+    res.status(201).json({ msg: "Cita terminada y venta completada." });
   } catch (error) {
-    console.log(error);
-    res.status(400).json({ error: error.message });
+    console.error("Error al finalizar la cita y crear venta:", error);
+    res.status(500).json({ msg: "Error al finalizar la cita y crear venta", error });
   }
 };
+
