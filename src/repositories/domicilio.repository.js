@@ -92,7 +92,7 @@ exports.createDomicilio = async (domicilio) => {
     return await Domicilio.create(domicilio);
 };
 
-exports.createDomicilioVenta = async (ventaId) => {
+exports.createDomicilioVenta = async (ventaId, direccion, valorDomicilio) => {
     try {
         const venta = await Venta.findByPk(ventaId);
 
@@ -104,9 +104,9 @@ exports.createDomicilioVenta = async (ventaId) => {
             numeroGuia: null,
             ventaId: venta.id,
             estadoId: 3,
+            tarifa: valorDomicilio,
+            direccion: direccion
         });
-
-        //PONER CORREO
 
         return nuevoDomicilio;
 
@@ -115,6 +115,24 @@ exports.createDomicilioVenta = async (ventaId) => {
         throw error;
     }
 };
+
+exports.getDomicilioByVentaId = async (id) => {
+    try {
+        const domicilio = await Domicilio.findOne({
+            where: { ventaId: id }
+        });
+
+        if (!domicilio) {
+            throw new Error('No se encontró el domicilio para el ventaId proporcionado');
+        }
+
+        return domicilio;
+    } catch (error) {
+        console.error('Error al obtener el domicilio:', error.message);
+        throw error;
+    }
+};
+
 
 exports.updateDomicilio = async (id, domicilio) => {
     return await Domicilio.update(domicilio, { where: { id } });

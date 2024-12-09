@@ -6,6 +6,7 @@ const {
   getVentaByUsuarioId,
   confirmarVenta,
   cancelarVenta,
+  calcularDomicilio,
 } = require("../controllers/venta.controller");
 const { verifyToken } = require("../utils/verifyToken");
 const { upload } = require("../utils/image");
@@ -28,7 +29,7 @@ router.get(
 
 router.post(
   "/createVenta",
-  [verifyToken, buscarPermiso("Ventas"), upload.single("file")],
+  [upload.single("file")],
   createVenta
 );
 
@@ -40,8 +41,10 @@ router.post(
 
 router.post(
   "/cancelarVenta/:id",
-  [verifyToken, buscarPermiso("Ventas")],
+ 
   cancelarVenta
 );
+
+router.post("/calcularDomicilio/:id", calcularDomicilio)
 
 module.exports = router;
