@@ -34,7 +34,11 @@ router.get(
   [verifyToken, buscarPermiso("Ventas")],
   getVentaByUsuarioId
 );
-router.put("/updateVenta/:id", [upload.single("file")], updateVenta);
+router.put(
+  "/updateVenta/:id",
+  [verifyToken, buscarPermiso("Ventas"), upload.single("file")],
+  updateVenta
+);
 
 router.post("/createVenta", [upload.single("file")], createVenta);
 

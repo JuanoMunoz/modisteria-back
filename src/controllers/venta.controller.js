@@ -70,10 +70,15 @@ exports.updateVenta = async (req, res) => {
       const result = await uploadToCloudinary(processedBuffer);
       imagen = result.url;
     }
-    await updateVenta(id, imagen);
-    res.status(201).json({ msg: "Categoría actualizada exitosamente" });
+    
+    const cambio = { imagen }
+
+    await updateVenta(id, cambio);
+
+    return res.status(200).json({ msg: "Venta actualizada exitosamente" });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error('Error al actualizar la venta:', error.message);
+    return res.status(400).json({ error: "No se pudo actualizar la venta. Por favor, inténtalo nuevamente." });
   }
 };
 
@@ -433,51 +438,60 @@ exports.confirmarVenta = async (req, res) => {
 
 exports.cancelarVenta = async (req, res) => {
   const { id } = req.params;
+
   try {
     const { motivo } = req.body;
 
+    // Validar motivo
     if (!motivo) {
       return res.status(400).json({ msg: "El motivo de cancelación es obligatorio." });
     }
 
+    // Validar que la venta existe
     const venta = await getVentaById(id);
     if (!venta) {
-      return res.status(404).json({ msg: "Venta no encontrada" });
+      return res.status(404).json({ msg: "Venta no encontrada." });
     }
 
-    const domicilio = await getDomicilioByVentaId(id);
-    const idDomicilio = domicilio.id
+    // Intentar obtener el domicilio relacionado, pero continuar si no existe
+    let domicilio;
+    try {
+      domicilio = await getDomicilioByVentaId(id);
+    } catch (error) {
+      console.log(`No se encontró un domicilio asociado a la venta ID ${id}. Continuando con el proceso...`);
+    }
+
+    // Actualizar el estado del domicilio, si existe
     if (domicilio) {
-      await Domicilio.update({ estadoId: 8 }, { where: { id: idDomicilio } })
-    } else {
-      console.log("No se encontró un domicilio válido para la venta ID:", id);
+      await Domicilio.update({ estadoId: 8 }, { where: { id: domicilio.id } });
     }
 
-
+    // Manejar cita o pedidos asociados
     if (venta.citaId) {
       const cita = await getCitaById(venta.citaId);
       if (!cita) {
-        return res.status(404).json({ msg: "No se encontró la cita asociada a esta venta" });
+        return res.status(404).json({ msg: "No se encontró la cita asociada a esta venta." });
       }
       await Cita.update({ estadoId: 12 }, { where: { id: cita.id } });
     } else {
       const pedidos = await getPedidoByVenta(id);
       if (pedidos.length === 0) {
-        return res.status(404).json({ msg: "No hay pedidos asociados a esta venta" });
+        return res.status(404).json({ msg: "No hay pedidos asociados a esta venta." });
       }
       await Promise.all(
-        pedidos.map(async (producto) => {
-          await Pedido.update({ estadoId: 12 }, { where: { id: producto.id } });
+        pedidos.map(async (pedido) => {
+          await Pedido.update({ estadoId: 12 }, { where: { id: pedido.id } });
         })
       );
     }
 
+    // Actualizar estado y motivo de la venta
     const cambioVenta = { estadoId: 12, motivo };
     await updateVenta(id, cambioVenta);
 
     res.status(200).json({ msg: "Venta cancelada con éxito." });
   } catch (error) {
-    console.error("Error al cancelar la venta:", error);
-    return res.status(500).json({ msg: "Error interno del servidor." });
+    console.error("Error al cancelar la venta:", error.message);
+    res.status(500).json({ msg: "Error interno del servidor." });
   }
 };
