@@ -164,45 +164,66 @@ exports.confirmarVenta = async (req, res) => {
     const email = await getEmailByUserId(usuarioId)
 
     // Verificar insumos
-    const catalogoId = pedidos[0].catalogoId;
-    const cantidad = pedidos[0].cantidad;
+    for (const pedido of pedidos) {
+      const catalogoId = pedido.catalogoId;
+      const cantidad = pedido.cantidad;
 
-    // Obtener los insumos necesarios para el catálogo
-    const insumosCatalogo = await CatalogoInsumos.findAll({
-      where: { catalogo_id: catalogoId },
-    });
+      // Obtener los insumos necesarios para el catálogo
+      const insumosCatalogo = await CatalogoInsumos.findAll({
+        where: { catalogo_id: catalogoId },
+      });
 
-    if (!insumosCatalogo || insumosCatalogo.length === 0) {
-      return res
-        .status(404)
-        .json({ msg: "No hay insumos configurados para este catálogo." });
-    }
+      if (!insumosCatalogo || insumosCatalogo.length === 0) {
+        return res
+          .status(404)
+          .json({ msg: "No hay insumos configurados para este catálogo." });
+      }
 
-    // Verificar disponibilidad de insumos
-    const insumosInsuficientes = [];
+      // Verificar disponibilidad de insumos
+      const insumosInsuficientes = [];
 
-    for (const insumo of insumosCatalogo) {
-      const insumoId = insumo.insumo_id;
-      const cantidadNecesaria = insumo.cantidad_utilizada * cantidad;
+      for (const insumo of insumosCatalogo) {
+        const insumoId = insumo.insumo_id;
+        const cantidadNecesaria = insumo.cantidad_utilizada * cantidad;
 
-      // Obtener disponibilidad del insumo desde la tabla de inventario
-      const inventarioInsumo = await Insumo.findByPk(insumoId);
+        // Obtener disponibilidad del insumo desde la tabla de inventario
+        const inventarioInsumo = await Insumo.findByPk(insumoId);
 
-      if (!inventarioInsumo || inventarioInsumo.cantidad < cantidadNecesaria) {
-        insumosInsuficientes.push({
-          insumoId,
-          requerido: cantidadNecesaria,
-          disponible: inventarioInsumo ? inventarioInsumo.cantidad : 0,
+        if (!inventarioInsumo || inventarioInsumo.cantidad < cantidadNecesaria) {
+          insumosInsuficientes.push({
+            insumoId,
+            requerido: cantidadNecesaria,
+            disponible: inventarioInsumo ? inventarioInsumo.cantidad : 0,
+          });
+        }
+      }
+
+      // Si hay insumos insuficientes, detener el flujo
+      if (insumosInsuficientes.length > 0) {
+        return res.status(400).json({
+          msg: "No hay suficientes insumos para confirmar la venta.",
+          detalles: insumosInsuficientes,
         });
       }
-    }
 
-    // Si hay insumos insuficientes, detener el flujo
-    if (insumosInsuficientes.length > 0) {
-      return res.status(400).json({
-        msg: "No hay suficientes insumos para confirmar la venta.",
-        detalles: insumosInsuficientes,
-      });
+      // Descontar insumos y registrar en historial
+      for (const insumo of insumosCatalogo) {
+        const insumoId = insumo.insumo_id;
+        const cantidadDescontar = insumo.cantidad_utilizada * cantidad;
+
+        await Insumo.update(
+          { cantidad: Sequelize.literal(`cantidad - ${cantidadDescontar}`) },
+          { where: { id: insumoId } }
+        );
+
+        await InsumoHistorial.create({
+          insumo_id: insumoId,
+          cantidad_modificada: -cantidadDescontar,
+          motivo: `Confirmación de venta`,
+          usuario_id: usuarioId,
+          fecha: new Date(),
+        });
+      }
     }
 
     // Actualizar el estado de cada pedido
@@ -214,9 +235,10 @@ exports.confirmarVenta = async (req, res) => {
         );
       })
     );
+
     // Actualizar el estado de la venta
-    const cambio = { estadoId: 14 }; // Estado Pagado
-    await updateVenta(id, cambio);
+    await updateVenta(id, { estadoId: 14 }); // Estado Pagado
+
     const mailOptions = {
       from: "modistadonaluz@gmail.com",
       to: email,
@@ -364,8 +386,8 @@ exports.confirmarVenta = async (req, res) => {
     // Enviar correo
     await transporter.sendMail(mailOptions);
     res.status(200).json({
-      msg: "Venta confirmada, pedidos actualizados y correo enviado",
-      usuarioId, // Opcional: devolver el ID del usuario
+      msg: "Venta confirmada, pedidos actualizados e insumos registrados.",
+      usuarioId,
     });
   } catch (error) {
     console.error("Error al confirmar la venta:", error);
@@ -389,9 +411,7 @@ exports.cancelarVenta = async (req, res) => {
 
     const domicilio = await getDomicilioByVentaId(id);
     const idDomicilio = domicilio.id
-    console.log("Domicilio obtenido:", domicilio);
     if (domicilio) {
-      console.log("Actualizando estadoId del domicilio con ID:", idDomicilio);
       await Domicilio.update({ estadoId: 8 }, { where: { id: idDomicilio } })
     } else {
       console.log("No se encontró un domicilio válido para la venta ID:", id);

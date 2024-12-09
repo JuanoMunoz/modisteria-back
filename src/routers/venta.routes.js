@@ -41,7 +41,7 @@ router.post(
 
 router.post(
   "/cancelarVenta/:id",
-  [verifyToken, buscarPermiso("Ventas")],
+ 
   cancelarVenta
 );
 
