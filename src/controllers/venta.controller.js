@@ -1,7 +1,8 @@
-const { Pedido, CatalogoInsumos, Insumo, Cita, Domicilio } = require("../models");
+const { Pedido, CatalogoInsumos, Insumo, Cita, Domicilio, InsumoHistorial } = require("../models");
+const { Sequelize } = require('sequelize');
 const { createDomicilioVenta, getDomicilioByVentaId } = require("../repositories/domicilio.repository");
 const { getPedidoByUsuarioyEstado, getPedidoByVenta, } = require("../repositories/pedido.repository");
-const { getAllVentas, getVentaById, createVenta, getVentaByUsuarioId, updateVenta, getUsuarioIdByPedidoId } = require("../repositories/venta.repository");
+const { getAllVentas, getVentaById, createVenta, getVentaByUsuarioId, updateVenta, getUsuarioIdByPedidoId, getCitaVenta } = require("../repositories/venta.repository");
 const { helperImg, uploadToCloudinary, gestionImagen } = require("../utils/image");
 const transporter = require("../utils/mailer");
 const { getEmailByUserId, getUserById } = require('../repositories/usuario.repository');
@@ -30,6 +31,24 @@ exports.getVentaById = async (req, res) => {
   }
 };
 
+exports.getCitaVenta = async (req, res) => {
+  const { citaId } = req.params;
+
+  try {
+    // Asegúrate de devolver solo el primer registro
+    const ventaCita = await getCitaVenta(citaId);
+
+    if (ventaCita.length === 0) {
+      return res.status(404).json({ error: 'No se encontró venta asociada con la cita.' });
+    }
+
+    res.status(200).json(ventaCita);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+
 exports.getVentaByUsuarioId = async (req, res) => {
   const { id } = req.params;
 
@@ -38,6 +57,28 @@ exports.getVentaByUsuarioId = async (req, res) => {
     res.status(200).json(venta);
   } catch (error) {
     res.status(400).json({ error: error.message });
+  }
+};
+
+exports.updateVenta = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    let imagen = null;
+    if (req.file) {
+      const processedBuffer = await helperImg(req.file.buffer, 300);
+      const result = await uploadToCloudinary(processedBuffer);
+      imagen = result.url;
+    }
+    
+    const cambio = { imagen }
+
+    await updateVenta(id, cambio);
+
+    return res.status(200).json({ msg: "Venta actualizada exitosamente" });
+  } catch (error) {
+    console.error('Error al actualizar la venta:', error.message);
+    return res.status(400).json({ error: "No se pudo actualizar la venta. Por favor, inténtalo nuevamente." });
   }
 };
 
@@ -397,36 +438,48 @@ exports.confirmarVenta = async (req, res) => {
 
 exports.cancelarVenta = async (req, res) => {
   const { id } = req.params;
+
   try {
     const { motivo } = req.body;
+    // Validar motivo
     if (!motivo) {
       return res.status(400).json({ msg: "El motivo de cancelación es obligatorio." });
     }
+
+    // Validar que la venta existe
     const venta = await getVentaById(id);
     if (!venta) {
-      return res.status(404).json({ msg: "Venta no encontrada" });
+      return res.status(404).json({ msg: "Venta no encontrada." });
     }
-    const domicilio = await getDomicilioByVentaId(id);
-    const idDomicilio = domicilio.id
+
+    // Intentar obtener el domicilio relacionado, pero continuar si no existe
+    let domicilio;
+    try {
+      domicilio = await getDomicilioByVentaId(id);
+    } catch (error) {
+      console.log(`No se encontró un domicilio asociado a la venta ID ${id}.`);
+    }
+
+    // Actualizar el estado del domicilio, si existe
     if (domicilio) {
-      await Domicilio.update({ estadoId: 8 }, { where: { id: idDomicilio } })
-    } else {
-      console.log("No se encontró un domicilio válido para la venta ID:", id);
+      await Domicilio.update({ estadoId: 8 }, { where: { id: domicilio.id } });
     }
+
+    // Manejar cita o pedidos asociados
     if (venta.citaId) {
       const cita = await getCitaById(venta.citaId);
       if (!cita) {
-        return res.status(404).json({ msg: "No se encontró la cita asociada a esta venta" });
+        return res.status(404).json({ msg: "No se encontró la cita asociada a esta venta." });
       }
       await Cita.update({ estadoId: 12 }, { where: { id: cita.id } });
     } else {
       const pedidos = await getPedidoByVenta(id);
       if (pedidos.length === 0) {
-        return res.status(404).json({ msg: "No hay pedidos asociados a esta venta" });
+        return res.status(404).json({ msg: "No hay pedidos asociados a esta venta." });
       }
       await Promise.all(
-        pedidos.map(async (producto) => {
-          await Pedido.update({ estadoId: 12 }, { where: { id: producto.id } });
+        pedidos.map(async (pedido) => {
+          await Pedido.update({ estadoId: 12 }, { where: { id: pedido.id } });
         })
       );
     }
@@ -579,12 +632,13 @@ exports.cancelarVenta = async (req, res) => {
     await transporter.sendMail(mailOptions);
 
 
+    // Actualizar estado y motivo de la venta
     const cambioVenta = { estadoId: 12, motivo };
     await updateVenta(id, cambioVenta);
 
     res.status(200).json({ msg: "Venta cancelada con éxito." });
   } catch (error) {
-    console.error("Error al cancelar la venta:", error);
-    return res.status(500).json({ msg: "Error interno del servidor." });
+    console.error("Error al cancelar la venta:", error.message);
+    res.status(500).json({ msg: "Error interno del servidor." });
   }
 };
