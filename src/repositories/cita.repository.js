@@ -16,7 +16,7 @@ exports.getAllCitas = async (estadoId) => {
         as: "usuario",
       },
       { model: Insumo, attributes: ["nombre", "id"] },
-      { model: Venta, as: "venta", attributes: ["imagen"] },
+      { model: Venta, as: "venta", attributes: ["imagen", "id"] },
     ],
   });
 };
