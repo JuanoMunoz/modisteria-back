@@ -28,12 +28,12 @@ router.get(
   getDomiciliosByClienteId
 );
 
-router.post(
+/* router.post(
   "/createDomicilio",
 
   createDomicilio
 );
-
+ */
 router.put(
   "/updateDomicilio/:id",
   [verifyToken, buscarPermiso("Domicilios")],

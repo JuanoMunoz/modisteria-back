@@ -54,7 +54,7 @@ exports.getDomiciliosByClienteId = async (req, res) => {
   }
 };
 
-exports.createDomicilio = async (req, res) => {
+/* exports.createDomicilio = async (req, res) => {
   const { ventaId, estadoId, direccion } = req.body;
   try {
     const municipios = [" Medellín", " Bello", " Copacabana", " Girardota", " Barbosa", " La estrella", " Caldas", " Envigado", " Sabaneta", " Itagüí"];
@@ -88,7 +88,7 @@ exports.createDomicilio = async (req, res) => {
     console.error(error);
     return res.status(500).json({ error: error.message });
   }
-};
+}; */
 
 exports.updateSG = async (req, res) => { //update status and guide
   const { id } = req.params
