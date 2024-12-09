@@ -5,7 +5,7 @@ const { getPedidoByUsuarioyEstado, getPedidoByVenta, } = require("../repositorie
 const { getAllVentas, getVentaById, createVenta, getVentaByUsuarioId, updateVenta, getUsuarioIdByPedidoId, getCitaVenta } = require("../repositories/venta.repository");
 const { helperImg, uploadToCloudinary, gestionImagen } = require("../utils/image");
 const transporter = require("../utils/mailer");
-const { getEmailByUserId } = require('../repositories/usuario.repository');
+const { getEmailByUserId, getUserById } = require('../repositories/usuario.repository');
 const { getCitaById } = require("../repositories/cita.repository");
 const { getCatalogoById } = require("../repositories/catalogo.repository");
 const { createDomicilio, updateDomicilio } = require("./domicilio.controller");
@@ -441,7 +441,6 @@ exports.cancelarVenta = async (req, res) => {
 
   try {
     const { motivo } = req.body;
-
     // Validar motivo
     if (!motivo) {
       return res.status(400).json({ msg: "El motivo de cancelación es obligatorio." });
@@ -458,7 +457,7 @@ exports.cancelarVenta = async (req, res) => {
     try {
       domicilio = await getDomicilioByVentaId(id);
     } catch (error) {
-      console.log(`No se encontró un domicilio asociado a la venta ID ${id}. Continuando con el proceso...`);
+      console.log(`No se encontró un domicilio asociado a la venta ID ${id}.`);
     }
 
     // Actualizar el estado del domicilio, si existe
@@ -484,6 +483,154 @@ exports.cancelarVenta = async (req, res) => {
         })
       );
     }
+    const email = await getEmailByUserId(id)
+    console.log(email)
+    const mailOptions = {
+      from: "modistadonaluz@gmail.com",
+      to: email,
+      subject: "Venta cancelada",
+      html: `<!DOCTYPE html>
+            <html lang="es">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Venta cancelada</title>
+                <style>
+                    body {
+                        background-color: #f4f4f4;
+                        font-family: Arial, sans-serif;
+                        margin: 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+                    }
+
+                    .all, .container {
+                        max-width: 500px;
+                        width: 100%;
+                        margin: 0 auto;
+                        border-radius: 8px;
+                    }
+
+                    .all {
+                        background-color: #f4f4f4;
+                        padding: 10px;
+                    }
+
+                    .container {
+                        background-color: #ffffff;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                        text-align: center;
+                    }
+
+                    .header {
+                        background-color: #873780;
+                        color: white;
+                        padding: 20px;
+                        border-radius: 8px 8px 0 0;
+                    }
+
+                    .header h1 {
+                        margin: 0;
+                        font-size: 30px;
+                    }
+
+                    /* Contenido principal */
+                    .content {
+                        padding: 20px;
+                    }
+
+                    .content p {
+                        font-size: 18px;
+                        color: #333;
+                        line-height: 1.5;
+                        margin: 20px 0;
+                    }
+
+                    .verification-code {
+                        font-size: 32px;
+                        font-weight: bold;
+                        letter-spacing: 2px;
+                        color: #ffffff;
+                        background-color: #873780;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        display: inline-block;
+                        margin: 20px 0;
+                    }
+
+                    .btn {
+                        display: inline-block;
+                        padding: 12px 25px;
+                        font-size: 16px;
+                        color: white;
+                        background-color: #4CAF50;
+                        text-decoration: none;
+                        border-radius: 5px;
+                        margin-top: 20px;
+                    }
+
+                    /* Pie de página */
+                    .footer {
+                        margin-top: 20px;
+                        font-size: 12px;
+                        color: #555;
+                    }
+
+                    /* Modo oscuro */
+                    @media (prefers-color-scheme: dark) {
+                        body {
+                            background-color: #121212;
+                            color: #ddd;
+                        }
+
+                        .all {
+                            background-color: #121212;
+                        }
+
+                        .container {
+                            background-color: #1e1e1e;
+                            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+                        }
+
+                        .header {
+                            background-color: #333;
+                            color: white;
+                        }
+
+                        .content p {
+                            color: #ddd;
+                        }
+
+                        .footer {
+                            color: #aaa;
+                        }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="all">
+                    <div class="container">
+                        <div class="header">
+                            <h1>Modisteria D.L</h1>
+                        </div>
+                        <div class="content">
+                            <h2>¡Hola!</h2>
+                            <p>Este correo ha sido enviado para avisarte de que tu cita ha sido cancelada.</p>
+                            <p>Motivo de cancelación: ${motivo}</p>
+                        </div>
+                        <div class="footer">
+                            <p>Este correo es automático, por favor no responder</p>
+                            <p>&copy; 2024 Modisteria D.L. Todos los derechos reservados.</p>
+                        </div>
+                    </div>
+                </div>
+            </body>
+            </html>`,
+    };
+    await transporter.sendMail(mailOptions);
+
 
     // Actualizar estado y motivo de la venta
     const cambioVenta = { estadoId: 12, motivo };
