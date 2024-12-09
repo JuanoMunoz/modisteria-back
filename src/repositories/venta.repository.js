@@ -6,6 +6,17 @@ exports.getAllVentas = async () => {
     return await Venta.findAll();
 };
 
+exports.getCitaVenta = async (citaId) => {
+    return await Venta.findAll({
+        where: { citaId },
+        limit: 1 
+      });
+};
+
+exports.updateVenta = async (id, imagen) => {
+    return await Venta.update(imagen, { where: { id } });
+  };
+
 exports.getVentaById = async (id) => {
     return await Venta.findByPk(id);
 };

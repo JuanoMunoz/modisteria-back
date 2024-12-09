@@ -7,6 +7,8 @@ const {
   confirmarVenta,
   cancelarVenta,
   calcularDomicilio,
+  getCitaVenta,
+  updateVenta
 } = require("../controllers/venta.controller");
 const { verifyToken } = require("../utils/verifyToken");
 const { upload } = require("../utils/image");
@@ -22,9 +24,20 @@ router.get(
 );
 
 router.get(
+  "/getCitaVenta/:citaId",
+  [verifyToken, buscarPermiso("Ventas")],
+  getCitaVenta
+);
+
+router.get(
   "/getVentaByUsuarioId/:id",
   [verifyToken, buscarPermiso("Ventas")],
   getVentaByUsuarioId
+);
+router.put(
+  "/updateVenta/:id",
+  [verifyToken, buscarPermiso("Ventas")],
+  updateVenta
 );
 
 router.post(
