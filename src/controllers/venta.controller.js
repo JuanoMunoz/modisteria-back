@@ -1,7 +1,8 @@
-const { Pedido, CatalogoInsumos, Insumo, Cita, Domicilio } = require("../models");
+const { Pedido, CatalogoInsumos, Insumo, Cita, Domicilio, InsumoHistorial } = require("../models");
+const { Sequelize } = require('sequelize');
 const { createDomicilioVenta, getDomicilioByVentaId } = require("../repositories/domicilio.repository");
 const { getPedidoByUsuarioyEstado, getPedidoByVenta, } = require("../repositories/pedido.repository");
-const { getAllVentas, getVentaById, createVenta, getVentaByUsuarioId, updateVenta, getUsuarioIdByPedidoId } = require("../repositories/venta.repository");
+const { getAllVentas, getVentaById, createVenta, getVentaByUsuarioId, updateVenta, getUsuarioIdByPedidoId, getCitaVenta } = require("../repositories/venta.repository");
 const { helperImg, uploadToCloudinary, gestionImagen } = require("../utils/image");
 const transporter = require("../utils/mailer");
 const { getEmailByUserId } = require('../repositories/usuario.repository');
@@ -30,12 +31,47 @@ exports.getVentaById = async (req, res) => {
   }
 };
 
+exports.getCitaVenta = async (req, res) => {
+  const { citaId } = req.params;
+
+  try {
+    // Asegúrate de devolver solo el primer registro
+    const ventaCita = await getCitaVenta(citaId);
+
+    if (ventaCita.length === 0) {
+      return res.status(404).json({ error: 'No se encontró venta asociada con la cita.' });
+    }
+
+    res.status(200).json(ventaCita);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+
 exports.getVentaByUsuarioId = async (req, res) => {
   const { id } = req.params;
 
   try {
     const venta = await getVentaByUsuarioId(id);
     res.status(200).json(venta);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+exports.updateVenta = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    let imagen = null;
+    if (req.file) {
+      const processedBuffer = await helperImg(req.file.buffer, 300);
+      const result = await uploadToCloudinary(processedBuffer);
+      imagen = result.url;
+    }
+    await updateVenta(id, imagen);
+    res.status(201).json({ msg: "Categoría actualizada exitosamente" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
